@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OCTABLE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 表名称 -->
+				TYPE	as "type",  <!-- 表类型 -->
+				DATANODE	as "datanode",  <!-- 分片节点 -->
+				RULE	as "rule",  <!-- 分片规则 -->
+				PARENT_NAME	as "parentName",  <!-- 父表 -->
+				JOINKEY	as "joinkey",  <!-- 关联KEY -->
+				PARENTKEY	as "parentkey",  <!-- 父级KEY -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				STATE as "state",
+				CREATE_USER	as "createUser" <!-- 创建人 -->
+		FROM T_OC_TABLE
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+		<select id="query" resultType="map" parameterType="map">
+		SELECT 
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 表名称 -->
+				TYPE	as "type",  <!-- 表类型 -->
+				DATANODE	as "datanode",  <!-- 分片节点 -->
+				RULE	as "rule",  <!-- 分片规则 -->
+				PARENT_NAME	as "parentName",  <!-- 父表 -->
+				JOINKEY	as "joinkey",  <!-- 关联KEY -->
+				PARENTKEY	as "parentkey",  <!-- 父级KEY -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				STATE as "state",
+				CREATE_USER	as "createUser" <!-- 创建人 -->
+		FROM T_OC_TABLE
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and NAME = #{name}
+			</if>
+			<if test="type != null">
+				and TYPE = #{type}
+			</if>
+			<if test="datanode != null">
+				and DATANODE = #{datanode}
+			</if>
+			<if test="rule != null">
+				and RULE = #{rule}
+			</if>
+			<if test="parentName != null">
+				and PARENT_NAME = #{parentName}
+			</if>
+			<if test="joinkey != null">
+				and JOINKEY = #{joinkey}
+			</if>
+			<if test="parentkey != null">
+				and PARENTKEY = #{parentkey}
+			</if>
+			<if test="state != null">
+				and STATE = #{state}
+			</if>
+		</where>
+
+	</select>
+	
+	<select id="queryForSchemaMap" resultType="map" parameterType="map">
+		select 
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 表名称 -->
+				TYPE	as "type",  <!-- 表类型 -->
+				DATANODE	as "datanode",  <!-- 分片节点 -->
+				RULE	as "rule",  <!-- 分片规则 -->
+				PARENT_NAME	as "parentName",  <!-- 父表 -->
+				JOINKEY	as "joinkey",  <!-- 关联KEY -->
+				PARENTKEY	as "parentkey",  <!-- 父级KEY -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				STATE as "state",
+				CREATE_USER	as "createUser" <!-- 创建人 --> 
+		from T_OC_TABLE a where not exists(select b.guid from t_oc_schema_map b where b.table_name = a.name and b.schema_name = #{schemaName})
+		and ((type = 'default' and parent_name is null) or type = 'global')
+			<if test="name != null">
+				and NAME like '%${name}%'
+			</if>
+				
+	</select>
+
+	<select id="queryComboxTree" resultType="map" parameterType="map">
+		SELECT
+				guid	as "id",  <!-- 代码 -->
+				PARENT_NAME	as "parentCode",  <!-- 上级代码 -->
+				NAME	as "text", <!-- 名称 -->
+				state as "state" <!-- 节点状态 -->
+		FROM T_OC_TABLE
+		<where>
+		    	TYPE = 'default'
+			<if test="id == null">
+				and (PARENT_NAME = '' OR PARENT_NAME IS null)
+			</if>
+			<if test="id != null">
+				and PARENT_NAME = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryTree" resultType="map" parameterType="map">
+		SELECT
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 表名称 -->
+				TYPE	as "type",  <!-- 表类型 -->
+				DATANODE	as "datanode",  <!-- 分片节点 -->
+				RULE	as "rule",  <!-- 分片规则 -->
+				PARENT_NAME	as "parentName",  <!-- 父表 -->
+				JOINKEY	as "joinkey",  <!-- 关联KEY -->
+				PARENTKEY	as "parentkey",  <!-- 父级KEY -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				STATE as "state",
+				CREATE_USER	as "createUser" <!-- 创建人 -->
+		FROM T_OC_TABLE
+		<where>
+			<if test="id == null">
+				and (PARENT_NAME = '' OR PARENT_NAME IS null)
+			</if>
+			<if test="id != null">
+				and PARENT_NAME = #{id}
+			</if>
+		</where>
+		order by TYPE desc
+	</select>
+
+	
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_OC_TABLE (
+			GUID,  <!-- GUID -->
+			NAME,  <!-- 表名称 -->
+			TYPE,  <!-- 表类型 -->
+			DATANODE,  <!-- 分片节点 -->
+			RULE,  <!-- 分片规则 -->
+			PARENT_NAME,  <!-- 父表 -->
+			JOINKEY,  <!-- 关联KEY -->
+			PARENTKEY,  <!-- 父级KEY -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			STATE,
+			CREATE_USER  <!-- 创建人 -->
+		)
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{name, jdbcType=NVARCHAR}, 
+			#{type, jdbcType=NVARCHAR}, 
+			#{datanode, jdbcType=NVARCHAR}, 
+			#{rule, jdbcType=NVARCHAR}, 
+			#{parentName, jdbcType=NVARCHAR}, 
+			#{joinkey, jdbcType=NVARCHAR}, 
+			#{parentkey, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{state, jdbcType=NVARCHAR}, 
+			#{createUser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_OC_TABLE 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_OC_TABLE  
+		<set>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name, jdbcType=NVARCHAR},
+			</if>
+			<if test="type != null">
+				TYPE = #{type, jdbcType=NVARCHAR},
+			</if>
+			<if test="datanode != null">
+				DATANODE = #{datanode, jdbcType=NVARCHAR},
+			</if>
+			<if test="rule != null">
+				RULE = #{rule, jdbcType=NVARCHAR},
+			</if>
+			<if test="parentName != null">
+				PARENT_NAME = #{parentName, jdbcType=NVARCHAR},
+			</if>
+			<if test="joinkey != null">
+				JOINKEY = #{joinkey, jdbcType=NVARCHAR},
+			</if>
+			<if test="parentkey != null">
+				PARENTKEY = #{parentkey, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="state != null">
+				STATE = #{state, jdbcType=NVARCHAR},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

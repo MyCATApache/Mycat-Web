@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSWHEREEX">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				SORT_INDEX	as "sortIndex",  <!-- 排序位置 -->
+				WHERE_CODE	as "whereCode",  <!-- 条件代码 -->
+				GUID	as "guid",  <!-- guid -->
+				WHERE_NAME	as "whereName",  <!-- 条件名称 -->
+				CODE	as "code",  <!-- 字段名称 -->
+				DESCRIBE	as "describe",  <!-- 字段中文描述 -->
+				REMARK	as "remark",  <!-- 备注 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				VALUE_TYPE	as "valueType",  <!-- 值类型 -->
+				VALUE_CODE	as "valueCode",  <!-- 值代码 -->
+				VALUE_SERVICE	as "valueService",  <!-- 取值服务 -->
+				VALUE_METHOD	as "valueMethod",  <!-- 取值方法 -->
+				BIZ_COMBOX_ID	as "bizComboxId",  <!-- 数据表格值域 -->
+				BIZ_COMBOX_TEXT	as "bizComboxText",  <!-- 数据表格文本 -->
+				EXTEND3	as "extend3",  <!-- 扩展3 -->
+				EXTEND4	as "extend4",  <!-- 扩展4 -->
+				EXTEND5	as "extend5",  <!-- 扩展5 -->
+				BIZ_COLUMNS	as "bizColumns" <!-- 字段定义 -->
+		FROM T_SYS_WHEREEX
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				SORT_INDEX	as "sortIndex",  <!-- 排序位置 -->
+				WHERE_CODE	as "whereCode",  <!-- 条件代码 -->
+				GUID	as "guid",  <!-- guid -->
+				WHERE_NAME	as "whereName",  <!-- 条件名称 -->
+				CODE	as "code",  <!-- 字段名称 -->
+				DESCRIBE	as "describe",  <!-- 字段中文描述 -->
+				REMARK	as "remark",  <!-- 备注 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				VALUE_TYPE	as "valueType",  <!-- 值类型 -->
+				VALUE_CODE	as "valueCode",  <!-- 值代码 -->
+				VALUE_SERVICE	as "valueService",  <!-- 取值服务 -->
+				VALUE_METHOD	as "valueMethod",  <!-- 取值方法 -->
+				BIZ_COMBOX_ID	as "bizComboxId",  <!-- 数据表格值域 -->
+				BIZ_COMBOX_TEXT	as "bizComboxText",  <!-- 数据表格文本 -->
+				EXTEND3	as "extend3",  <!-- 扩展3 -->
+				EXTEND4	as "extend4",  <!-- 扩展4 -->
+				EXTEND5	as "extend5",  <!-- 扩展5 -->
+				BIZ_COLUMNS	as "bizColumns" <!-- 字段定义 -->
+		FROM T_SYS_WHEREEX
+		<where>
+			<if test="sortIndex != null">
+				and SORT_INDEX = #{sortIndex}
+			</if>
+			<if test="whereCode != null">
+				and WHERE_CODE = #{whereCode}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="whereName != null">
+				and WHERE_NAME = #{whereName}
+			</if>
+			<if test="code != null">
+				and CODE = #{code}
+			</if>
+			<if test="describe != null">
+				and DESCRIBE = #{describe}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="valueType != null">
+				and VALUE_TYPE = #{valueType}
+			</if>
+			<if test="valueCode != null">
+				and VALUE_CODE = #{valueCode}
+			</if>
+			<if test="valueService != null">
+				and VALUE_SERVICE = #{valueService}
+			</if>
+			<if test="valueMethod != null">
+				and VALUE_METHOD = #{valueMethod}
+			</if>
+			<if test="bizComboxId != null">
+				and BIZ_COMBOX_ID = #{bizComboxId}
+			</if>
+			<if test="bizComboxText != null">
+				and BIZ_COMBOX_TEXT = #{bizComboxText}
+			</if>
+			<if test="extend3 != null">
+				and EXTEND3 = #{extend3}
+			</if>
+			<if test="extend4 != null">
+				and EXTEND4 = #{extend4}
+			</if>
+			<if test="extend5 != null">
+				and EXTEND5 = #{extend5}
+			</if>
+			<if test="bizColumns != null">
+				and BIZ_COLUMNS = #{bizColumns}
+			</if>
+			<if test="whereex != null">
+				and ${whereex}
+			</if>
+		</where>
+		order by WHERE_CODE,SORT_INDEX
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_WHEREEX 
+		<where>
+			<if test="sortIndex != null">
+				and SORT_INDEX = #{sortIndex}
+			</if>
+			<if test="whereCode != null">
+				and WHERE_CODE = #{whereCode}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="whereName != null">
+				and WHERE_NAME = #{whereName}
+			</if>
+			<if test="code != null">
+				and CODE = #{code}
+			</if>
+			<if test="describe != null">
+				and DESCRIBE = #{describe}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="valueType != null">
+				and VALUE_TYPE = #{valueType}
+			</if>
+			<if test="valueCode != null">
+				and VALUE_CODE = #{valueCode}
+			</if>
+			<if test="valueService != null">
+				and VALUE_SERVICE = #{valueService}
+			</if>
+			<if test="valueMethod != null">
+				and VALUE_METHOD = #{valueMethod}
+			</if>
+			<if test="bizComboxId != null">
+				and BIZ_COMBOX_ID = #{bizComboxId}
+			</if>
+			<if test="bizComboxText != null">
+				and BIZ_COMBOX_TEXT = #{bizComboxText}
+			</if>
+			<if test="extend3 != null">
+				and EXTEND3 = #{extend3}
+			</if>
+			<if test="extend4 != null">
+				and EXTEND4 = #{extend4}
+			</if>
+			<if test="extend5 != null">
+				and EXTEND5 = #{extend5}
+			</if>
+			<if test="bizColumns != null">
+				and BIZ_COLUMNS = #{bizColumns}
+			</if>
+			<if test="whereex != null">
+				and ${whereex}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_WHEREEX (
+			SORT_INDEX,  <!-- 排序位置 -->
+			WHERE_CODE,  <!-- 条件代码 -->
+			GUID,  <!-- guid -->
+			WHERE_NAME,  <!-- 条件名称 -->
+			CODE,  <!-- 字段名称 -->
+			DESCRIBE,  <!-- 字段中文描述 -->
+			REMARK,  <!-- 备注 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			VALUE_TYPE,  <!-- 值类型 -->
+			VALUE_CODE,  <!-- 值代码 -->
+			VALUE_SERVICE,  <!-- 取值服务 -->
+			VALUE_METHOD,  <!-- 取值方法 -->
+			BIZ_COMBOX_ID,  <!-- 数据表格值域 -->
+			BIZ_COMBOX_TEXT,  <!-- 数据表格文本 -->
+			EXTEND3,  <!-- 扩展3 -->
+			EXTEND4,  <!-- 扩展4 -->
+			EXTEND5,  <!-- 扩展5 -->
+			BIZ_COLUMNS  <!-- 字段定义 -->
+		)
+		VALUES ( 
+			#{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{whereCode, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{whereName, jdbcType=NVARCHAR}, 
+			#{code, jdbcType=NVARCHAR}, 
+			#{describe, jdbcType=NVARCHAR}, 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{valueType, jdbcType=NVARCHAR}, 
+			#{valueCode, jdbcType=NVARCHAR}, 
+			#{valueService, jdbcType=NVARCHAR}, 
+			#{valueMethod, jdbcType=NVARCHAR}, 
+			#{bizComboxId, jdbcType=NVARCHAR}, 
+			#{bizComboxText, jdbcType=NVARCHAR}, 
+			#{extend3, jdbcType=NVARCHAR}, 
+			#{extend4, jdbcType=NVARCHAR}, 
+			#{extend5, jdbcType=NVARCHAR}, 
+			#{bizColumns, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_WHEREEX 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_WHEREEX  
+		<set>
+			<if test="sortIndex != null">
+				SORT_INDEX = #{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="whereCode != null">
+				WHERE_CODE = #{whereCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="whereName != null">
+				WHERE_NAME = #{whereName, jdbcType=NVARCHAR},
+			</if>
+			<if test="code != null">
+				CODE = #{code, jdbcType=NVARCHAR},
+			</if>
+			<if test="describe != null">
+				DESCRIBE = #{describe, jdbcType=NVARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="valueType != null">
+				VALUE_TYPE = #{valueType, jdbcType=NVARCHAR},
+			</if>
+			<if test="valueCode != null">
+				VALUE_CODE = #{valueCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="valueService != null">
+				VALUE_SERVICE = #{valueService, jdbcType=NVARCHAR},
+			</if>
+			<if test="valueMethod != null">
+				VALUE_METHOD = #{valueMethod, jdbcType=NVARCHAR},
+			</if>
+			<if test="bizComboxId != null">
+				BIZ_COMBOX_ID = #{bizComboxId, jdbcType=NVARCHAR},
+			</if>
+			<if test="bizComboxText != null">
+				BIZ_COMBOX_TEXT = #{bizComboxText, jdbcType=NVARCHAR},
+			</if>
+			<if test="extend3 != null">
+				EXTEND3 = #{extend3, jdbcType=NVARCHAR},
+			</if>
+			<if test="extend4 != null">
+				EXTEND4 = #{extend4, jdbcType=NVARCHAR},
+			</if>
+			<if test="extend5 != null">
+				EXTEND5 = #{extend5, jdbcType=NVARCHAR},
+			</if>
+			<if test="bizColumns != null">
+				BIZ_COLUMNS = #{bizColumns, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

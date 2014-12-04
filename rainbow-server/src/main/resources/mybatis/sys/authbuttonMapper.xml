@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSAUTHBUTTON">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				BUTTON_GUID	as "buttonGuid",  <!-- 按钮GUID -->
+				BUTTON_NAME	as "buttonName",  <!-- 按钮名称 -->
+				BUTTON_CODE	as "buttonCode",  <!-- 按钮代码 -->
+				MODIFY_TIME	as "modifyTime",  <!-- 修改时间 -->
+				ROLE_GUID	as "roleGuid",  <!-- 角色GUID -->
+				ROLE_CODE	as "roleCode",  <!-- 角色代码 -->
+				MODIFY_USER	as "modifyUser",  <!-- 修改人 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				REMARK	as "remark",  <!-- 备注 -->
+				GUID	as "guid" <!-- 授权号 -->
+		FROM T_SYS_AUTHBUTTON
+		<where>
+			AND GUID = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				BUTTON_GUID	as "buttonGuid",  <!-- 按钮GUID -->
+				BUTTON_NAME	as "buttonName",  <!-- 按钮名称 -->
+				BUTTON_CODE	as "buttonCode",  <!-- 按钮代码 -->
+				MODIFY_TIME	as "modifyTime",  <!-- 修改时间 -->
+				ROLE_GUID	as "roleGuid",  <!-- 角色GUID -->
+				ROLE_CODE	as "roleCode",  <!-- 角色代码 -->
+				MODIFY_USER	as "modifyUser",  <!-- 修改人 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				REMARK	as "remark",  <!-- 备注 -->
+				GUID	as "guid" <!-- 授权号 -->
+		FROM T_SYS_AUTHBUTTON
+		<where>
+			<if test="buttonGuid != null">
+				and BUTTON_GUID = #{buttonGuid}
+			</if>
+			<if test="buttonName != null">
+				and BUTTON_NAME = #{buttonName}
+			</if>
+			<if test="buttonCode != null">
+				and BUTTON_CODE = #{buttonCode}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryByPageCode" resultType="map" parameterType="map">
+		SELECT B.BUTTON_CODE AS "buttonCode"
+		  FROM T_SYS_BUTTON B
+		 WHERE B.PAGE_CODE = #{pageCode}
+		   AND B.BUTTON_CODE IN (SELECT S.BUTTON_CODE
+		                           FROM T_SYS_AUTHBUTTON S, T_SYS_AUTHUSER U
+		                          WHERE S.ROLE_GUID = U.ROLE_GUID
+		                            AND U.USER_CODE = #{loginId})
+	</select>
+	
+	<select id="queryAuthButton" resultType="map" parameterType="map">
+		SELECT 
+			B.GUID AS "guid",
+			B.BUTTON_CODE AS "buttonCode",
+			B.BUTTON_NAME AS "buttonName",
+			B.PAGE_CODE AS "pageCode"
+  		FROM T_SYS_BUTTON B
+  		WHERE NOT EXISTS(
+  				SELECT
+  					DISTINCT B.PAGE_CODE
+          		FROM T_SYS_AUTHBUTTON AB
+         		WHERE AB.BUTTON_GUID = B.GUID
+           		AND AB.ROLE_GUID = #{roleGuid}
+           		)
+	</select>
+	<select id="queryAuthButtonCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+  		FROM T_SYS_BUTTON B
+  		WHERE NOT EXISTS(
+  				SELECT
+  					DISTINCT B.PAGE_CODE
+          		FROM T_SYS_AUTHBUTTON AB
+         		WHERE AB.BUTTON_GUID = B.GUID
+           		AND AB.ROLE_GUID = #{roleGuid}
+           		)
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_AUTHBUTTON 
+		<where>
+			<if test="buttonGuid != null">
+				and BUTTON_GUID = #{buttonGuid}
+			</if>
+			<if test="buttonName != null">
+				and BUTTON_NAME = #{buttonName}
+			</if>
+			<if test="buttonCode != null">
+				and BUTTON_CODE = #{buttonCode}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_AUTHBUTTON (
+			BUTTON_GUID,  <!-- 按钮GUID -->
+			BUTTON_NAME,  <!-- 按钮名称 -->
+			BUTTON_CODE,  <!-- 按钮代码 -->
+			MODIFY_TIME,  <!-- 修改时间 -->
+			ROLE_GUID,  <!-- 角色GUID -->
+			ROLE_CODE,  <!-- 角色代码 -->
+			MODIFY_USER,  <!-- 修改人 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			REMARK,  <!-- 备注 -->
+			GUID  <!-- 授权号 -->
+		)
+		VALUES ( 
+			#{buttonGuid, jdbcType=NVARCHAR}, 
+			#{buttonName, jdbcType=NVARCHAR}, 
+			#{buttonCode, jdbcType=NVARCHAR}, 
+			#{modifyTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{roleGuid, jdbcType=NVARCHAR}, 
+			#{roleCode, jdbcType=NVARCHAR}, 
+			#{modifyUser, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_AUTHBUTTON 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_AUTHBUTTON  
+		<set>
+			<if test="buttonGuid != null">
+				BUTTON_GUID = #{buttonGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="buttonName != null">
+				BUTTON_NAME = #{buttonName, jdbcType=NVARCHAR},
+			</if>
+			<if test="buttonCode != null">
+				BUTTON_CODE = #{buttonCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyTime != null">
+				MODIFY_TIME = #{modifyTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="roleGuid != null">
+				ROLE_GUID = #{roleGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="roleCode != null">
+				ROLE_CODE = #{roleCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				MODIFY_USER = #{modifyUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

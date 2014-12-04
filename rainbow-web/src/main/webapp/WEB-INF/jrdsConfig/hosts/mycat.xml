@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<host name="mycat" dnsName="127.0.0.1">
+      <connection type="jrds.probe.jdbc.JdbcConnection" name="mycatdb">
+        <arg type="String" name="login">test</arg>
+		<arg type="String" name="password">test</arg>
+        <arg type="String" name="url">jdbc:mysql://localhost:9066/TESTDB</arg>
+		 <arg type="String"  name="driverClass">com.mysql.jdbc.Driver</arg>
+		</connection>
+        <probe type="MySqlStatusGeneric" connection="mycatdb" />
+	    <probe type="MySqlStatus" connection="mycatdb" />
+		<probe type="MysqlTableSpace" connection="mycatdb" />
+</host>

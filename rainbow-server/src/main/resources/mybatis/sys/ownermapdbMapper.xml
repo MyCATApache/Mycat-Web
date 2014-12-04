@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSOWNERMAPDB">
+
+<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				GOMACODE	as "gomacode",  <!-- GOMACODE -->
+				STATUS	as "status",  <!-- STATUS -->
+				GOODSOWNERNAME	as "goodsownername",  <!-- GOODSOWNERNAME -->
+				DB_NAME	as "dbName",  <!-- DB_NAME -->
+				CREATEDATE	as "createdate",  <!-- CREATEDATE -->
+				CREATENAME	as "createname",  <!-- CREATENAME -->
+				GOODSOWNERID	as "goodsownerid" <!-- GOODSOWNERID -->
+		FROM T_SYS_OWNERMAPDB
+		<where>
+				and GOODSOWNERID = #{goodsownerid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				GOMACODE	as "gomacode",  <!-- GOMACODE -->
+				STATUS	as "status",  <!-- STATUS -->
+				GOODSOWNERNAME	as "goodsownername",  <!-- GOODSOWNERNAME -->
+				DB_NAME	as "dbName",  <!-- DB_NAME -->
+				CREATEDATE	as "createdate",  <!-- CREATEDATE -->
+				CREATENAME	as "createname",  <!-- CREATENAME -->
+				GOODSOWNERID	as "goodsownerid" <!-- GOODSOWNERID -->
+		FROM T_SYS_OWNERMAPDB
+		<where>
+			<if test="gomacode != null">
+				and GOMACODE = #{gomacode}
+			</if>
+			<if test="status != null">
+				and STATUS = #{status}
+			</if>
+			<if test="goodsownername != null">
+				and GOODSOWNERNAME like '%${goodsownername}%'
+			</if>
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if>
+			<if test="createdate != null">
+				and CREATEDATE = #{createdate}
+			</if>
+			<if test="createname != null">
+				and CREATENAME = #{createname}
+			</if>
+			<if test="goodsownerid != null">
+				and GOODSOWNERID = #{goodsownerid}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_OWNERMAPDB 
+		<where>
+			<if test="gomacode != null">
+				and GOMACODE = #{gomacode}
+			</if>
+			<if test="status != null">
+				and STATUS = #{status}
+			</if>
+			<if test="goodsownername != null">
+				and GOODSOWNERNAME like '%${goodsownername}%'
+			</if>
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if>
+			<if test="createdate != null">
+				and CREATEDATE = #{createdate}
+			</if>
+			<if test="createname != null">
+				and CREATENAME = #{createname}
+			</if>
+			<if test="goodsownerid != null">
+				and GOODSOWNERID = #{goodsownerid}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_OWNERMAPDB (
+			GOMACODE,  <!-- GOMACODE -->
+			STATUS,  <!-- STATUS -->
+			GOODSOWNERNAME,  <!-- GOODSOWNERNAME -->
+			DB_NAME,  <!-- DB_NAME -->
+			CREATEDATE,  <!-- CREATEDATE -->
+			CREATENAME,  <!-- CREATENAME -->
+			GOODSOWNERID  <!-- GOODSOWNERID -->
+		)
+		VALUES ( 
+			#{gomacode, jdbcType=NVARCHAR}, 
+			#{status, jdbcType=CHAR}, 
+			#{goodsownername, jdbcType=NVARCHAR}, 
+			#{dbName, jdbcType=NVARCHAR}, 
+			#{createdate, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createname, jdbcType=NVARCHAR}, 
+			#{goodsownerid, jdbcType=NUMERIC,typeHandler=NumberHandler}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_OWNERMAPDB 
+		<where> 
+			GOODSOWNERID = #{goodsownerid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_OWNERMAPDB  
+		<set>
+			<if test="gomacode != null">
+				GOMACODE = #{gomacode},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="goodsownername != null">
+				GOODSOWNERNAME = #{goodsownername},
+			</if>
+			<if test="dbName != null">
+				DB_NAME = #{dbName},
+			</if>
+			<if test="createdate != null">
+				CREATEDATE = #{createdate},
+			</if>
+			<if test="createname != null">
+				CREATENAME = #{createname},
+			</if>
+			<if test="goodsownerid != null">
+				GOODSOWNERID = #{goodsownerid}
+			</if>
+		</set>
+		<where>
+			GOODSOWNERID = #{goodsownerid}
+		</where>
+	</update>
+	
+	<select id="queryDB" resultType="map" parameterType="map">
+		SELECT
+				GOMACODE	as "gomacode",  <!-- GOODSOWNERID -->
+				DB_NAME	as "dbName"  <!-- DB_NAssME -->
+		FROM T_SYS_OWNERMAPDB
+		<where>
+			<if test="gomacode != null">
+				and GOMACODE = #{gomacode}
+			</if>
+		</where>
+	</select>
+</mapper>

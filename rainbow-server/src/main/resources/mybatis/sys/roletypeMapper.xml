@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSROLETYPE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				role_type_code	as "roleTypeCode",  <!-- 角色类型代码 -->
+				role_type_name	as "roleTypeName",  <!-- 角色类型名称 -->
+				role_type_group	as "roleTypeGroup",  <!-- 角色类型组 -->
+				status	as "status",  <!-- 状态 -->
+				remark	as "remark",  <!-- 备注 -->
+				sort_index	as "sortIndex",  <!-- 排序索引 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_roletype
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				role_type_code	as "roleTypeCode",  <!-- 角色类型代码 -->
+				role_type_name	as "roleTypeName",  <!-- 角色类型名称 -->
+				role_type_group	as "roleTypeGroup",  <!-- 角色类型组 -->
+				status	as "status",  <!-- 状态 -->
+				remark	as "remark",  <!-- 备注 -->
+				sort_index	as "sortIndex",  <!-- 排序索引 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_roletype
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="roleTypeCode != null">
+				and role_type_code = #{roleTypeCode}
+			</if>
+			<if test="roleTypeName != null">
+				and role_type_name like '%${roleTypeName}%'
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+		order by role_type_group,sort_index
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_roletype 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="roleTypeCode != null">
+				and role_type_code = #{roleTypeCode}
+			</if>
+			<if test="roleTypeName != null">
+				and role_type_name like '%${roleTypeName}%'
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_ROLETYPE (
+			ROLE_TYPE_GROUP,  <!-- 角色类型组 -->
+			GUID,  <!-- guid -->
+			ROLE_TYPE_CODE,  <!-- 角色类型代码 -->
+			ROLE_TYPE_NAME,  <!-- 角色类型名称 -->
+			STATUS,  <!-- 状态 -->
+			REMARK,  <!-- 备注 -->
+			SORT_INDEX,  <!-- 排序索引 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER  <!-- 创建人 -->
+		)
+		VALUES ( 
+			#{roleTypeGroup, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{roleTypeCode, jdbcType=NVARCHAR}, 
+			#{roleTypeName, jdbcType=NVARCHAR}, 
+			#{status, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_roletype 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_ROLETYPE  
+		<set>
+			<if test="roleTypeGroup != null">
+				ROLE_TYPE_GROUP = #{roleTypeGroup, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="roleTypeCode != null">
+				ROLE_TYPE_CODE = #{roleTypeCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="roleTypeName != null">
+				ROLE_TYPE_NAME = #{roleTypeName, jdbcType=NVARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=NVARCHAR},
+			</if>
+			<if test="sortIndex != null">
+				SORT_INDEX = #{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+	
+	<select id="queryNotInOrg" resultType="map" parameterType="map">
+		SELECT
+		  a.guid           AS "guid",
+		  a.role_type_code AS "roleTypeCode",
+		  a.role_type_name AS "roleTypeName",
+		  a.status         AS "status",
+		  a.remark         AS "remark",
+		  a.sort_index     AS "sortIndex",
+		  a.create_time    AS "createTime",
+		  a.create_user    AS "createUser"
+		FROM t_sys_roletype a
+		<where>
+		     NOT EXISTS(SELECT
+		                   d.role_type_code
+		                 FROM t_sys_roletype d
+		                 WHERE EXISTS(SELECT
+		                                b.role_code
+		                              FROM t_sys_role b,
+		                                t_sys_org c
+		                              WHERE b.org_code = c.org_code
+		                                  AND d.role_type_code = b.role_type_code
+		                                  AND b.org_code = #{orgCode})
+		                     AND a.role_type_code = d.role_type_code)
+		 </where>
+		      
+	</select>
+
+	<select id="countNotInOrg" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+		FROM t_sys_roletype a
+		<where>
+		     NOT EXISTS(SELECT
+		                   d.role_type_code
+		                 FROM t_sys_roletype d
+		                 WHERE EXISTS(SELECT
+		                                b.role_code
+		                              FROM t_sys_role b,
+		                                t_sys_org c
+		                              WHERE b.org_code = c.org_code
+		                                  AND d.role_type_code = b.role_type_code
+		                                  AND b.org_code = #{orgCode})
+		                     AND a.role_type_code = d.role_type_code)
+		 </where>
+	</select>
+</mapper>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSMENU">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 代码 -->
+				parent_code	as "parentCode",  <!-- 上级代码 -->
+				page_code	as "pageCode",  <!-- 页面号 -->
+				remark	as "remark",  <!-- 备注 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				status	as "status",  <!-- 状态 -->
+				sort_index	as "sortIndex",  <!-- 排序位置 -->
+				name	as "name", <!-- 名称 -->
+				state as "state" <!-- 节点状态 -->
+		FROM t_sys_menu
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+	
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 代码 -->
+				parent_code	as "parentCode",  <!-- 上级代码 -->
+				page_code	as "pageCode",  <!-- 页面号 -->
+				remark	as "remark",  <!-- 备注 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				status	as "status",  <!-- 状态 -->
+				sort_index	as "sortIndex",  <!-- 排序位置 -->
+				name	as "name", <!-- 名称 -->
+				state as "state" <!-- 节点状态 -->
+		FROM t_sys_menu
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="pageCode != null">
+				and page_code = #{pageCode}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+		</where>
+		order by sort_index
+	</select>
+	
+	<select id="queryComboxTree" resultType="map" parameterType="map">
+	    	SELECT 
+				
+				code	as "id",  <!-- 代码 -->
+				parent_code	as "parentCode",  <!-- 上级代码 -->
+				name	as "text", <!-- 名称 -->
+				state as "state" <!-- 节点状态 -->
+		FROM t_sys_menu
+		<where>
+			<if test="id == null">
+				and (parent_code = '' OR parent_code IS null)
+			</if>
+			<if test="id != null">
+				and parent_code = #{id}
+			</if>
+		</where>
+		order by sort_index
+	</select>
+	
+	<select id="queryMenus" resultType="map" parameterType="map">
+	    	SELECT
+	    		b.is_cache as "isCache",<!-- 是否缓存 --> 	
+				a.code	as "id",  <!-- 代码 -->
+				a.parent_code	as "parentCode",  <!-- 上级代码 -->
+				a.name	as "text", <!-- 名称 -->
+				a.state as "state", <!-- 节点状态 -->
+				b.url as "url", <!-- 页面路径 -->
+				b.name as "pageName"  <!-- 页面名称 -->
+		FROM t_sys_menu a LEFT JOIN t_sys_page b
+			ON a.page_code = b.code
+		<where>
+		 <if test="loginId != 'admin'" >
+		   a.code in (select s.resource_code
+                    from t_sys_authresouce s, t_sys_authuser u
+                   where s.role_guid = u.role_guid
+                     and u.user_code = #{loginId})
+          </if>
+			<if test="id == null">
+				and (a.parent_code = '' OR a.parent_code IS null)
+			</if>
+			<if test="id != null">
+				and a.parent_code = #{id}
+			</if>
+			<if test="code != null">
+				and a.code = #{code}
+			</if>
+			
+		</where>
+		order by sort_index
+	</select>
+	
+	<select id="queryTree" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 代码 -->
+				parent_code	as "parentCode",  <!-- 上级代码 -->
+				page_code	as "pageCode",  <!-- 页面号 -->
+				remark	as "remark",  <!-- 备注 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				status	as "status",  <!-- 状态 -->
+				sort_index	as "sortIndex",  <!-- 排序位置 -->
+				name	as "name", <!-- 名称 -->
+				state as "state" <!-- 节点状态 -->
+		FROM t_sys_menu
+		<where>
+		<if test="id == null">
+				and parent_code = '' OR parent_code IS null
+			</if>
+			<if test="id != null">
+				and parent_code = #{id}
+			</if>
+		</where>
+		order by sort_index
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_menu 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="parentCode != null">
+				and parent_code = #{parentCode}
+			</if>
+			<if test="pageCode != null">
+				and page_code = #{pageCode}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="status != null">
+				and status = #{status}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_MENU (
+			REMARK,  <!-- 备注 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			STATUS,  <!-- 状态 -->
+			SORT_INDEX,  <!-- 排序位置 -->
+			NAME,  <!-- 名称 -->
+			STATE,  <!-- 节点状态 -->
+			GUID,  <!-- guid -->
+			CODE,  <!-- 代码 -->
+			PARENT_CODE,  <!-- 上级代码 -->
+			PAGE_CODE  <!-- 页面号 -->
+		)		 
+		VALUES ( 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{status, jdbcType=NVARCHAR}, 
+			#{sortIndex, jdbcType=NUMERIC}, 
+			#{name, jdbcType=NVARCHAR}, 
+			#{state, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{code, jdbcType=NVARCHAR}, 
+			#{parentCode, jdbcType=NVARCHAR}, 
+			#{pageCode, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_menu 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_menu  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="parentCode != null">
+				parent_code = #{parentCode},
+			</if>
+			<if test="pageCode != null">
+				page_code = #{pageCode},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="sortIndex != null">
+				sort_index = #{sortIndex},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="state != null">
+				state = #{state},
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+	
+	<update id="updateState" parameterType="map">
+		UPDATE t_sys_menu  
+		<set>
+			state = #{state}
+		</set>
+		<where>
+			code = #{code}
+		</where>
+	</update>
+	
+	<select id="queryFavorites" resultType="map" parameterType="map">
+   SELECT b.is_cache  as "isCache", <!-- 是否缓存 -->   
+       a.page_code as "id", <!--  代码 -->
+       b.url       as "url", <!--  页面路径 -->
+       b.name      as "text",<!--  页面名称 -->
+       <if test="loginId != 'admin'" >
+       (select count(*)
+                         from t_sys_authresouce s, t_sys_authuser u
+                        where s.role_guid = u.role_guid
+                          and a.login_id = u.user_code
+                          and s.resource_code = a.page_code
+                          and u.user_code = #{loginId}) as "isAuth"
+       </if>
+       <if test="loginId == 'admin'" >
+       	1 as "isAuth"
+       </if>
+  FROM t_sys_favorites a
+  LEFT JOIN t_sys_page b
+    ON a.page_code = b.code
+ where 
+ a.login_id = #{loginId}
+ order by a.create_time desc
+	</select>
+</mapper>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSAUTHRESOUCE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				RESOURCE_GUID	as "resourceGuid",  <!-- 资源GUID -->
+				RESOURCE_CODE	as "resourceCode",  <!-- 资源代码 -->
+				MODIFY_TIME	as "modifyTime",  <!-- 修改时间 -->
+				ROLE_GUID	as "roleGuid",  <!-- 角色GUID -->
+				ROLE_CODE	as "roleCode",  <!-- 角色代码 -->
+				MODIFY_USER	as "modifyUser",  <!-- 修改人 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				REMARK	as "remark",  <!-- 备注 -->
+				GUID	as "guid" <!-- 授权号 -->
+		FROM T_SYS_AUTHRESOUCE
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				t.RESOURCE_GUID	as "resourceGuid",  <!-- 资源GUID -->
+				t.RESOURCE_CODE	as "resourceCode",  <!-- 资源代码 -->
+				t.MODIFY_TIME	as "modifyTime",  <!-- 修改时间 -->
+				t.ROLE_GUID	as "roleGuid",  <!-- 角色GUID -->
+				t.ROLE_CODE	as "roleCode",  <!-- 角色代码 -->
+				(select r.ROLE_NAME from T_SYS_ROLE r where t.ROLE_GUID = r.guid) as "roleName",  <!-- 角色名称 -->
+				t.MODIFY_USER	as "modifyUser",  <!-- 修改人 -->
+				t.CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				t.CREATE_USER	as "createUser",  <!-- 创建人 -->
+				t.REMARK	as "remark",  <!-- 备注 -->
+				t.GUID	as "guid" <!-- 授权号 -->
+		FROM T_SYS_AUTHRESOUCE t 
+		<where>
+			<if test="resourceGuid != null">
+				and t.RESOURCE_GUID = #{resourceGuid}
+			</if>
+			<if test="resourceCode != null">
+				and t.RESOURCE_CODE = #{resourceCode}
+			</if>
+			<if test="modifyTime != null">
+				and t.MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and t.ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and t.ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and t.MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and t.CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and t.CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and t.REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and t.GUID = #{guid}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_AUTHRESOUCE 
+		<where>
+			<if test="resourceGuid != null">
+				and RESOURCE_GUID = #{resourceGuid}
+			</if>
+			<if test="resourceCode != null">
+				and RESOURCE_CODE = #{resourceCode}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_AUTHRESOUCE (
+			RESOURCE_GUID,  <!-- 资源GUID -->
+			RESOURCE_CODE,  <!-- 资源代码 -->
+			MODIFY_TIME,  <!-- 修改时间 -->
+			ROLE_GUID,  <!-- 角色GUID -->
+			ROLE_CODE,  <!-- 角色代码 -->
+			MODIFY_USER,  <!-- 修改人 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			REMARK,  <!-- 备注 -->
+			GUID  <!-- 授权号 -->
+		)
+		VALUES ( 
+			#{resourceGuid, jdbcType=NVARCHAR}, 
+			#{resourceCode, jdbcType=NVARCHAR}, 
+			#{modifyTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{roleGuid, jdbcType=NVARCHAR}, 
+			#{roleCode, jdbcType=NVARCHAR}, 
+			#{modifyUser, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_AUTHRESOUCE 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_AUTHRESOUCE  
+		<set>
+			<if test="resourceGuid != null">
+				RESOURCE_GUID = #{resourceGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="resourceCode != null">
+				RESOURCE_CODE = #{resourceCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyTime != null">
+				MODIFY_TIME = #{modifyTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="roleGuid != null">
+				ROLE_GUID = #{roleGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="roleCode != null">
+				ROLE_CODE = #{roleCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				MODIFY_USER = #{modifyUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

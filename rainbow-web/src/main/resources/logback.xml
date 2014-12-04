@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="true">
+
+	<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" /> 
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+		<Encoding>UTF-8</Encoding>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{80} - %m%n</Pattern>
+			
+		</layout>
+	</appender>
+
+	<appender name="ROLLING"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		 <Encoding>UTF-8</Encoding>
+		<File>${logbase}\rianbow.log</File>
+	  		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> 
+
+		  	<fileNamePattern>${logbase}\rainbow.%d{yyyy-MM-dd}.%i.log</fileNamePattern> 
+				<timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"> 
+				  <!-- or whenever the file size reaches 100MB --> 
+					<maxFileSize>100MB</maxFileSize>
+		       </timeBasedFileNamingAndTriggeringPolicy>
+		   <maxHistory>30</maxHistory> 
+		 </rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<MaxFileSize>30MB</MaxFileSize>
+		</triggeringPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{80} - %m%n</Pattern>
+		</layout>
+	</appender>
+
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="com.google" level="ERROR" />
+	<logger name="net.rubyeye" level="ERROR" />
+	<logger name="org.mybatis" level="ERROR" />
+	<logger name="org.apache" level="ERROR" />
+
+	<!--logger 模块 -->
+	<logger name="ch.qos.logback" level="ERROR">
+		<appender-ref ref="ROLLING" />
+	</logger>
+	
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ROLLING" />
+	</root>
+
+</configuration>

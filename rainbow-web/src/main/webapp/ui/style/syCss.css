@@ -1,0 +1,75 @@
+.tableForm {
+	border-collapse: collapse;
+}
+
+.tableForm th {
+     border: 1px solid #CCCCCC;   
+     background: #FDF5E6;
+     font-size:12px;
+     font-family:arial;
+     font-weight:bold;
+     padding: 6px 6px 6px 0px;
+     color:#281e78;
+}
+
+.tableForm td {
+	 text-align: left;
+     border: 1px solid #CCCCCC;   
+     background: #FFF;
+     font-size:11px;
+     padding: 6px 6px 6px 12px;
+     color: #4f6b72;
+}
+
+
+.queryForm {
+	border-collapse: collapse;
+}
+
+.queryForm th {
+	 text-align: right;
+	 line-height:10px;
+     border: 0px solid #97acda;   
+     background: #fff;
+     font-family:arial;
+     font-weight:bold;
+     padding: 6px 6px 6px 0px;
+     color:#281e78;
+}
+
+.queryForm td {
+	 text-align: left;
+	 line-height:10px;
+     border: 0px solid #97acda;   
+     background: #fff;
+     font-weight:bold;
+     padding: 6px 6px 6px 0px;
+}
+
+input{
+	border-style: solid; 
+	border-top-width: 0px;
+	border-right-width: 0px; 
+	border-bottom-width: 1px;
+	border-left-width: 0px
+}
+
+.logo {
+	background: url('images/mycat4.jpg') no-repeat;
+}
+
+.info {
+	background: #FFFEE6;
+	color: #8F5700;
+	padding: 12px;
+}
+
+.tip {
+	width: 24px;
+	height: 16px;
+	float: left;
+}
+
+img {
+	cursor: pointer;
+}

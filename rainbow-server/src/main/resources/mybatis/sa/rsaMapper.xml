@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SARSA">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  
+				code	as "code",  <!-- 密钥代码 -->
+				name	as "name",  <!-- 密钥名称 -->
+				public_key	as "publicKey",  <!-- 公钥 -->
+				private_key	as "privateKey",  <!-- 私钥 -->
+				modulus	as "modulus" <!-- 模数 -->
+		FROM t_sa_rsa
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  
+				code	as "code",  <!-- 密钥代码 -->
+				name	as "name",  <!-- 密钥名称 -->
+				public_key	as "publicKey",  <!-- 公钥 -->
+				private_key	as "privateKey",  <!-- 私钥 -->
+				modulus	as "modulus" <!-- 模数 -->
+		FROM t_sa_rsa
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="publicKey != null">
+				and public_key = #{publicKey}
+			</if>
+			<if test="privateKey != null">
+				and private_key = #{privateKey}
+			</if>
+			<if test="modulus != null">
+				and modulus = #{modulus}
+			</if>
+		</where>
+	</select>
+
+		<select id="queryCombox" resultType="map" parameterType="map">
+				SELECT
+						code	as "code",  <!-- 密钥代码 -->
+						name	as "name"  <!-- 密钥名称 -->
+				FROM t_sa_rsa
+	</select>
+	
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sa_rsa 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="publicKey != null">
+				and public_key = #{publicKey}
+			</if>
+			<if test="privateKey != null">
+				and private_key = #{privateKey}
+			</if>
+			<if test="modulus != null">
+				and modulus = #{modulus}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sa_rsa (
+			guid,
+			code,  <!-- 密钥代码 -->
+			name,  <!-- 密钥名称 -->
+			public_key,  <!-- 公钥 -->
+			private_key,  <!-- 私钥 -->
+			modulus  <!-- 模数 -->
+		)		 
+		VALUES ( 
+			#{guid}, 
+			#{code}, 
+			#{name}, 
+			#{publicKey}, 
+			#{privateKey}, 
+			#{modulus}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sa_rsa 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sa_rsa  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="publicKey != null">
+				public_key = #{publicKey},
+			</if>
+			<if test="privateKey != null">
+				private_key = #{privateKey},
+			</if>
+			<if test="modulus != null">
+				modulus = #{modulus}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OCDATAHOSTMAP">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				GUID	as "guid",  <!-- GUID -->
+				DATAHOST	as "dataHost",  <!-- 物理节点 -->
+				HOST	as "host"
+		FROM T_OC_DATAHOSTMAP
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT 
+				b.GUID	as "guid",  
+				a.DATAHOST	as "datahost",
+				a.HOST	as "host",
+                b.URL as "url",
+                b.D_USER "user",
+                b.PASSWORD "password",                            
+                c.DBTYPE as "dbType",                                
+                c.DBDRIVER as "dbDriver"
+		FROM T_OC_DATAHOSTMAP a,T_OC_HOST b,t_oc_datahost c
+                where a.HOST = b.HOST and c.NAME = a.DATAHOST
+			<if test="dataHost != null">
+				and a.DATAHOST = #{dataHost}
+			</if>
+			<if test="host != null">
+				and a.HOST = #{host}
+			</if>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT count(*)
+		FROM T_OC_DATAHOSTMAP a,T_OC_HOST b,t_oc_datahost c
+                where a.HOST = b.HOST and c.NAME = a.DATAHOST
+		<where>
+			<if test="dataHost != null">
+				and a.DATAHOST = #{dataHost}
+			</if>
+			<if test="host != null">
+				and a.HOST = #{host}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_OC_DATAHOSTMAP (
+			GUID,  <!-- GUID -->
+			DATAHOST,  <!-- 物理节点 -->
+			HOST
+		)
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{dataHost, jdbcType=NVARCHAR}, 
+			#{host, jdbcType=NVARCHAR}	
+		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_OC_DATAHOSTMAP 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_OC_DATAHOSTMAP  
+		<set>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="dataHost != null">
+				DATAHOST = #{dataHost, jdbcType=NVARCHAR},
+			</if>
+			<if test="host != null">
+				HOST = #{host, jdbcType=NVARCHAR},
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

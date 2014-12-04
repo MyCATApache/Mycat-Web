@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSPAGE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 页面代码 -->
+				url	as "url",  <!-- 页面路径 -->
+				name	as "name",  <!-- 页面名称 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_page
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 页面代码 -->
+				url	as "url",  <!-- 页面路径 -->
+				name	as "name",  <!-- 页面名称 -->
+				is_cache	as "isCache",  <!-- 是否缓存 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_page
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="url != null">
+				and url = #{url}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="isCache != null">
+				and is_cache = #{isCache}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_page 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="url != null">
+				and url = #{url}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="isCache != null">
+				and is_cache = #{isCache}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_PAGE (
+			GUID,  <!-- guid -->
+			CODE,  <!-- 页面代码 -->
+			URL,  <!-- 页面路径 -->
+			NAME,  <!-- 页面名称 -->
+			IS_CACHE, <!-- 是否缓存 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER  <!-- 创建人 -->
+		)		 
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{code, jdbcType=NVARCHAR}, 
+			#{url, jdbcType=NVARCHAR}, 
+			#{name, jdbcType=NVARCHAR}, 
+			#{isCache, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_page 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_page  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="url != null">
+				url = #{url},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="isCache != null">
+				is_cache = #{isCache}
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>

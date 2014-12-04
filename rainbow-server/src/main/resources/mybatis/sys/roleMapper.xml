@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSROLE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- 角色ID -->
+				role_code	as "roleCode",  <!-- 角色编号 -->
+				role_name	as "roleName",  <!-- 角色名称 -->
+				role_type_code	as "roleTypeCode",  <!-- 角色类型代码 -->
+				org_code	as "orgCode",  <!-- 机构代码 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_role
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				t.guid	as "guid",  <!-- 角色ID -->
+				t.role_code	as "roleCode",  <!-- 角色编号 -->
+				t.role_name	as "roleName",  <!-- 角色名称 -->
+				t.role_type_code	as "roleTypeCode",  <!-- 角色类型代码 -->
+				(select r.role_type_name from t_sys_roletype r where t.role_type_code = r.role_type_code) as "roleTypeName", <!-- 角色类型名称 -->
+				t.org_code	as "orgCode",  <!-- 机构代码 -->
+				(select o.org_name from t_sys_org o where o.org_code = t.org_code) as "orgName", <!-- 机构名称 -->
+				t.create_time	as "createTime",  <!-- 创建时间 -->
+				t.create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_role t
+		<where>
+			<if test="guid != null">
+				and t.guid = #{guid}
+			</if>
+			<if test="roleCode != null">
+				and t.role_code = #{roleCode}
+			</if>
+			<if test="roleName != null">
+				and t.role_name like '%${roleName}%'
+			</if>
+			<if test="roleTypeCode != null">
+				and t.role_type_code = #{roleTypeCode}
+			</if>
+			<if test="orgCode != null">
+				and t.org_code = #{orgCode}
+			</if>
+			<if test="createTime != null">
+				and t.create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and t.create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_role 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="roleCode != null">
+				and role_code = #{roleCode}
+			</if>
+			<if test="roleName != null">
+				and role_name like '%${roleName}%'
+			</if>
+			<if test="roleTypeCode != null">
+				and role_type_code = #{roleTypeCode}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_ROLE (
+			GUID,  <!-- 角色ID -->
+			ROLE_CODE,  <!-- 角色编号 -->
+			ROLE_NAME,  <!-- 角色名称 -->
+			ROLE_TYPE_CODE,  <!-- 角色类型代码 -->
+			ORG_CODE,  <!-- 机构代码 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER  <!-- 创建人 -->
+		)		 
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{roleCode, jdbcType=NVARCHAR}, 
+			#{roleName, jdbcType=NVARCHAR}, 
+			#{roleTypeCode, jdbcType=NVARCHAR}, 
+			#{orgCode, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_role 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_role  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="roleCode != null">
+				role_code = #{roleCode},
+			</if>
+			<if test="roleName != null">
+				role_name = #{roleName},
+			</if>
+			<if test="roleTypeCode != null">
+				role_type_code = #{roleTypeCode},
+			</if>
+			<if test="orgCode != null">
+				org_code = #{orgCode},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+	
+	<delete id="deleteAuthButton" parameterType="map">
+		DELETE FROM T_SYS_AUTHBUTTON 
+		<where> 
+			role_guid = #{guid}
+		</where>
+	</delete>
+	<delete id="deleteAuthresouce" parameterType="map">
+		DELETE FROM T_SYS_AUTHRESOUCE 
+		<where> 
+			role_guid = #{guid}
+		</where>
+	</delete>
+	<delete id="deleteAuthservice" parameterType="map">
+		DELETE FROM T_SYS_AUTHSERVICE 
+		<where> 
+			role_guid = #{guid}
+		</where>
+	</delete>
+	<delete id="deleteAuthuser" parameterType="map">
+		DELETE FROM T_SYS_AUTHUSER 
+		<where> 
+			role_guid = #{guid}
+		</where>
+	</delete>
+</mapper>

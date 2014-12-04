@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SACUSTOMER">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 客户编号 -->
+				name	as "name",  <!-- 客户名称 -->
+				linkman	as "linkman",  <!-- 联系人 -->
+				telephony	as "telephony",  <!-- 联系电话 -->
+				e_mail	as "eMail",  <!-- 邮箱地址 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				remark	as "remark" <!-- 备注 -->
+		FROM t_sa_customer
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				code	as "code",  <!-- 客户编号 -->
+				name	as "name",  <!-- 客户名称 -->
+				linkman	as "linkman",  <!-- 联系人 -->
+				telephony	as "telephony",  <!-- 联系电话 -->
+				e_mail	as "eMail",  <!-- 邮箱地址 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				remark	as "remark" <!-- 备注 -->
+		FROM t_sa_customer
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="linkman != null">
+				and linkman = #{linkman}
+			</if>
+			<if test="telephony != null">
+				and telephony = #{telephony}
+			</if>
+			<if test="eMail != null">
+				and e_mail = #{eMail}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sa_customer 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="linkman != null">
+				and linkman = #{linkman}
+			</if>
+			<if test="telephony != null">
+				and telephony = #{telephony}
+			</if>
+			<if test="eMail != null">
+				and e_mail = #{eMail}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sa_customer (
+			guid,  <!-- guid -->
+			code,  <!-- 客户编号 -->
+			name,  <!-- 客户名称 -->
+			linkman,  <!-- 联系人 -->
+			telephony,  <!-- 联系电话 -->
+			e_mail,  <!-- 邮箱地址 -->
+			create_time,  <!-- 创建时间 -->
+			create_user,  <!-- 创建人 -->
+			remark  <!-- 备注 -->
+		)		 
+		VALUES ( 
+			#{guid}, 
+			#{code}, 
+			#{name}, 
+			#{linkman}, 
+			#{telephony}, 
+			#{eMail}, 
+			#{createTime}, 
+			#{createUser}, 
+			#{remark}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sa_customer 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sa_customer  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="linkman != null">
+				linkman = #{linkman},
+			</if>
+			<if test="telephony != null">
+				telephony = #{telephony},
+			</if>
+			<if test="eMail != null">
+				e_mail = #{eMail},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser},
+			</if>
+			<if test="remark != null">
+				remark = #{remark}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+	
+	<select id="queryCombox" resultType="map" parameterType="map">
+		SELECT
+				code	as "code",  <!-- 客户编号 -->
+				name	as "name"  <!-- 客户名称 -->
+		FROM t_sa_customer
+		<where>
+			<if test="code != null">
+				and code = #{code}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+		</where>
+	</select>
+</mapper>

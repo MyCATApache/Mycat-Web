@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OCMONITOR">
+    
+	<select id="queryBackend" resultType="map" parameterType="map">
+		Show @@backend
+	</select>
+	
+	<select id="queryConnection" resultType="map" parameterType="map">
+		Show @@connection
+	</select>
+	<select id="queryThreadpool" resultType="map" parameterType="map">
+		Show @@threadpool
+	</select>
+	<select id="queryHeartbeat" resultType="map" parameterType="map">
+		Show @@heartbeat
+	</select>
+	<select id="queryDatanode" resultType="map" parameterType="map">
+		Show @@datanode
+	</select>
+	<select id="queryDatasource" resultType="map" parameterType="map">
+		Show @@datasource
+	</select>
+	
+</mapper>

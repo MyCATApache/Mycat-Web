@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSCODE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				value	as "value",  <!-- 值 -->
+				text	as "text",  <!-- 名称 -->
+				code	as "code",  <!-- 代码 -->
+				parent	as "parent",  <!-- 上级 -->
+				remark	as "remark",  <!-- 备注 -->
+				createTime	as "createtime",  <!-- 创建时间 -->
+				createUser	as "createuser" <!-- 创建人 -->
+		FROM t_sys_code
+		<where>
+				and guid = #{guid}
+		</where>
+	</select>
+
+	<select id="getCode" resultType="map" parameterType="map">
+		SELECT
+				value	as "value",  <!-- 值 -->
+				text	as "text"  <!-- 名称 -->
+		FROM t_sys_code
+		<where>
+		    code = #{code}
+		</where>
+		order by value
+	</select>
+	
+	<select id="queryCombox" resultType="map" parameterType="map">
+		SELECT  distinct
+				code	as "id",  <!-- 值 -->
+				remark	as "name"  <!-- 名称 -->
+		FROM t_sys_code
+		<where>
+		    <if test="id != null">
+				and code = #{id}
+			</if>
+			<if test="name != null">
+				and remark like '%${name}%'
+			</if>
+		</where>
+		order by code
+	</select>
+
+	<select id="countCombox" resultType="int" parameterType="map">
+		SELECT count(*) from (
+		  SELECT 
+		  	distinct 
+		  	code as "code", 
+		  	remark as "text" 
+		  FROM t_sys_code
+		 <where>
+		    <if test="id != null">
+				and code = #{id}
+			</if>
+			<if test="name != null">
+				and remark like '%${name}%'
+			</if>
+		</where>
+		        order by code
+		 )
+
+	</select>
+	
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				value	as "value",  <!-- 值 -->
+				text	as "text",  <!-- 名称 -->
+				code	as "code",  <!-- 代码 -->
+				parent	as "parent",  <!-- 上级 -->
+				remark	as "remark",  <!-- 备注 -->
+				createTime	as "createtime",  <!-- 创建时间 -->
+				createUser	as "createuser" <!-- 创建人 -->
+		FROM t_sys_code
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="value != null">
+				and value = #{value}
+			</if>
+			<if test="text != null">
+				and text like '%${text}%'
+			</if>
+			<if test="code != null">
+				and code like '%${code}%'
+			</if>
+			<if test="parent != null">
+				and parent = #{parent}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="createtime != null">
+				and createTime = #{createtime}
+			</if>
+			<if test="createuser != null">
+				and createUser = #{createuser}
+			</if>
+		</where>
+		order by code,value
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_code 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="value != null">
+				and value = #{value}
+			</if>
+			<if test="text != null">
+				and text like '%${text}%'
+			</if>
+			<if test="code != null">
+				and code like '%${code}%'
+			</if>
+			<if test="parent != null">
+				and parent = #{parent}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="createtime != null">
+				and createTime = #{createtime}
+			</if>
+			<if test="createuser != null">
+				and createUser = #{createuser}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_CODE (
+			GUID,  <!-- guid -->
+			VALUE,  <!-- 值 -->
+			TEXT,  <!-- 名称 -->
+			CODE,  <!-- 代码 -->
+			PARENT,  <!-- 上级 -->
+			REMARK,  <!-- 备注 -->
+			CREATETIME,  <!-- 创建时间 -->
+			CREATEUSER  <!-- 创建人 -->
+		)		 
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{value, jdbcType=NVARCHAR}, 
+			#{text, jdbcType=NVARCHAR}, 
+			#{code, jdbcType=NVARCHAR}, 
+			#{parent, jdbcType=NVARCHAR}, 
+			#{remark, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createuser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_code 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_code  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="value != null">
+				value = #{value},
+			</if>
+			<if test="text != null">
+				text = #{text},
+			</if>
+			<if test="code != null">
+				code = #{code},
+			</if>
+			<if test="parent != null">
+				parent = #{parent},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime},
+			</if>
+			<if test="createuser != null">
+				createUser = #{createuser}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>

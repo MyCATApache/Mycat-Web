@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML>
+	<MESSAGEHEAD>
+		<SENDER> PLATFORM </SENDER>
+		<FILETYPE> XML </FILETYPE>
+		<CONTENTTYPE>Customer </CONTENTTYPE>
+		<SENDTIME>2008-05-30 10:10:10 </SENDTIME>
+		<FILENAME>20080530101010</FILENAME>
+		<FILEFUNCTION> ADD </FILEFUNCTION>
+	</MESSAGEHEAD>
+	<MESSAGEDETAIL> 
+	<![CDATA[
+		<?xml version="1.0" encoding="UTF-8"?>
+	  	<XML> 
+		  	<CONTENTLIST> 
+			  	<CONTENT> 
+			  	<HEAEDER>
+				</HEADER> 
+				<DETAIL>
+					<GCOMPANYID> GCOMPANYID </GCOMPANYID>   
+					<COMPANYID> COMPANYID </COMPANYID>  
+			        <COMPANYNAME> COMPANYNAME </COMPANYNAME>   
+					<COMPANYTYPE> COMPANYTYPE </COMPANYTYPE>  
+			        <GOMACODE> GOMACODE </ GOMACODE >   
+					<CONNECTOR> CONNECTOR </ CONNECTOR >  
+			        <CONNPHONE> CONNPHONE </ CONNPHONE >   
+					<INVOICEADDRESS> INVOICEADDRESS </INVOICEADDRESS>  
+			        <DELIVERADDRESS> DELIVERADDRESS </DELIVERADDRESS>   	
+				</DETAIL>                                     	
+			   	</CONTENT>                                    	
+		    </CONTENTLIST>                                	
+	 	</XML>                                        	
+         ]]>                                      	
+	</MESSAGEDETAIL>                                	
+</XML>
+	

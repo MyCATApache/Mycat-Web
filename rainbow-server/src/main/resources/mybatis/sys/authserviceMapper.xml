@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSAUTHSERVICE">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT
+			GUID as "guid",<!-- GUID -->
+			SERVICE_GUID as "serviceGuid",<!-- serviceGuid -->
+			METHOD_CODE as "methodCode",<!-- 方法代码 -->
+			SERVICE_CODE as "serviceCode",<!-- 服务代码 -->
+			ROLE_GUID as "roleGuid",<!-- roleGuid -->
+			ROLE_CODE as "roleCode",<!-- 角色代码 -->
+			REMARK as "remark",<!-- 备注 -->
+			CREATE_TIME as "createTime",<!-- 创建时间 -->
+			CREATE_USER as "createUser",<!-- 创建人 -->
+			MODIFY_TIME as "modifyTime",<!-- 修改时间 -->
+			MODIFY_USER as "modifyUser"<!-- 修改人 -->
+		FROM T_SYS_AUTHSERVICE
+		<where>
+			and GUID = #{guid}
+		</where>
+	</select>
+	
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+			GUID as "guid",<!-- GUID -->
+			SERVICE_GUID as "serviceGuid",<!-- serviceGuid -->
+			METHOD_CODE as "methodCode",<!-- 方法代码 -->
+			SERVICE_CODE as "serviceCode",<!-- 服务代码 -->
+			ROLE_GUID as "roleGuid",<!-- roleGuid -->
+			ROLE_CODE as "roleCode",<!-- 角色代码 -->
+			REMARK as "remark",<!-- 备注 -->
+			CREATE_TIME as "createTime",<!-- 创建时间 -->
+			CREATE_USER as "createUser",<!-- 创建人 -->
+			MODIFY_TIME as "modifyTime",<!-- 修改时间 -->
+			MODIFY_USER as "modifyUser"<!-- 修改人 -->
+		FROM T_SYS_AUTHSERVICE
+		<where>
+			<if test="serviceGuid != null">
+				and SERVICE_GUID = #{serviceGuid}
+			</if>
+			<if test="serviceGuid != null">
+				and SERVICE_CODE = #{serviceGuid}
+			</if>
+			<if test="methodCode != null">
+				and METHOD_CODE = #{methodCode}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_AUTHSERVICE 
+		<where>
+			<if test="serviceGuid != null">
+				and SERVICE_GUID = #{serviceGuid}
+			</if>
+			<if test="serviceGuid != null">
+				and SERVICE_CODE = #{serviceGuid}
+			</if>
+			<if test="methodCode != null">
+				and METHOD_CODE = #{methodCode}
+			</if>
+			<if test="modifyTime != null">
+				and MODIFY_TIME = #{modifyTime}
+			</if>
+			<if test="roleGuid != null">
+				and ROLE_GUID = #{roleGuid}
+			</if>
+			<if test="roleCode != null">
+				and ROLE_CODE = #{roleCode}
+			</if>
+			<if test="modifyUser != null">
+				and MODIFY_USER = #{modifyUser}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryAuthService" resultType="map" parameterType="map">
+		SELECT GUID  AS "guid",
+           SERVICE_CODE AS "serviceCode",
+           METHOD_CODE  AS "methodCode",
+           PACKAGE      AS "package",
+           SERVICE_NAME AS "serviceName",
+           METHOD_NAME  AS "methodName"
+      FROM T_SYS_SERVICE S
+     WHERE NOT EXISTS
+     (SELECT SERVICE_CODE
+              FROM T_SYS_AUTHSERVICE A
+             WHERE A.SERVICE_GUID = S.GUID
+               AND A.ROLE_GUID = #{roleGuid})
+	</select>
+	
+	<select id="queryAuthServiceCount" resultType="int" parameterType="map">
+		  SELECT COUNT(*)
+	       	FROM T_SYS_SERVICE S
+	      WHERE NOT EXISTS (SELECT SERVICE_CODE
+	               FROM T_SYS_AUTHSERVICE A
+	              WHERE A.SERVICE_GUID = S.GUID
+	                AND A.ROLE_GUID = #{roleGuid})
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_AUTHSERVICE (
+			GUID,<!-- GUID -->
+			SERVICE_GUID,<!-- serviceGuid -->
+			METHOD_CODE,<!-- 方法代码 -->
+			SERVICE_CODE,<!-- 服务代码 -->
+			ROLE_GUID,<!-- roleGuid -->
+			ROLE_CODE,<!-- 角色代码 -->
+			REMARK,<!-- 备注 -->
+			CREATE_TIME,<!-- 创建时间 -->
+			CREATE_USER,<!-- 创建人 -->
+			MODIFY_TIME,<!-- 修改时间 -->
+			MODIFY_USER<!-- 修改人 -->
+		)
+		VALUES ( 
+			#{guid,jdbcType=NVARCHAR}, 
+			#{serviceGuid,jdbcType=NVARCHAR}, 
+			#{methodCode,jdbcType=NVARCHAR}, 
+			#{serviceCode,jdbcType=NVARCHAR}, 
+			#{roleGuid,jdbcType=NVARCHAR}, 
+			#{roleCode,jdbcType=NVARCHAR}, 
+			#{remark,jdbcType=NVARCHAR}, 
+			#{createTime,jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser,jdbcType=NVARCHAR}, 
+			#{modifyTime,jdbcType=DATE,typeHandler=DateHandler}, 
+			#{modifyUser,jdbcType=NVARCHAR}
+			)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_AUTHSERVICE 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_AUTHSERVICE  
+		<set>
+			<if test="serviceGuid != null">
+				SERVICE_GUID = #{serviceGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="serviceCode != null">
+				SERVICE_CODE = #{serviceCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="methodCode != null">
+				METHOD_CODE = #{methodCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyTime != null">
+				MODIFY_TIME = #{modifyTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="roleGuid != null">
+				ROLE_GUID = #{roleGuid, jdbcType=NVARCHAR},
+			</if>
+			<if test="roleCode != null">
+				ROLE_CODE = #{roleCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="modifyUser != null">
+				MODIFY_USER = #{modifyUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

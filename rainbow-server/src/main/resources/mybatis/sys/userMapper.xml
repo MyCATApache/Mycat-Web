@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSUSER">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				login_id	as "loginId",  <!-- 登陆id -->
+				name	as "name",  <!-- 姓名 -->
+				password	as "password",  <!-- 密码 -->
+				alive_flag	as "aliveFlag",  <!-- 是否有效 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				mobile_phone	as "mobilePhone",  <!-- 移动电话 -->
+				address	as "address",  <!-- 地址 -->
+				age	as "age",  <!-- 年龄 -->
+				sex	as "sex",  <!-- 性别 -->
+				sort_index	as "sortIndex",  <!-- 排序位置 -->
+				org_code	as "orgCode",  <!-- 所在部门 -->
+				in_join_time	as "inJoinTime",  <!-- 入职时间 -->
+				work_status	as "workStatus",  <!-- 工作状态(在职，离职) -->
+				e_mail	as "eMail" <!-- 电子邮箱 -->
+		FROM t_sys_user
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="queryAutherUser" resultType="map" parameterType="map">
+		SELECT
+				A.GUID	as "guid",  <!-- guid -->
+				A.LOGIN_ID	as "loginId",  <!-- 登陆id -->
+				A.NAME	as "name",  <!-- 姓名 -->
+				A.PASSWORD	as "password",  <!-- 密码 -->
+				A.ORG_CODE	as "orgCode"  <!-- 所在部门 -->
+		FROM T_SYS_USER A,T_SYS_AUTHUSER B  
+		<where>
+			A.LOGIN_ID = B.USER_CODE AND B.ROLE_CODE = #{roleCode}
+			<if test="loginId != null">
+				AND LOGIN_ID = #{loginId}
+			</if>
+			<if test="name != null">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="orgCode != null">
+				AND ORG_CODE = #{orgCode}
+			</if>
+		</where>
+	</select>
+	<select id="queryAutherUserCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+		FROM T_SYS_USER A,T_SYS_AUTHUSER B  
+		<where>
+			A.LOGIN_ID = B.USER_CODE AND B.ROLE_CODE = #{roleCode}
+			<if test="loginId != null">
+				AND LOGIN_ID = #{loginId}
+			</if>
+			<if test="name != null">
+				AND NAME LIKE '%${name}%'
+			</if>
+			<if test="orgCode != null">
+				AND ORG_CODE = #{orgCode}
+			</if>
+		</where>
+	</select>
+	
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				login_id	as "loginId",  <!-- 登陆id -->
+				name	as "name",  <!-- 姓名 -->
+				password	as "password",  <!-- 密码 -->
+				alive_flag	as "aliveFlag",  <!-- 是否有效 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				mobile_phone	as "mobilePhone",  <!-- 移动电话 -->
+				address	as "address",  <!-- 地址 -->
+				age	as "age",  <!-- 年龄 -->
+				sex	as "sex",  <!-- 性别 -->
+				sort_index	as "sortIndex",  <!-- 排序位置 -->
+				org_code	as "orgCode",  <!-- 所在部门 -->
+				in_join_time	as "inJoinTime",  <!-- 入职时间 -->
+				work_status	as "workStatus",  <!-- 工作状态(在职，离职) -->
+				e_mail	as "eMail" ,<!-- 电子邮箱 -->
+				is_online	as "isOnline" ,<!-- 是否在线 -->
+				is_verify	as "isVerify" <!-- 是否需要验证码 -->
+		FROM t_sys_user
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="loginId != null">
+				and login_id = #{loginId}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="password != null">
+				and password = #{password}
+			</if>
+			<if test="aliveFlag != null">
+				and alive_flag = #{aliveFlag}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="mobilePhone != null">
+				and mobile_phone = #{mobilePhone}
+			</if>
+			<if test="address != null">
+				and address = #{address}
+			</if>
+			<if test="age != null">
+				and age = #{age}
+			</if>
+			<if test="sex != null">
+				and sex = #{sex}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="inJoinTime != null">
+				and in_join_time = #{inJoinTime}
+			</if>
+			<if test="workStatus != null">
+				and work_status = #{workStatus}
+			</if>
+			<if test="eMail != null">
+				and e_mail = #{eMail}
+			</if>
+			<if test="isVerify != null">
+				and is_verify = #{isVerify}
+			</if>
+			<if test="isOnline != null">
+				and is_online = #{isOnline}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_user 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="loginId != null">
+				and login_id = #{loginId}
+			</if>
+			<if test="name != null">
+				and name like '%${name}%'
+			</if>
+			<if test="password != null">
+				and password = #{password}
+			</if>
+			<if test="aliveFlag != null">
+				and alive_flag = #{aliveFlag}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="mobilePhone != null">
+				and mobile_phone = #{mobilePhone}
+			</if>
+			<if test="address != null">
+				and address = #{address}
+			</if>
+			<if test="age != null">
+				and age = #{age}
+			</if>
+			<if test="sex != null">
+				and sex = #{sex}
+			</if>
+			<if test="sortIndex != null">
+				and sort_index = #{sortIndex}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="inJoinTime != null">
+				and in_join_time = #{inJoinTime}
+			</if>
+			<if test="workStatus != null">
+				and work_status = #{workStatus}
+			</if>
+			<if test="eMail != null">
+				and e_mail = #{eMail}
+			</if>
+			<if test="isVerify != null">
+				and is_verify = #{isVerify}
+			</if>
+			<if test="isOnline != null">
+				and is_online = #{isOnline}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_USER (
+			IS_ONLINE,  <!-- 是否在线 -->
+			IS_VERIFY,  <!-- 是否需要验证码 -->
+			GUID,  <!-- guid -->
+			LOGIN_ID,  <!-- 登陆id -->
+			NAME,  <!-- 姓名 -->
+			PASSWORD,  <!-- 密码 -->
+			ALIVE_FLAG,  <!-- 是否有效 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			MOBILE_PHONE,  <!-- 移动电话 -->
+			ADDRESS,  <!-- 地址 -->
+			AGE,  <!-- 年龄 -->
+			SEX,  <!-- 性别 -->
+			SORT_INDEX,  <!-- 排序位置 -->
+			ORG_CODE,  <!-- 所在部门 -->
+			IN_JOIN_TIME,  <!-- 入职时间 -->
+			WORK_STATUS,  <!-- 工作状态 -->
+			E_MAIL  <!-- 电子邮箱 -->
+		)
+		VALUES ( 
+			#{isOnline, jdbcType=NVARCHAR}, 
+			#{isVerify, jdbcType=NVARCHAR}, 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{loginId, jdbcType=NVARCHAR}, 
+			#{name, jdbcType=NVARCHAR}, 
+			#{password, jdbcType=NVARCHAR}, 
+			#{aliveFlag, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{mobilePhone, jdbcType=NVARCHAR}, 
+			#{address, jdbcType=NVARCHAR}, 
+			#{age, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{sex, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{orgCode, jdbcType=NVARCHAR}, 
+			#{inJoinTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{workStatus, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{eMail, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_user 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_USER  
+		<set>
+			<if test="isOnline != null">
+				IS_ONLINE = #{isOnline, jdbcType=NVARCHAR},
+			</if>
+			<if test="isVerify != null">
+				IS_VERIFY = #{isVerify, jdbcType=NVARCHAR},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="loginId != null">
+				LOGIN_ID = #{loginId, jdbcType=NVARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name, jdbcType=NVARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password, jdbcType=NVARCHAR},
+			</if>
+			<if test="aliveFlag != null">
+				ALIVE_FLAG = #{aliveFlag, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="mobilePhone != null">
+				MOBILE_PHONE = #{mobilePhone, jdbcType=NVARCHAR},
+			</if>
+			<if test="address != null">
+				ADDRESS = #{address, jdbcType=NVARCHAR},
+			</if>
+			<if test="age != null">
+				AGE = #{age, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="sex != null">
+				SEX = #{sex, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="sortIndex != null">
+				SORT_INDEX = #{sortIndex, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="orgCode != null">
+				ORG_CODE = #{orgCode, jdbcType=NVARCHAR},
+			</if>
+			<if test="inJoinTime != null">
+				IN_JOIN_TIME = #{inJoinTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="workStatus != null">
+				WORK_STATUS = #{workStatus, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="eMail != null">
+				E_MAIL = #{eMail, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

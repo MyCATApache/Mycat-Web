@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SAPRODUCT">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				product_code	as "productCode",  <!-- 产品代码 -->
+				product_name	as "productName",  <!-- 产品名称 -->
+				company	as "company",  <!-- 公司名称 -->
+				product_digest	as "productDigest",  <!-- 产品摘要 -->
+				product_type	as "productType",  <!-- 产品类型 -->
+				biz_field	as "bizField",  <!-- 业务板块 -->
+				product_manager	as "productManager",  <!-- 产品经理 -->
+				manager_phone	as "managerPhone",  <!-- 产品经理联系方式 -->
+				address	as "address",  <!-- 公司地址 -->
+				customer_service	as "customerService",  <!-- 客服 -->
+				operation_phone	as "operationPhone",  <!-- 运维电话 -->
+				mobile_phone	as "mobilePhone",  <!-- 移动电话 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sa_product
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				product_code	as "productCode",  <!-- 产品代码 -->
+				product_name	as "productName",  <!-- 产品名称 -->
+				company	as "company",  <!-- 公司名称 -->
+				product_digest	as "productDigest",  <!-- 产品摘要 -->
+				product_type	as "productType",  <!-- 产品类型 -->
+				biz_field	as "bizField",  <!-- 业务板块 -->
+				product_manager	as "productManager",  <!-- 产品经理 -->
+				manager_phone	as "managerPhone",  <!-- 产品经理联系方式 -->
+				address	as "address",  <!-- 公司地址 -->
+				customer_service	as "customerService",  <!-- 客服 -->
+				operation_phone	as "operationPhone",  <!-- 运维电话 -->
+				mobile_phone	as "mobilePhone",  <!-- 移动电话 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sa_product
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="productCode != null">
+				and product_code = #{productCode}
+			</if>
+			<if test="productName != null">
+				and product_name like '%${productName}%'
+			</if>
+			<if test="company != null">
+				and company like '%${company}%'
+			</if>
+			<if test="productDigest != null">
+				and product_digest = #{productDigest}
+			</if>
+			<if test="productType != null">
+				and product_type = #{productType}
+			</if>
+			<if test="bizField != null">
+				and biz_field = #{bizField}
+			</if>
+			<if test="productManager != null">
+				and product_manager = #{productManager}
+			</if>
+			<if test="managerPhone != null">
+				and manager_phone = #{managerPhone}
+			</if>
+			<if test="address != null">
+				and address = #{address}
+			</if>
+			<if test="customerService != null">
+				and customer_service = #{customerService}
+			</if>
+			<if test="operationPhone != null">
+				and operation_phone = #{operationPhone}
+			</if>
+			<if test="mobilePhone != null">
+				and mobile_phone = #{mobilePhone}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sa_product 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="productCode != null">
+				and product_code = #{productCode}
+			</if>
+			<if test="productName != null">
+				and product_name like '%${productName}%'
+			</if>
+			<if test="company != null">
+				and company like '%${company}%'
+			</if>
+			<if test="productDigest != null">
+				and product_digest = #{productDigest}
+			</if>
+			<if test="productType != null">
+				and product_type = #{productType}
+			</if>
+			<if test="bizField != null">
+				and biz_field = #{bizField}
+			</if>
+			<if test="productManager != null">
+				and product_manager = #{productManager}
+			</if>
+			<if test="managerPhone != null">
+				and manager_phone = #{managerPhone}
+			</if>
+			<if test="address != null">
+				and address = #{address}
+			</if>
+			<if test="customerService != null">
+				and customer_service = #{customerService}
+			</if>
+			<if test="operationPhone != null">
+				and operation_phone = #{operationPhone}
+			</if>
+			<if test="mobilePhone != null">
+				and mobile_phone = #{mobilePhone}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sa_product (
+			guid,  <!-- guid -->
+			product_code,  <!-- 产品代码 -->
+			product_name,  <!-- 产品名称 -->
+			company,  <!-- 公司名称 -->
+			product_digest,  <!-- 产品摘要 -->
+			product_type,  <!-- 产品类型 -->
+			biz_field,  <!-- 业务板块 -->
+			product_manager,  <!-- 产品经理 -->
+			manager_phone,  <!-- 产品经理联系方式 -->
+			address,  <!-- 公司地址 -->
+			customer_service,  <!-- 客服 -->
+			operation_phone,  <!-- 运维电话 -->
+			mobile_phone,  <!-- 移动电话 -->
+			create_time,  <!-- 创建时间 -->
+			create_user  <!-- 创建人 -->
+		)		 
+		VALUES ( 
+			#{guid}, 
+			#{productCode}, 
+			#{productName}, 
+			#{company}, 
+			#{productDigest}, 
+			#{productType}, 
+			#{bizField}, 
+			#{productManager}, 
+			#{managerPhone}, 
+			#{address}, 
+			#{customerService}, 
+			#{operationPhone}, 
+			#{mobilePhone}, 
+			#{createTime}, 
+			#{createUser}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sa_product 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sa_product  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode},
+			</if>
+			<if test="productName != null">
+				product_name = #{productName},
+			</if>
+			<if test="company != null">
+				company = #{company},
+			</if>
+			<if test="productDigest != null">
+				product_digest = #{productDigest},
+			</if>
+			<if test="productType != null">
+				product_type = #{productType},
+			</if>
+			<if test="bizField != null">
+				biz_field = #{bizField},
+			</if>
+			<if test="productManager != null">
+				product_manager = #{productManager},
+			</if>
+			<if test="managerPhone != null">
+				manager_phone = #{managerPhone},
+			</if>
+			<if test="address != null">
+				address = #{address},
+			</if>
+			<if test="customerService != null">
+				customer_service = #{customerService},
+			</if>
+			<if test="operationPhone != null">
+				operation_phone = #{operationPhone},
+			</if>
+			<if test="mobilePhone != null">
+				mobile_phone = #{mobilePhone},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+	<select id="queryAuthrCustomer" resultType="map" parameterType="map">
+	SELECT
+			c.guid	as "guid",  <!-- guid -->
+			c.code	as "code",  <!-- 客户编号 -->
+			c.name	as "name",  <!-- 客户名称 -->
+			c.linkman	as "linkman",  <!-- 联系人 -->
+			c.telephony	as "telephony",  <!-- 联系电话 -->
+			c.e_mail	as "eMail",  <!-- 邮箱地址 -->
+			s.licensesId    AS "licensesId"  <!-- 是否已ID -->
+	  FROM t_sa_customer c
+	  LEFT JOIN (SELECT
+	               b.guid AS licensesId,
+	               b.customer_code  AS customerCode
+	             FROM t_sa_product a,
+	               t_sa_licenses b
+	             WHERE a.product_code = b.product_code AND a.guid= #{guid}) s
+	    ON c.code = s.customerCode
+</select>
+
+<select id="countAuthrCustomer" resultType="int" parameterType="map">
+		SELECT COUNT(*) 
+		FROM t_sa_customer c
+	  	LEFT JOIN (SELECT
+	               b.guid AS licensesId,
+	               b.customer_code  AS customerCode
+	             FROM t_sa_product a,
+	               t_sa_licenses b
+	             WHERE a.product_code = b.product_code AND a.guid= #{guid}) s
+	    ON c.code = s.customerCode
+</select>
+
+	<select id="queryCombox" resultType="map" parameterType="map">
+		SELECT
+				product_code	as "code",  <!-- 客户编号 -->
+				product_name	as "name"  <!-- 客户名称 -->
+		FROM t_sa_product
+		<where>
+			<if test="code != null">
+				and product_code = #{code}
+			</if>
+			<if test="name != null">
+				and product_name like '%${name}%'
+			</if>
+		</where>
+	</select>
+</mapper>

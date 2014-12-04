@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OCDATAHOST">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 物理节点 -->
+				MIN_CON	as "minCon",  <!-- 最小链接数 -->
+				MAX_CON	as "maxCon",  <!-- 最大链接数 -->
+				BALANCE	as "balance",  <!-- 均衡策略 -->
+				HEARBEAT	as "hearbeat",  <!-- 心跳检查 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				DBDRIVER	as "dbdriver",  <!-- 链接驱动 -->
+				DBTYPE	as "dbtype" <!-- 数据库类型 -->
+		FROM T_OC_DATAHOST
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+
+	
+	
+	<select id="queryCombox" resultType="map" parameterType="map">
+		SELECT
+				NAME	as "name"  <!-- 物理节点 -->
+		FROM T_OC_DATAHOST
+	</select>
+	
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				GUID	as "guid",  <!-- GUID -->
+				NAME	as "name",  <!-- 物理节点 -->
+				MIN_CON	as "minCon",  <!-- 最小链接数 -->
+				MAX_CON	as "maxCon",  <!-- 最大链接数 -->
+				BALANCE	as "balance",  <!-- 均衡策略 -->
+				HEARBEAT	as "hearbeat",  <!-- 心跳检查 -->
+				CREATE_TIME	as "createTime",  <!-- 创建时间 -->
+				CREATE_USER	as "createUser",  <!-- 创建人 -->
+				DBDRIVER	as "dbdriver",  <!-- 链接驱动 -->
+				DBTYPE	as "dbtype" <!-- 数据库类型 -->
+		FROM T_OC_DATAHOST
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and NAME = #{name}
+			</if>
+			<if test="minCon != null">
+				and MIN_CON = #{minCon}
+			</if>
+			<if test="maxCon != null">
+				and MAX_CON = #{maxCon}
+			</if>
+			<if test="balance != null">
+				and BALANCE = #{balance}
+			</if>
+			<if test="hearbeat != null">
+				and HEARBEAT = #{hearbeat}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="dbdriver != null">
+				and DBDRIVER = #{dbdriver}
+			</if>
+			<if test="dbtype != null">
+				and DBTYPE = #{dbtype}
+			</if>
+			<if test="whereex != null">
+				and ${whereex}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_OC_DATAHOST 
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and NAME = #{name}
+			</if>
+			<if test="minCon != null">
+				and MIN_CON = #{minCon}
+			</if>
+			<if test="maxCon != null">
+				and MAX_CON = #{maxCon}
+			</if>
+			<if test="balance != null">
+				and BALANCE = #{balance}
+			</if>
+			<if test="hearbeat != null">
+				and HEARBEAT = #{hearbeat}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and CREATE_USER = #{createUser}
+			</if>
+			<if test="dbdriver != null">
+				and DBDRIVER = #{dbdriver}
+			</if>
+			<if test="dbtype != null">
+				and DBTYPE = #{dbtype}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_OC_DATAHOST (
+			GUID,  <!-- GUID -->
+			NAME,  <!-- 物理节点 -->
+			MIN_CON,  <!-- 最小链接数 -->
+			MAX_CON,  <!-- 最大链接数 -->
+			BALANCE,  <!-- 均衡策略 -->
+			HEARBEAT,  <!-- 心跳检查 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			DBDRIVER,  <!-- 链接驱动 -->
+			DBTYPE  <!-- 数据库类型 -->
+		)
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{name, jdbcType=NVARCHAR}, 
+			#{minCon, jdbcType=NVARCHAR}, 
+			#{maxCon, jdbcType=NVARCHAR}, 
+			#{balance, jdbcType=NVARCHAR}, 
+			#{hearbeat, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{dbdriver, jdbcType=NVARCHAR}, 
+			#{dbtype, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_OC_DATAHOST 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_OC_DATAHOST  
+		<set>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="name != null">
+				NAME = #{name, jdbcType=NVARCHAR},
+			</if>
+			<if test="minCon != null">
+				MIN_CON = #{minCon, jdbcType=NVARCHAR},
+			</if>
+			<if test="maxCon != null">
+				MAX_CON = #{maxCon, jdbcType=NVARCHAR},
+			</if>
+			<if test="balance != null">
+				BALANCE = #{balance, jdbcType=NVARCHAR},
+			</if>
+			<if test="hearbeat != null">
+				HEARBEAT = #{hearbeat, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="createUser != null">
+				CREATE_USER = #{createUser, jdbcType=NVARCHAR},
+			</if>
+			<if test="dbdriver != null">
+				DBDRIVER = #{dbdriver, jdbcType=NVARCHAR},
+			</if>
+			<if test="dbtype != null">
+				DBTYPE = #{dbtype, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

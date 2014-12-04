@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSORG">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				org_code	as "orgCode",  <!-- 机构代码 -->
+				org_name	as "orgName",  <!-- 机构名称 -->
+				parent_code	as "parentCode",  <!-- 上级机构代码 -->
+				levels	as "level",  <!-- 机构层级 -->
+				alive_flag	as "aliveFlag",  <!-- 是否有效 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				state	as "state" <!-- 节点状态 -->
+		FROM t_sys_org
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				org_code	as "orgCode",  <!-- 机构代码 -->
+				org_name	as "orgName",  <!-- 机构名称 -->
+				parent_code	as "parentCode",  <!-- 上级机构代码 -->
+				levels	as "level",  <!-- 机构层级 -->
+				alive_flag	as "aliveFlag",  <!-- 是否有效 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				state	as "state" <!-- 节点状态 -->
+		FROM t_sys_org
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="orgName != null">
+				and org_name like '%${orgName}%'
+			</if>
+			<if test="parentCode != null">
+				and parent_code = #{parentCode}
+			</if>
+			<if test="level != null">
+				and levels = #{level}
+			</if>
+			<if test="aliveFlag != null">
+				and alive_flag = #{aliveFlag}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+			<if test="state != null">
+				and state = #{state}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryGridTree" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				org_code	as "orgCode",  <!-- 机构代码 -->
+				org_name	as "orgName",  <!-- 机构名称 -->
+				parent_code	as "parentCode",  <!-- 上级机构代码 -->
+				levels	as "level",  <!-- 机构层级 -->
+				alive_flag	as "aliveFlag",  <!-- 是否有效 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser",  <!-- 创建人 -->
+				state	as "state" <!-- 节点状态 -->
+		FROM t_sys_org
+		<where>
+			<if test="id == null">
+				and parent_code = '' OR parent_code IS null
+			</if>
+			<if test="id != null">
+				and parent_code = #{id}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryComboxTree" resultType="map" parameterType="map">
+		SELECT
+				org_code	as "id",  <!-- 机构代码 -->
+				org_name	as "text",  <!-- 机构名称 -->
+				state	as "state" <!-- 节点状态 -->
+		FROM t_sys_org
+		<where>
+			<if test="id == null">
+				and (parent_code = '' OR parent_code IS null)
+			</if>
+			<if test="id != null">
+				and parent_code = #{id}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="orgName != null">
+				and org_name like '%${orgName}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryTree" resultType="map" parameterType="map">
+		SELECT
+				org_code	as "id",  <!-- 机构代码 -->
+				org_name	as "text",  <!-- 机构名称 -->
+				state	as "state" <!-- 节点状态 -->
+		FROM t_sys_org
+		<where>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="orgName != null">
+				and org_name like '%${orgName}%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_org 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="orgCode != null">
+				and org_code = #{orgCode}
+			</if>
+			<if test="orgName != null">
+				and org_name like '%${orgName}%'
+			</if>
+			<if test="parentCode != null">
+				and parent_code = #{parentCode}
+			</if>
+			<if test="level != null">
+				and levels = #{level}
+			</if>
+			<if test="aliveFlag != null">
+				and alive_flag = #{aliveFlag}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_ORG (
+			GUID,  <!-- guid -->
+			ORG_CODE,  <!-- 机构代码 -->
+			ORG_NAME,  <!-- 机构名称 -->
+			PARENT_CODE,  <!-- 上级机构代码 -->
+			LEVELS,  <!-- 机构层级 -->
+			ALIVE_FLAG,  <!-- 是否有效 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER,  <!-- 创建人 -->
+			STATE  <!-- 节点状态 -->
+		)		 
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{orgCode, jdbcType=NVARCHAR}, 
+			#{orgName, jdbcType=NVARCHAR}, 
+			#{parentCode, jdbcType=NVARCHAR}, 
+			#{level, jdbcType=NUMERIC}, 
+			#{aliveFlag, jdbcType=NUMERIC}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}, 
+			#{state, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_org 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_org  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="orgCode != null">
+				org_code = #{orgCode},
+			</if>
+			<if test="orgName != null">
+				org_name = #{orgName},
+			</if>
+			<if test="parentCode != null">
+				parent_code = #{parentCode},
+			</if>
+			<if test="level != null">
+				levels = #{level},
+			</if>
+			<if test="aliveFlag != null">
+				alive_flag = #{aliveFlag},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser},
+			</if>
+			<if test="state != null">
+				state = #{state}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+	
+	<update id="updateState" parameterType="map">
+		UPDATE t_sys_org  
+		<set>
+			state = #{state}
+		</set>
+		<where>
+			org_code = #{orgCode}
+		</where>
+	</update>
+</mapper>

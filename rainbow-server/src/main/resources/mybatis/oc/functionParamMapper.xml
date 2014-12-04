@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OCFUNCTIONPARAM">
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				FUNCTION_NAME	as "functionName",  <!-- FUNCTION_NAME -->
+				PARAM_KEY	as "paramKey",  <!-- PARAM_KEY -->
+				PARAM_VALUE	as "paramValue" <!-- PARAM_VALUE -->
+		FROM T_OC_FUNCTION_PARAM
+		<where>
+			<if test="functionName != null">
+				and FUNCTION_NAME = #{functionName}
+			</if>
+			<if test="paramKey != null">
+				and PARAM_KEY = #{paramKey}
+			</if>
+			<if test="paramValue != null">
+				and PARAM_VALUE = #{paramValue}
+			</if>
+			<if test="whereex != null">
+				and ${whereex}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_OC_FUNCTION_PARAM 
+		<where>
+			<if test="functionName != null">
+				and FUNCTION_NAME = #{functionName}
+			</if>
+			<if test="paramKey != null">
+				and PARAM_KEY = #{paramKey}
+			</if>
+			<if test="paramValue != null">
+				and PARAM_VALUE = #{paramValue}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_OC_FUNCTION_PARAM (
+			FUNCTION_NAME,  <!-- FUNCTION_NAME -->
+			PARAM_KEY,  <!-- PARAM_KEY -->
+			PARAM_VALUE  <!-- PARAM_VALUE -->
+		)
+		VALUES ( 
+			#{functionName, jdbcType=NVARCHAR}, 
+			#{paramKey, jdbcType=NVARCHAR}, 
+			#{paramValue, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_OC_FUNCTION_PARAM 
+		<where> 
+			function_name = #{functionName}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_OC_FUNCTION_PARAM  
+		<set>
+			<if test="functionName != null">
+				FUNCTION_NAME = #{functionName, jdbcType=NVARCHAR},
+			</if>
+			<if test="paramKey != null">
+				PARAM_KEY = #{paramKey, jdbcType=NVARCHAR},
+			</if>
+			<if test="paramValue != null">
+				PARAM_VALUE = #{paramValue, jdbcType=NVARCHAR}
+			</if>
+		</set>
+		<where>
+		</where>
+	</update>
+</mapper>

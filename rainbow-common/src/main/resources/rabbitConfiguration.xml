@@ -1,0 +1,27 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/rabbit
+						http://www.springframework.org/schema/rabbit/spring-rabbit-1.1.xsd
+						http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	创建rabbitmq connectionFactory
+	<rabbit:connection-factory
+		id="connectionFactory"  addresses="localhost:5672"/>
+	创建rabbitmq Channel	
+	<rabbit:admin id="rainbowAdmin" auto-startup="true" connection-factory="connectionFactory"/>
+	
+	message change JSON java.lang.ClassNotFoundException: org.springframework.amqp.support.converter
+	<bean id="rainbowAdmin" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="messageConverter">
+			<bean
+				class="org.springframework.amqp.support.converter.JsonMessageConverter">
+		
+				<property name="classMapper" ref="customClassMapper" />
+			</bean>
+		</property>
+	</bean>
+	<bean id="customClassMapper" class="org.springframework.amqp.support.converter"/>
+</beans>
+ -->

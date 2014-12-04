@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SALICENSES">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  
+				customer_code	as "customerCode",  <!-- 客户代码 -->
+				customer_name	as "customerName",  <!-- 客户名称 -->
+				product_company	as "productCompany",  <!-- 签发单位 -->
+				product_code	as "productCode",  <!-- 产品代码 -->
+				product_Name	as "productName",  <!-- 产品名称 -->
+				expiring_date	as "expiringDate",  <!-- 过期时间 -->
+				lic_version	as "licVersion",  <!-- 许可证版本 -->
+				license_code	as "licenseCode",  <!-- 许可证代码 -->
+				license_mode	as "licenseMode",  <!-- 许可证模式 -->
+				signing_date	as "signingDate",  <!-- 签发时间 -->
+				start_date	as "startDate",  <!-- 起始时间 -->
+				version_number	as "versionNumber",  <!-- 产品版本 -->
+				signature	as "signature",  <!-- 防伪签名 -->
+				encrypt_model	as "encryptModel",  <!-- 加密模式 -->
+				create_time	as "createTime" <!-- 创建时间 -->
+		FROM t_sa_licenses
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  
+				customer_code	as "customerCode",  <!-- 客户代码 -->
+				customer_name	as "customerName",  <!-- 客户名称 -->
+				product_company	as "productCompany",  <!-- 签发单位 -->
+				product_code	as "productCode",  <!-- 产品代码 -->
+				product_Name	as "productName",  <!-- 产品名称 -->
+				expiring_date	as "expiringDate",  <!-- 过期时间 -->
+				lic_version	as "licVersion",  <!-- 许可证版本 -->
+				license_code	as "licenseCode",  <!-- 许可证代码 -->
+				license_mode	as "licenseMode",  <!-- 许可证模式 -->
+				signing_date	as "signingDate",  <!-- 签发时间 -->
+				start_date	as "startDate",  <!-- 起始时间 -->
+				version_number	as "versionNumber",  <!-- 产品版本 -->
+				signature	as "signature",  <!-- 防伪签名 -->
+				encrypt_model	as "encryptModel",  <!-- 加密模式 -->
+				create_time	as "createTime" <!-- 创建时间 -->
+		FROM t_sa_licenses
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="customerCode != null">
+				and customer_code = #{customerCode}
+			</if>
+			<if test="customerName != null">
+				and customer_name like '%${customerName}%'
+			</if>
+			<if test="productCompany != null">
+				and product_company = #{productCompany}
+			</if>
+			<if test="productCode != null">
+				and product_code = #{productCode}
+			</if>
+			<if test="productName != null">
+				and product_Name like '%${productName}%'
+			</if>
+			<if test="expiringDate != null">
+				and expiring_date = #{expiringDate}
+			</if>
+			<if test="licVersion != null">
+				and lic_version = #{licVersion}
+			</if>
+			<if test="licenseCode != null">
+				and license_code = #{licenseCode}
+			</if>
+			<if test="licenseMode != null">
+				and license_mode = #{licenseMode}
+			</if>
+			<if test="signingDate != null">
+				and signing_date = #{signingDate}
+			</if>
+			<if test="startDate != null">
+				and start_date = #{startDate}
+			</if>
+			<if test="versionNumber != null">
+				and version_number = #{versionNumber}
+			</if>
+			<if test="signature != null">
+				and signature = #{signature}
+			</if>
+			<if test="encryptModel != null">
+				and encrypt_model = #{encryptModel}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sa_licenses 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="customerCode != null">
+				and customer_code = #{customerCode}
+			</if>
+			<if test="customerName != null">
+				and customer_name like '%${customerName}%'
+			</if>
+			<if test="productCompany != null">
+				and product_company = #{productCompany}
+			</if>
+			<if test="productCode != null">
+				and product_code = #{productCode}
+			</if>
+			<if test="productName != null">
+				and product_Name like '%${productName}%'
+			</if>
+			<if test="expiringDate != null">
+				and expiring_date = #{expiringDate}
+			</if>
+			<if test="licVersion != null">
+				and lic_version = #{licVersion}
+			</if>
+			<if test="licenseCode != null">
+				and license_code = #{licenseCode}
+			</if>
+			<if test="licenseMode != null">
+				and license_mode = #{licenseMode}
+			</if>
+			<if test="signingDate != null">
+				and signing_date = #{signingDate}
+			</if>
+			<if test="startDate != null">
+				and start_date = #{startDate}
+			</if>
+			<if test="versionNumber != null">
+				and version_number = #{versionNumber}
+			</if>
+			<if test="signature != null">
+				and signature = #{signature}
+			</if>
+			<if test="encryptModel != null">
+				and encrypt_model = #{encryptModel}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sa_licenses (
+			guid,
+			customer_code,  <!-- 客户代码 -->
+			customer_name,  <!-- 客户名称 -->
+			product_company,  <!-- 签发单位 -->
+			product_code,  <!-- 产品代码 -->
+			product_Name,  <!-- 产品名称 -->
+			expiring_date,  <!-- 过期时间 -->
+			lic_version,  <!-- 许可证版本 -->
+			license_code,  <!-- 许可证代码 -->
+			license_mode,  <!-- 许可证模式 -->
+			signing_date,  <!-- 签发时间 -->
+			start_date,  <!-- 起始时间 -->
+			version_number,  <!-- 产品版本 -->
+			signature,  <!-- 防伪签名 -->
+			encrypt_model,  <!-- 加密模式 -->
+			create_time  <!-- 创建时间 -->
+		)		 
+		VALUES ( 
+			#{guid}, 
+			#{customerCode}, 
+			#{customerName}, 
+			#{productCompany}, 
+			#{productCode}, 
+			#{productName}, 
+			#{expiringDate}, 
+			#{licVersion}, 
+			#{licenseCode}, 
+			#{licenseMode}, 
+			#{signingDate}, 
+			#{startDate}, 
+			#{versionNumber}, 
+			#{signature}, 
+			#{encryptModel}, 
+			#{createTime}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sa_licenses 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sa_licenses  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="customerCode != null">
+				customer_code = #{customerCode},
+			</if>
+			<if test="customerName != null">
+				customer_name = #{customerName},
+			</if>
+			<if test="productCompany != null">
+				product_company = #{productCompany},
+			</if>
+			<if test="productCode != null">
+				product_code = #{productCode},
+			</if>
+			<if test="productName != null">
+				product_Name = #{productName},
+			</if>
+			<if test="expiringDate != null">
+				expiring_date = #{expiringDate},
+			</if>
+			<if test="licVersion != null">
+				lic_version = #{licVersion},
+			</if>
+			<if test="licenseCode != null">
+				license_code = #{licenseCode},
+			</if>
+			<if test="licenseMode != null">
+				license_mode = #{licenseMode},
+			</if>
+			<if test="signingDate != null">
+				signing_date = #{signingDate},
+			</if>
+			<if test="startDate != null">
+				start_date = #{startDate},
+			</if>
+			<if test="versionNumber != null">
+				version_number = #{versionNumber},
+			</if>
+			<if test="signature != null">
+				signature = #{signature},
+			</if>
+			<if test="encryptModel != null">
+				encrypt_model = #{encryptModel},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>

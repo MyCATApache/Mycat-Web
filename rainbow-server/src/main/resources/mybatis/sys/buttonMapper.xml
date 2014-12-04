@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSBUTTON">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				guid	as "guid",  <!-- guid -->
+				button_code	as "buttonCode",  <!-- 按钮代码 -->
+				button_name	as "buttonName",  <!-- 按钮名称 -->
+				page_code	as "pageCode",  <!-- 页面代码 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_button
+		<where>
+				and guid = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				guid	as "guid",  <!-- guid -->
+				button_code	as "buttonCode",  <!-- 按钮代码 -->
+				button_name	as "buttonName",  <!-- 按钮名称 -->
+				page_code	as "pageCode",  <!-- 页面代码 -->
+				create_time	as "createTime",  <!-- 创建时间 -->
+				create_user	as "createUser" <!-- 创建人 -->
+		FROM t_sys_button
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="buttonCode != null">
+				and button_code = #{buttonCode}
+			</if>
+			<if test="buttonName != null">
+				and button_name like '%${buttonName}%'
+			</if>
+			<if test="pageCode != null">
+				and page_code = #{pageCode}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_button 
+		<where>
+			<if test="guid != null">
+				and guid = #{guid}
+			</if>
+			<if test="buttonCode != null">
+				and button_code = #{buttonCode}
+			</if>
+			<if test="buttonName != null">
+				and button_name like '%${buttonName}%'
+			</if>
+			<if test="pageCode != null">
+				and page_code = #{pageCode}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createUser != null">
+				and create_user = #{createUser}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_BUTTON (
+			GUID,  <!-- guid -->
+			BUTTON_CODE,  <!-- 按钮代码 -->
+			BUTTON_NAME,  <!-- 按钮名称 -->
+			PAGE_CODE,  <!-- 页面代码 -->
+			CREATE_TIME,  <!-- 创建时间 -->
+			CREATE_USER  <!-- 创建人 -->
+		)		 
+		VALUES ( 
+			#{guid, jdbcType=NVARCHAR}, 
+			#{buttonCode, jdbcType=NVARCHAR}, 
+			#{buttonName, jdbcType=NVARCHAR}, 
+			#{pageCode, jdbcType=NVARCHAR}, 
+			#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+			#{createUser, jdbcType=NVARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_button 
+		<where> 
+			guid = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_button  
+		<set>
+			<if test="guid != null">
+				guid = #{guid},
+			</if>
+			<if test="buttonCode != null">
+				button_code = #{buttonCode},
+			</if>
+			<if test="buttonName != null">
+				button_name = #{buttonName},
+			</if>
+			<if test="pageCode != null">
+				page_code = #{pageCode},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser}
+			</if>
+		</set>
+		<where>
+			guid = #{guid}
+		</where>
+	</update>
+</mapper>
