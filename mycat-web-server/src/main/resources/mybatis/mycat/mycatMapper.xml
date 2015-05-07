@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSMYCAT">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				DESCRIPTION	as "description",  <!-- DESCRIPTION -->
+				DRIVER_CLASS as "driverClass", 
+				CREATE_TIME	as "createTime",  <!-- CREATE_TIME -->
+				GUID	as "guid",  <!-- GUID -->
+				MYCAT_NAME	as "mycatName",  <!-- NAME -->
+				IP	as "ip",  <!-- IP -->
+				PORT	as "port",  <!-- PORT -->
+				USERNAME	as "username",  <!-- USERNAME -->
+				PASSWORD	as "password", <!-- PASSWORD -->
+				jrdsfile    as "jrdsfile",
+				DB_NAME as "name"
+		FROM T_SYS_MYCAT
+		<where>
+				and GUID = #{guid}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				DESCRIPTION	as "description",  <!-- DESCRIPTION -->
+				CREATE_TIME	as "createTime",  <!-- CREATE_TIME -->
+				DRIVER_CLASS as "driverClass", 
+				GUID	as "guid",  <!-- GUID -->
+				MYCAT_NAME	as "mycatName",  <!-- NAME -->
+				IP	as "ip",  <!-- IP -->
+				PORT	as "port",  <!-- PORT -->
+				USERNAME	as "username",  <!-- USERNAME -->
+				PASSWORD	as "password", <!-- PASSWORD -->
+				jrdsfile    as "jrdsfile",
+				DB_NAME as "dbName"
+		FROM T_SYS_MYCAT
+		<where>
+			<if test="description != null">
+				and DESCRIPTION = #{description}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="mycatName != null">
+				and MYCAT_NAME = #{mycatName}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="username != null">
+				and USERNAME = #{username}
+			</if>
+			<if test="password != null">
+				and PASSWORD = #{password}
+			</if>
+			<if test="dbName != null">
+				and DB_NAME=#{dbName}
+			</if>
+			<if test="whereex != null">
+				and ${whereex}
+			</if>
+			
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM T_SYS_MYCAT 
+		<where>
+			<if test="description != null">
+				and DESCRIPTION = #{description}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and MYCAT_NAME = #{mycatName}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="username != null">
+				and USERNAME = #{username}
+			</if>
+			<if test="password != null">
+				and PASSWORD = #{password}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_MYCAT (
+				DESCRIPTION,  <!-- DESCRIPTION -->
+				CREATE_TIME,  <!-- CREATE_TIME -->
+				GUID,  <!-- GUID -->
+				MYCAT_NAME,  <!-- NAME -->
+				IP,  <!-- IP -->
+				PORT,  <!-- PORT -->
+				USERNAME,  <!-- USERNAME -->
+				PASSWORD,  <!-- PASSWORD -->
+				DRIVER_CLASS,
+				DB_NAME,
+				jrdsfile
+		)VALUES ( 
+				#{description, jdbcType=NVARCHAR}, 
+				#{createTime, jdbcType=DATE,typeHandler=DateHandler}, 
+				#{guid, jdbcType=NVARCHAR}, 
+				#{mycatName, jdbcType=NVARCHAR}, 
+				#{ip, jdbcType=NVARCHAR}, 
+				#{port, jdbcType=NVARCHAR}, 
+				#{username, jdbcType=NVARCHAR}, 
+				#{password, jdbcType=NVARCHAR} ,
+				#{driverClass,jdbcType=NVARCHAR},
+				#{dbName,jdbcType=NVARCHAR},
+				#{jrdsfile,jdbcType=NVARCHAR}
+				
+		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_MYCAT 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_MYCAT  
+		<set>
+			<if test="description != null">
+				DESCRIPTION = #{description, jdbcType=NVARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime, jdbcType=DATE,typeHandler=DateHandler},
+			</if>
+			<if test="guid != null">
+				GUID = #{guid, jdbcType=NVARCHAR},
+			</if>
+			<if test="name != null">
+				MYCAT_NAME = #{mycatName, jdbcType=NVARCHAR},
+			</if>
+			<if test="ip != null">
+				IP = #{ip, jdbcType=NVARCHAR},
+			</if>
+			<if test="port != null">
+				PORT = #{port, jdbcType=NVARCHAR},
+			</if>
+			<if test="username != null">
+				USERNAME = #{username, jdbcType=NVARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password, jdbcType=NVARCHAR},
+			</if>
+			<if test="driverClass!=null">
+				DRIVER_CLASS=#{password, jdbcType=NVARCHAR},
+			</if>
+			<if test="dbName!=null">
+				DB_NAME=#{dbName, jdbcType=NVARCHAR},
+			</if>
+			
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

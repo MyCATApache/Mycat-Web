@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSNMP">
+
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				GUID	as "guid",  <!-- GUID -->
+				snmpname as "name",  <!-- NAME -->
+				IP	as "ip",  <!-- IP -->
+				PORT	as "port",  <!-- PORT -->
+				community	as "community",  <!-- PORT -->
+				FILE_NAME as "fileName"
+		FROM T_SYS_MYCAT_SNMP
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and SNMPNAME = #{name}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="community != null">
+				and community = #{community}
+			</if>
+		</where>
+	</select>
+
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_MYCAT_SNMP (
+				GUID,  <!-- GUID -->
+				SNMPNAME,  <!-- NAME -->
+				IP,  <!-- IP -->
+				PORT,  <!-- PORT -->
+				community,
+				FILE_NAME
+		)VALUES ( 
+				#{guid, jdbcType=NVARCHAR}, 
+				#{snmpname, jdbcType=NVARCHAR}, 
+				#{ip, jdbcType=NVARCHAR}, 
+				#{port, jdbcType=NVARCHAR}, 
+				#{community, jdbcType=NVARCHAR}, 
+				#{fileName, jdbcType=NVARCHAR} 
+				
+		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_MYCAT_SNMP 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+</mapper>

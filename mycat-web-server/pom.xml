@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>mycat-web-base</artifactId>
+		<groupId>org.mycat</groupId>
+		<relativePath>./pom-base.xml</relativePath>
+		<version>1.0-RELEASE</version>
+	</parent>
+
+	<artifactId>mycat-web-server</artifactId>
+	<name>mycat-web-server</name>
+	
+	<packaging>war</packaging>
+	
+	<!-- 开发环境WINDOWS -->
+	<properties>
+		<mvn.jdbc.driverClassName>org.sqlite.JDBC</mvn.jdbc.driverClassName>
+		<mvn.jdbc.url>jdbc:sqlite:${webapp.root}/WEB-INF/db/mycat-web.db</mvn.jdbc.url>
+		<mvn.jdbc.username></mvn.jdbc.username>
+		<mvn.jdbc.password></mvn.jdbc.password>
+		<mvn.logpath>./</mvn.logpath>
+	</properties>
+
+</project>
+
