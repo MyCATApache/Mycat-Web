@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+">
+
+	<!-- PetClinic's central data access object using Spring's SimpleJdbcTemplate -->
+
+	<!-- Call monitoring aspect that monitors call count and call invocation 
+		time -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>${jdbc.driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations">
+            <list>
+                <value>classpath:mybatis/**/*Mapper.xml</value>
+            </list>
+        </property>
+		<property name="typeAliasesPackage" value="org.hx.rainbow.common.dao.handler"/>
+	</bean>
+	
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">   
+        <constructor-arg index="0" ref="sqlSessionFactory" />   
+    </bean>    
+    
+   
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean> 
+	  
+</beans>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!-- status=debug 可以查看log4j的装配过程 -->  
+<configuration status="OFF"  monitorInterval="1800">  
+    <properties>  
+        <property name="BACKUP_HOME">backup</property>  
+        <property name="PROJECT_PATH">${mvn.logpath}</property>  
+        <property name="STAT_NAME">stat</property>  
+        <property name="SERVER_NAME">rainbow</property>  
+    </properties>  
+    <appenders>  
+        <!-- 定义控制台输出 -->  
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level %c:%line - %msg%n" />  
+        </Console>
+        <!-- 程序员调试日志 -->  
+        <RollingRandomAccessFile name="DevLog" fileName="${PROJECT_PATH}/${SERVER_NAME}.log"
+            filePattern="${PROJECT_PATH}/${SERVER_NAME}.%d{yyyy-MM-dd-HH}.log">  
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level %thread %c:%line - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="360" modulate="true" />  
+            </Policies>  
+        </RollingRandomAccessFile>  
+        <!-- 游戏产品数据分析日志 -->  
+<!--         <RollingRandomAccessFile name="ProductLog"  
+            fileName="${PROJECT_PATH}/${SERVER_NAME}_${STAT_NAME}"  
+            filePattern="${PROJECT_PATH}/${SERVER_NAME}_${STAT_NAME}.%d{yyyy-MM-dd-HH}.log">  
+            <PatternLayout  
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="360"  
+                    modulate="true" />  
+            </Policies>  
+        </RollingRandomAccessFile>  --> 
+    </appenders>  
+    <loggers>  
+        <!-- 3rdparty Loggers -->  
+		<logger name="org.springframework" level="error" />
+		<logger name="com.google" level="error" />
+		<logger name="net.rubyeye" level="error" />
+		<logger name="org.mybatis" level="error" />
+		<logger name="org.apache" level="error" />
+		<logger name="org.hx.rainbow" level="error" />
+		<Root  level="DEBUG">
+			<appender-ref ref="DevLog" />
+			<appender-ref ref="Console" />
+		</Root> 
+    </loggers>  
+    
+</configuration>  
