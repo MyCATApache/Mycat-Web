@@ -28,17 +28,15 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.asm.ClassVisitor;
+
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.SoaManager;
 import org.hx.rainbow.common.exception.AppException;
-import org.hx.rainbow.common.util.JsonUtil;
 import org.hx.rainbow.common.web.session.RainbowSession;
+import org.mycat.web.model.MMDataGrid;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.fastjson.serializer.SerializerFeature;
 
 @Controller
 @RequestMapping("/dispatcherAction")
@@ -123,116 +121,49 @@ public class DispatcherAction {
 		return context;
 	}
 	
-	@RequestMapping("/queryTree")
+	
+	@RequestMapping("/queryByMMGrid")
 	@ResponseBody
-	public String queryTree(HttpServletRequest request){
+	public MMDataGrid queryByMMGrid(HttpServletRequest request){
 		long begin = System.currentTimeMillis();
+		MMDataGrid mmDataGrid = new MMDataGrid();
 		RainbowContext context = new RainbowContext();
 		String service = null;
 		String method = null;
 		try{
 			service = request.getParameter(SERVICE);
 			if(service == null || service.length() == 0){
-				context.setMsg("服务名为空,请求失败!");
-				context.setSuccess(false);
-				return "[]";
+				mmDataGrid.setLoadErrorText("服务名为空,请求失败!");
+				return mmDataGrid;
 			}
 			method = request.getParameter(METHOD);
 			if(method == null || method.length() == 0){
-				context.setMsg("方法名为空,请求失败!");
-				context.setSuccess(false);
-				return "[]";
+				mmDataGrid.setLoadErrorText("方法名为空,请求失败!");
+				return mmDataGrid;
 			}
-			
 			context.setService(service);
 			context.setMethod(method);
 			context.setLimit(Integer.parseInt(request.getParameter("rows")==null?"10":request.getParameter("rows")));
-			context.setPage(Integer.parseInt(request.getParameter("page")==null?"10":request.getParameter("page")));
+			context.setPage(Integer.parseInt(request.getParameter("page")==null?"0":request.getParameter("page")));
 			setAttr(context,request);
 			RainbowSession.web2Service(request);
-			
 			context = SoaManager.getInstance().callNoTx(context);
-			return JsonUtil.getInstance().object2JSON(context.getRows(), SerializerFeature.WriteDateUseDateFormat);
+			mmDataGrid.setItems(context.getRows());
+			mmDataGrid.setTotalCount(context.getTotal());
 		}catch (Exception e) {
-			return "[]";
-		}finally{
-			System.out.println("DispatcherAction call:["+service + "." + method + "] to spend:"+(System.currentTimeMillis() - begin)+"ms");
-		}
-	}
-	
-	@RequestMapping("/comboxCode")
-	@ResponseBody
-	public String comboxCode(HttpServletRequest request){
-		long begin = System.currentTimeMillis();
-		RainbowContext context = new RainbowContext();
-		String service = null;
-		String method = null;
-		try{
-			String code = request.getParameter("code");
-			service = request.getParameter(SERVICE);
-			
-			if(service == null || service.length() == 0){
-				service = "codeService";
-			}
-			method = request.getParameter(METHOD);
-			if(method == null || method.length() == 0){
-				method = "getCode";
-			}
-			if((service.equals("codeService") && method.equals("getCode")) && (code == null || code.length() == 0)){
-				return "[]";
-			}
-			
-			context.setService(service);
-			context.setMethod(method);
-			context.addAttr("code", code);
-			
-			context = SoaManager.getInstance().callNoTx(context);
-			if(context.isSuccess()){
-				return JsonUtil.getInstance().object2JSON(context.getRows());
+			if ((e instanceof AppException)){	
+				mmDataGrid.setLoadErrorText(e.getMessage());
 			}else{
-				return "[]";
+				mmDataGrid.setLoadErrorText("系统异常!");
 			}
-		}catch (Exception e) {
-			return "[]";
+			
 		}finally{
 			System.out.println("DispatcherAction call:["+service + "." + method + "] to spend:"+(System.currentTimeMillis() - begin)+"ms");
 		}
+		return mmDataGrid;
 	}
 	
-	@RequestMapping("/queryComboxTree")
-	@ResponseBody
-	public String queryComboxTree(HttpServletRequest request){
-		long begin = System.currentTimeMillis();
-		RainbowContext context = new RainbowContext();
-		String service = null;
-		String method = null;
-		try{
-			service = request.getParameter(SERVICE);
-			if(service == null || service.length() == 0){
-				context.setMsg("服务名为空,请求失败!");
-				context.setSuccess(false);
-				return "[]";
-			}
-			method = request.getParameter(METHOD);
-			if(method == null || method.length() == 0){
-				context.setMsg("方法名为空,请求失败!");
-				context.setSuccess(false);
-				return "[]";
-			}
-			
-			context.setService(service);
-			context.setMethod(method);
-			context.addAttr("id", request.getParameter("id"));
-			setAttr(context,request);
-			
-			context = SoaManager.getInstance().invoke(context);
-			return JsonUtil.getInstance().object2JSON(context.getRows(), SerializerFeature.WriteDateUseDateFormat);
-		}catch (Exception e) {
-			return "[]";
-		}finally{
-			System.out.println("DispatcherAction call:["+service + "." + method + "] to spend:"+(System.currentTimeMillis() - begin)+"ms");
-		}
-	}
+
 	
 	@SuppressWarnings("unchecked")
 	private void setAttr(RainbowContext context ,HttpServletRequest request){

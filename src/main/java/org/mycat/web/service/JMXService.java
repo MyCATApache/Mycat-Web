@@ -27,7 +27,11 @@ public class JMXService extends BaseService {
 		super.query(context, NAMESPACE);
 		return context;
 	}
-
+	
+	public RainbowContext queryByPage(RainbowContext context) {
+		super.queryByPage(context, NAMESPACE);
+		return context;
+	}
 
 
 	public RainbowContext insert(RainbowContext context) {

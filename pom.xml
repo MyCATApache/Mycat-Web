@@ -484,7 +484,7 @@
 
 
 	<build>
-		<finalName>mycat-web</finalName>
+
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 
@@ -598,6 +598,22 @@
 						</execution>
 					</executions>
 				</plugin>
+
+				<plugin>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>maven-jetty-plugin</artifactId>
+					<version>6.1.26</version>
+					<configuration>
+						<contextPath>/</contextPath>
+						<scanIntervalSeconds>10</scanIntervalSeconds>
+						<connectors>
+							<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+								<port>8080</port>
+								<maxIdleTime>60000</maxIdleTime>
+							</connector>
+						</connectors>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -612,20 +628,6 @@
 										<versionRange>2.4</versionRange>
 										<goals>
 											<goal>copy-dependencies</goal>
-											<goal>unpack</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.google.code.maven-replacer-plugin</groupId>
-										<artifactId>replacer</artifactId>
-										<versionRange>[1.0.0,)</versionRange>
-										<goals>
-											<goal>replace</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -654,6 +656,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
+
 				<executions>
 					<execution>
 						<id>copy-dependencies</id>
@@ -670,123 +673,6 @@
 								<excludeArtifactIds>XmlSchema</excludeArtifactIds>
 							</excludes>
 						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<configuration>
-					<providerImplementations>
-						<git>jgit</git>
-					</providerImplementations>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-jgit</artifactId>
-						<version>1.9.2</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<format>{1}</format>
-					<items>
-						<item>timestamp</item>
-						<item>scmVersion</item>
-					</items>
-					<doCheck>false</doCheck>
-					<doUpdate>false</doUpdate>
-					<timestampFormat>{0,date,yyyyMMddHHmmss}</timestampFormat>
-					<providerImplementations>
-						<git>git</git>
-					</providerImplementations>
-
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>RELEASE</version>
-					</dependency>
-					<dependency>
-						<groupId>org.tmatesoft.svnkit</groupId>
-						<artifactId>svnkit</artifactId>
-						<version>RELEASE</version>
-					</dependency>
-				</dependencies>
-
-			</plugin>
-			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
-				<executions>
-					<execution>
-						<id>version</id>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-						<configuration>
-							<file>${project.basedir}/${version.template.file}</file>
-							<outputFile>${project.basedir}/src/main/webapp/${version.file}</outputFile>
-							<replacements>
-								<replacement>
-									<token>@buildnumber@</token>
-									<value>${buildNumber}</value>
-								</replacement>
-								<replacement>
-									<token>@buildtime@</token>
-									<value>${maven.build.timestamp}</value>
-								</replacement>
-								<replacement>
-									<token>@pomversion@</token>
-									<value>${project.version}</value>
-								</replacement>
-								<replacement>
-									<token>@giturl@</token>
-									<value>https://github.com/MyCATApache/Mycat-Server.git</value>
-								</replacement>
-								<replacement>
-									<token>@mycatsite@</token>
-									<value>http://www.mycat.org.cn</value>
-								</replacement>
-								<replacement>
-									<token>@qqgroup@</token>
-									<value>106088787</value>
-								</replacement>
-							</replacements>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/assembly-win.xml</descriptor>
-						<descriptor>src/main/assembly/assembly-linux.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>

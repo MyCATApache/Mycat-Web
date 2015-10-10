@@ -37,6 +37,31 @@
 		</where>
 	</select>
 
+	<select id="count" resultType="int" parameterType="map">
+		SELECT
+				count(*)
+		FROM T_SYS_MYCAT_JMX
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="name != null">
+				and JMXNAME = #{name}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="username != null">
+				and USERNAME = #{username}
+			</if>
+			<if test="password != null">
+				and PASSWORD = #{password}
+			</if>
+		</where>
+	</select>
 
 	<insert id="insert" parameterType="map">
 		INSERT INTO T_SYS_MYCAT_JMX (
