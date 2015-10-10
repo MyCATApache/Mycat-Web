@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+<title>赛飞可视化</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<style type="text/css">
+.btn {
+	-moz-border-bottom-colors: none;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	background-color: #f5f5f5;
+	background-image: linear-gradient(to bottom, #fff, #e6e6e6);
+	background-repeat: repeat-x;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #a2a2a2;
+	border-image: none;
+	border-radius: 4px;
+	border-style: solid;
+	border-width: 1px;
+	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px
+		rgba(0, 0, 0, 0.05);
+	color: #333;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: 0;
+	padding: 4px 12px;
+	text-align: center;
+	text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+	vertical-align: middle;
+}
+
+.btn-large {
+	padding: 11px 19px;
+	font-size: 17.5px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px
+}
+
+.btn-warning {
+	background-color: #faa732;
+	background-image: linear-gradient(to bottom, #fbb450, #f89406);
+	background-repeat: repeat-x;
+	border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	color: #fff;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+a {
+	color: #08c;
+	text-decoration: none;
+}
+
+.widget-content {
+	border: 1px solid #cdcdcd;
+	padding: 15px;
+	margin-top: 20px;
+}
+
+.error_ex {
+	text-align: center;
+}
+
+.error_ex h1 {
+	color: #28b779;
+	font-size: 140px;
+	font-weight: bold;
+	padding: 50px 0;
+}
+</style>
+
+ 
+<body>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="widget-box">
+					<div class="widget-content">
+
+						<div class="error_ex" id="JS-error-goto">
+							<h1>404</h1>
+							<h3>该页面不存在.</h3>
+							<p></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+		//定义元素 gotoE
+		var gotoE = document.createElement("a");
+		gotoE.className += " " + "btn"; 
+		gotoE.className += " " + "btn-warning"; 
+		gotoE.className += " " + "btn-large"; 
+		gotoE.text ="进入主页";
+		//默认主页页面
+		var defaultH = "/index2.html";
+		
+		var httpRequest=null;
+		  //创建HttpRequest对象
+		  function createHttp()
+		  {		
+			  if(window.ActiveXObject)
+			  {
+			  	httpRequest=new ActiveXObject("Microsoft.XMLHTTP");
+			  }
+			  else if(window.XMLHttpRequest)
+			  {
+			  	httpRequest=new XMLHttpRequest();
+			  }
+		  }
+		  createHttp();
+		  var host = window.location.host;
+		  var url = window.location.href;
+		  var lhref = url.substring(url.indexOf(host)+host.length+1, url.length).split("\/");
+		  if(lhref.length>=1){
+		  	RequestUrl();
+		  }else{
+			  gotoE.src= defaultH;
+			  document.getElementById("JS-error-goto").appendChild(gotoE);
+		  }
+		  var i=0;
+		  function RequestUrl(url){
+			  var realUrl = url? url:"";
+		  	  httpRequest.open("get", realUrl+"/js/json2.js", true);  //程序运行到这里就报错说  此对象不支持此属性或者用法
+           	  httpRequest.send(null);
+              httpRequest.onreadystatechange = function () {
+            	  	//请求完成
+	              	if (httpRequest.readyState == 4) {
+	              		//返回成功
+		                  if (httpRequest.status == 200) {
+		                	  gotoE.href=url + defaultH;
+		                	  document.getElementById("JS-error-goto").appendChild(gotoE);
+		                  }else{
+		                	  if(i==0){
+			              		RequestUrl("/"+lhref[0]);
+			              		i++;
+		                	  }
+			              }
+	              	}
+             };
+		  };
+  </script>
+</body>
+</html>
