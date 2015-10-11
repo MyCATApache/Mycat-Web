@@ -1,6 +1,6 @@
-BuildTime  20150924-1032
+BuildTime  20151011-1348
 GitVersion   null
 MavenVersion 1.0-SNAPSHOT
-GitUrl https://github.com/MyCATApache/Mycat-Server.git
-MyCatSite http://www.mycat.org.cn
+GitUrl https://github.com/MyCATApache/Mycat-Web.git
+MyCatSite http://mycat.io
 QQGroup 106088787
