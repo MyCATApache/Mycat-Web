@@ -7,7 +7,6 @@ import java.sql.Statement;
 
 import jrds.factories.ProbeBean;
 import jrds.starter.Connection;
-import jrds.starter.Starter;
 
 import org.apache.log4j.Level;
 
@@ -78,16 +77,11 @@ public class JdbcConnection extends Connection<Statement> {
     @Override
     public boolean startConnection() {
         boolean started = false;
-        Starter resolver = getResolver();
-        if(resolver.isStarted()) {
+        if(getResolver().isStarted()) {
             String url = getUrl();
-
             try {
                 DriverManager.setLoginTimeout(getTimeout());
                 con = DriverManager.getConnection(url , user, passwd);
-                resolver.setUser(user);
-                resolver.setPasswd(passwd);
-                resolver.setUrl(url);
                 started = true;
             } catch (SQLException e) {
                 log(Level.ERROR, e, "Sql error for %s: %s" , url, e);

@@ -3,17 +3,15 @@ package jrds.webapp;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
-import javax.management.MBeanServerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import jrds.StoreOpener;
-import jrds.jmx.Management;
 
 import org.apache.log4j.Logger;
 
@@ -31,62 +29,61 @@ import org.apache.log4j.Logger;
  * @version $Revision$,  $Date$
  */
 public class StartListener implements ServletContextListener {
-    static private final Logger logger = Logger.getLogger(StartListener.class);
-    static private boolean started = false;
+	static private final Logger logger = Logger.getLogger(StartListener.class);
+	static private boolean started = false;
 
-    /* (non-Javadoc)
-     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-     */
-    public void contextInitialized(ServletContextEvent arg0) {
-        //Resin and some others launch the listener twice !
-        if( ! started ) {
-            System.setProperty("java.awt.headless","true");
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+	 */
+	public void contextInitialized(ServletContextEvent arg0) {
+		//Resin and some others launch the listener twice !
+		if( ! started ) {
+			try {
+				jrds.JrdsLoggerConfiguration.initLog4J();
+			} catch (IOException e2) {
+				throw new RuntimeException("Log configuration failed", e2);
+			}
 
-            ServletContext ctxt = arg0.getServletContext();
-            ctxt.setAttribute(StartListener.class.getName(), this);
-            Properties p = readProperties(ctxt);
-            jrds.Configuration.configure(p);
-            //Register the mbean in MBeanServer if jmx activated
-            if(MBeanServerFactory.findMBeanServer(null).size() > 0) {
-                Management.register(ctxt);
-            }
-            started = true;
-            logger.info("Application jrds started");
-        }
-    }
+			System.setProperty("java.awt.headless","true");
 
-    /* (non-Javadoc)
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-     */
-    public void contextDestroyed(ServletContextEvent arg0) {
-        if(started) {
-            logger.info("Application jrds will stop");
-            started = false;
-            jrds.Configuration.stopConf();
-            StoreOpener.stop();
-            if(MBeanServerFactory.findMBeanServer(null).size() > 0) {
-                Management.unregister();
-            }
-            logger.info("Application jrds stopped");
-        }
-    }
-
-    public Properties readProperties(ServletContext ctxt) {
-        Properties p = new Properties();
-        ResourceBundle rb =  ResourceBundle.getBundle("jrds");
-        
-		Enumeration<String> enu = rb.getKeys();
-		while (enu.hasMoreElements()) {
-			String obj = enu.nextElement();
-			Object objv = rb.getObject(obj);
-			 p.setProperty((String)obj, (String)objv);
+			ServletContext ctxt = arg0.getServletContext();
+			ctxt.setAttribute(StartListener.class.getName(), this);
+            configure(ctxt);
+			started = true;
+			logger.info("Application jrds started");
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+	 */
+	public void contextDestroyed(ServletContextEvent arg0) {
+		if(started) {
+			logger.info("Application jrds will stop");
+			started = false;
+			jrds.Configuration.get().stop();
+			StoreOpener.stop();
+			logger.info("Application jrds stopped");
+		}
+	}
+
+    public void configure(ServletContext ctxt) {
+        Properties p = new Properties();
+
+        InputStream propStream = ctxt.getResourceAsStream("/WEB-INF/classes/jrds.properties");
+        if(propStream != null) {
+            try {
+                p.load(propStream);
+            } catch (IOException ex) {
+                logger.warn("Invalid properties stream " + propStream + ": " + ex);
+            }
+        }
+        
 		String webroot = System.getProperty("webapp.root");
 		p.setProperty("configdir", webroot + "/WEB-INF/jrdsconf/hosts");
 		p.setProperty("rrddir", webroot + "/WEB-INF/jrdsconf/rrddir");
-		
-        @SuppressWarnings("unchecked")
-        Enumeration<String> params = ctxt.getInitParameterNames();
+
+		Enumeration<String> params = (Enumeration<String>)ctxt.getInitParameterNames();
         for(String attr: jrds.Util.iterate(params)) {
             String value = ctxt.getInitParameter(attr);
             if(value != null)
@@ -100,7 +97,7 @@ public class StartListener implements ServletContextListener {
             } catch (FileNotFoundException e) {
             } catch (IOException e) {
             }
-        return p;
+        jrds.Configuration.configure(p);
     }
 
 }

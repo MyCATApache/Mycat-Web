@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>IPxErrors</name>
+  <graphName>iperrors-${index}</graphName>
+  <graphTitle>IP errors activity on {1}</graphTitle>
+  <verticalLabel>paquets/s</verticalLabel>
+  <add>
+    <name>ipFragFails</name>
+    <reversed/>
+    <graphType>line</graphType>
+    <legend>Number of paquets that need to be fragmented but can't be</legend>
+  </add>
+  <add>
+    <name>ipInHdrErrors</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <legend>Number of invalid input datagram because of headers error</legend>
+  </add>
+  <add>
+    <name>ipInAddrErrors</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <legend>Number of datagram received with invalid address</legend>
+  </add>
+  <add>
+    <name>ipInUnknownProtos</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <legend>Number of datagram received with an unknown protocol</legend>
+  </add>
+  <add>
+    <name>ipInDiscards</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <legend>Number of good datagram received but latter dropped</legend>
+  </add>
+  <add>
+    <name>ipReasmFails</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <legend>Number of datagram received but for wich re-assembly failed</legend>
+  </add>
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>INDEX</pathelement>
+    <pathstring>IP errors activity</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>INDEX</pathelement>
+    <pathelement>HOST</pathelement>
+    <pathstring>IP errors activity</pathstring>
+  </viewtree>
+</graphdesc>

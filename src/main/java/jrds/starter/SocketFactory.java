@@ -1,13 +1,21 @@
 package jrds.starter;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.SocketException;
+
+import jrds.PropertiesManager;
 
 public class SocketFactory extends Starter {
+
+    /* (non-Javadoc)
+     * @see jrds.starter.Starter#configure(jrds.PropertiesManager)
+     */
+    @Override
+    public void configure(PropertiesManager pm) {
+        super.configure(pm);
+    }
 
     public ServerSocket createServerSocket(int port) throws IOException {
         if(! isStarted())
@@ -34,8 +42,20 @@ public class SocketFactory extends Starter {
         if(! isStarted())
             return null;
 
-        Socket s = getSocket();
-        s.connect(new InetSocketAddress(host, port), getTimeout());
+        Socket s = new Socket(host, port) {
+            public void connect(SocketAddress endpoint) throws IOException {
+                super.connect(endpoint, getTimeout() * 1000);
+            }
+
+            /* (non-Javadoc)
+             * @see java.net.Socket#connect(java.net.SocketAddress, int)
+             */
+            public void connect(SocketAddress endpoint, int timeout) throws IOException {
+                super.connect(endpoint, timeout);
+            }
+        };
+        s.setSoTimeout(getTimeout() * 1000);
+        s.setTcpNoDelay(true);
         return s;
     }
 
@@ -47,27 +67,16 @@ public class SocketFactory extends Starter {
         if(r == null || ! r.isStarted())
             return null;
 
-        Socket s = getSocket();
-        s.connect(new InetSocketAddress(r.getInetAddress(), port), getTimeout());
-        return s;
-    }
-
-    public Socket createSocket() throws IOException {
-        if(! isStarted())
-            return null;
-        return getSocket();
-    }
-
-    private Socket getSocket() throws SocketException {
-        Socket s = new Socket() {
+        Socket s = new Socket(r.getInetAddress(), port) {
             public void connect(SocketAddress endpoint) throws IOException {
                 super.connect(endpoint, getTimeout() * 1000);
             }
 
-            @Override
-            public void connect(SocketAddress endpoint, int timeout)
-                    throws IOException {
-                super.connect(endpoint, getTimeout() * 1000);
+            /* (non-Javadoc)
+             * @see java.net.Socket#connect(java.net.SocketAddress, int)
+             */
+            public void connect(SocketAddress endpoint, int timeout) throws IOException {
+                super.connect(endpoint, timeout);
             }
         };
         s.setSoTimeout(getTimeout() * 1000);

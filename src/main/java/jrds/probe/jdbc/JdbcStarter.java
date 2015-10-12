@@ -17,9 +17,9 @@ public abstract class JdbcStarter extends Starter {
 	private String url;
 	private String user;
 	private String passwd;
-	private String dbName = "";
+	private String dbName = "";;
 
-    public void setHost(HostInfo monitoredHost) {
+	public void setHost(HostInfo monitoredHost) {
 		this.url = getUrlAsString();
 	}
 	
@@ -30,9 +30,6 @@ public abstract class JdbcStarter extends Starter {
 		boolean started = false;
 		Starter resolver = getLevel().find(Resolver.class);
 		if(resolver.isStarted()) {
-			this.url = resolver.getUrl();
-			this.user = resolver.getUser();
-			this.passwd = resolver.getPasswd();
 			Properties p = getProperties();
 			p.put("user", user);
 			p.put("password", passwd);

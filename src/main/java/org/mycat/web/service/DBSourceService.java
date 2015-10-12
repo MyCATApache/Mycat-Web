@@ -28,7 +28,7 @@ public class DBSourceService extends BaseService {
 			DataSourceUtils.register( context.getAttr(), mycatName);
 			RainbowContext mycatContext = new RainbowContext("mycatService", "insert");
 			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-			jrdsconfg = jrdsconfg + "D_" + context.getAttr("ip") + "_" + context.getAttr("port") + "_" + mycatName +".xml";
+			jrdsconfg = jrdsconfg + "D_" + context.getAttr("ip") + "_" + context.getAttr("port") + ".xml";
 			context.addAttr("jrdsfile", jrdsconfg);
 			mycatContext.setAttr(context.getAttr());
 			context = SoaManager.getInstance().invoke(mycatContext);
@@ -49,7 +49,7 @@ public class DBSourceService extends BaseService {
 			String packagePath = packageName.replace('.', '/');
 			ClassLoader classLoader = this.getClass().getClassLoader();
 			inputstate = classLoader
-					.getResourceAsStream(packagePath + "/templet/mysqljrds.ftl");
+					.getResourceAsStream(packagePath + "/templet/mycatjrds.ftl");
 			Template tempState = new Template("", new InputStreamReader(
 					inputstate), new Configuration());
 			tempState.setEncoding("UTF-8");

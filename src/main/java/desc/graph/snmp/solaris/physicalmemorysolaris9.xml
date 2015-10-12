@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>phymemsolaris9munins</name>
+  <graphName>phymemsolaris9munins</graphName>
+  <graphTitle>Physical memory usage on {1}</graphTitle>
+  <unit>
+    <binary/>
+  </unit>
+  <verticalLabel>Bytes</verticalLabel>
+  <add>
+    <name>ram_total</name>
+    <graphType>none</graphType>
+  </add>
+  <add>
+    <name>pagestotal</name>
+    <graphType>line</graphType>
+  </add>
+  <add>
+    <name>physmem</name>
+    <graphType>line</graphType>
+  </add>
+  <add>
+    <name>availrmem</name>
+    <graphType>none</graphType>
+  </add>
+  <add>
+    <name>freemem</name>
+    <graphType>none</graphType>
+  </add>
+  <add>
+    <name>static kernel</name>
+    <rpn>ram_total, pagestotal, -</rpn>
+    <graphType>area</graphType>
+  </add>
+  <add>
+    <name>swapfs_minfree</name>
+    <graphType>stack</graphType>
+  </add>
+  <add>
+    <name>dirty swappable</name>
+    <rpn>availrmem, freemem, -, swapfs_minfree, -</rpn>
+    <graphType>stack</graphType>
+  </add>
+  <add>
+    <name>Free Memory</name>
+    <rpn>freemem</rpn>
+    <graphType>stack</graphType>
+  </add>
+  <!--<add>
+		<name>Used Memory</name>
+		<graphType>stack</graphType>
+		<rpn>pagestotal, availrmem, -</rpn>
+	</add>-->
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Physical Memory usage</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>LOAD</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Physical Memory usage</pathstring>
+  </viewtree>
+</graphdesc>

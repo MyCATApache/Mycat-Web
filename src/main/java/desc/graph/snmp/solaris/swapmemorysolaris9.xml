@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>swapmemsolaris9munins</name>
+  <graphName>swapmemsolaris9munins</graphName>
+  <graphTitle>Swap Memory usage on {1}</graphTitle>
+  <unit>
+    <binary/>
+  </unit>
+  <verticalLabel>Bytes</verticalLabel>
+  <add>
+    <name>swap_alloc</name>
+    <graphType>area</graphType>
+  </add>
+  <add>
+    <name>swap_resv</name>
+    <graphType>stack</graphType>
+  </add>
+  <add>
+    <name>swap_avail</name>
+    <graphType>stack</graphType>
+  </add>
+  <add>
+    <name>swap_free</name>
+    <graphType>line</graphType>
+  </add>
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Swap Memory usage</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>LOAD</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Swap Memory usage</pathstring>
+  </viewtree>
+</graphdesc>

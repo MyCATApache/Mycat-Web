@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>ipactivitysnmp</name>
+  <graphName>ip</graphName>
+  <graphTitle>IP activity on {1}</graphTitle>
+  <verticalLabel>paquets/s</verticalLabel>
+  <add>
+    <legend>Sent datagrams</legend>
+  </add>
+  <add>
+    <name>ipForwDatagrams</name>
+    <graphType>line</graphType>
+    <color>green</color>
+    <legend>forwarded datagrams</legend>
+  </add>
+  <add>
+    <name>ipOutRequests</name>
+    <graphType>line</graphType>
+    <color>teal</color>
+    <legend>locally generated datagrams</legend>
+  </add>
+  <add>
+    <name>ipFragCreates</name>
+    <graphType>line</graphType>
+    <color>GRAY</color>
+    <legend>generated datagram fragment</legend>
+  </add>
+  <add>
+    <legend>Received datagrams</legend>
+  </add>
+  <add>
+    <name>ipInReceives</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <color>RED</color>
+    <legend>received datagrams</legend>
+  </add>
+  <add>
+    <name>ipInDelivers</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <color>ORANGE</color>
+    <legend>locally delivered datagram</legend>
+  </add>
+  <add>
+    <name>ipReasmOKs</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <color>YELLOW</color>
+    <legend>re-assembled datagrams</legend>
+  </add>
+  <add>
+    <name>ipFragOKs</name>
+    <reversed>true</reversed>
+    <graphType>line</graphType>
+    <color>GRAY</color>
+    <legend>fragmented datagrams</legend>
+  </add>
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>IP</pathelement>
+    <pathstring>IP activity</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>IP</pathelement>
+    <pathelement>HOST</pathelement>
+    <pathstring>IP activity</pathstring>
+  </viewtree>
+</graphdesc>

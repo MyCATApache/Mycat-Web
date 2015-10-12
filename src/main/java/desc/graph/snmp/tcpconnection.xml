@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+	<name>tcpconnection</name>
+	<graphName>tcp</graphName>
+	<graphTitle>TCP Connections on ${host}</graphTitle>
+	<verticalLabel>Requests/s</verticalLabel>
+	<add>
+		<name>ActiveOpens</name>
+		<graphType>line</graphType>
+		<legend>Active Opens</legend>
+	</add>
+	<add>
+		<name>PassiveOpens</name>
+		<graphType>line</graphType>
+		<legend>Passive Opens</legend>
+	</add>
+	<add>
+		<name>AttemptFails</name>
+		<graphType>line</graphType>
+		<legend>Connections attempt failed</legend>
+	</add>
+	<add>
+		<name>EstabResets</name>
+		<graphType>line</graphType>
+		<legend>Connections resets</legend>
+	</add>
+	<hosttree>
+		<pathstring>${host}</pathstring>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>New TCP Connections</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>New TCP Connections</pathstring>
+		<pathstring>${host}</pathstring>
+	</viewtree>
+</graphdesc>

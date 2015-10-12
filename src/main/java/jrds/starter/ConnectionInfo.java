@@ -60,9 +60,6 @@ public class ConnectionInfo {
             node.registerStarter(cnx);
             logger.debug(Util.delayedFormatString("Connexion registred: %s for %s", cnx, node));
         }
-        catch (InvocationTargetException ex) {
-            throw new InvocationTargetException(ex.getCause(), "Error during connection creation of type " + type.getName() + " for " + node + ": " + ex.getMessage());
-        }
         catch (Exception ex) {
             throw new InvocationTargetException(ex, "Error during connection creation of type " + type.getName() + " for " + node);
         }

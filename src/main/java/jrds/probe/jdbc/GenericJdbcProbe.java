@@ -37,7 +37,7 @@ public class GenericJdbcProbe extends ProbeConnected<String, Number, JdbcConnect
     /* (non-Javadoc)
      * @see jrds.ProbeConnected#configure()
      */
-    public Boolean configure(List<?> args) {
+    public Boolean configure(List<? extends Object> args) {
         if(super.configure()) {
             ProbeDesc pd =  getPd();
             query = jrds.Util.parseTemplate(pd.getSpecific("query"), getHost(), args);
@@ -62,7 +62,7 @@ public class GenericJdbcProbe extends ProbeConnected<String, Number, JdbcConnect
     }
 
     public Boolean configure(String... args) {
-        return configure(Arrays.asList(args));
+        return configure((List<? extends Object>)Arrays.asList(args));
     }
 
     @Override
@@ -89,9 +89,7 @@ public class GenericJdbcProbe extends ProbeConnected<String, Number, JdbcConnect
                 }
             }
             finally {
-                if (stmt != null) {
-                    stmt.close();
-                }
+                stmt.close();	
             }
             return values;
         } catch (SQLException e) {
@@ -134,7 +132,7 @@ public class GenericJdbcProbe extends ProbeConnected<String, Number, JdbcConnect
                     String key = keyValue + meta.getColumnLabel(i);
                     if(! collectKeys.contains(key))
                         continue;
-                    Number value;
+                    Number value = Double.NaN;
                     Object oValue = rs.getObject(i);
                     log(Level.TRACE, "type info for %s: type %d, %s = %s",  key, meta.getColumnType(i), oValue.getClass(), oValue.toString());
                     if(oValue instanceof Number) {
@@ -147,6 +145,7 @@ public class GenericJdbcProbe extends ProbeConnected<String, Number, JdbcConnect
                         switch(type) {
                         case Types.DATE: value = rs.getDate(i).getTime() / 1000; break;
                         case Types.TIME: value = rs.getTime(i).getTime() / 1000; break;
+                        case Types.LONGVARCHAR:
                         case Types.VARCHAR: value = Util.parseStringNumber(rs.getString(i), Double.NaN); break;
                         case Types.TIMESTAMP: value = rs.getTimestamp(i).getTime() / 1000; break;
                         }
