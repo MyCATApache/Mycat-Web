@@ -121,8 +121,11 @@ public abstract class JdbcProbe extends Probe<String, Number> implements UrlProb
             for (int i = 1; i <= colCount; i++) {
                 String key = rsmd.getColumnLabel(i);
                 Object oValue = rs.getObject(i);
-                if(numFilter && !(oValue instanceof Number)) {
-                    oValue = Double.NaN;
+                if(numFilter) {
+                    if(oValue instanceof Number)
+                        oValue = (Number) oValue;
+                    else
+                        oValue = new Double(Double.NaN);
                 }
                 row.put(key, oValue);
             }
@@ -138,6 +141,7 @@ public abstract class JdbcProbe extends Probe<String, Number> implements UrlProb
      * Parse all the collumns of a query and return a List of Map
      * where the column name is the key
      * @param query
+     * @param numFilter force all value to be a Number
      * @return a List of Map of values 
      */
     public Map<String, Number> select2Map(String query)
@@ -164,7 +168,7 @@ public abstract class JdbcProbe extends Probe<String, Number> implements UrlProb
     {
         Map<String, Object> values = new HashMap<String, Object>();
         log(Level.DEBUG, "Getting %s", query); 
-        Statement stmt;
+        Statement stmt = null;
         try {
             stmt = starter.getStatment();
             if(stmt.execute(query)) {

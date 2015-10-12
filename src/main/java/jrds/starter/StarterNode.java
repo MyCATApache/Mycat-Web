@@ -22,7 +22,6 @@ public abstract class StarterNode implements StartersSet {
     private StarterNode parent = null;
     private int timeout = -1;
     private int step = -1;
-    private int slowCollectTime = -1;
 
     public StarterNode() {
         if (this instanceof HostsList) {
@@ -131,7 +130,7 @@ public abstract class StarterNode implements StartersSet {
     }
 
     public <StarterClass extends Starter> StarterClass find(Class<StarterClass> sc) {
-        Object key;
+        Object key = null;
         try {
             Method m = sc.getMethod("makeKey", StarterNode.class);
             key = m.invoke(null, this);
@@ -233,7 +232,7 @@ public abstract class StarterNode implements StartersSet {
     @Deprecated
     public Starter registerStarter(Starter s, StarterNode parent) {
         return registerStarter(s);
-    }
+    };
 
     /* (non-Javadoc)
      * @see jrds.starter.StartersSet#find(java.lang.Class, jrds.starter.StarterNode)
@@ -277,14 +276,6 @@ public abstract class StarterNode implements StartersSet {
      */
     public void setStep(int step) {
         this.step = step;
-    }
-
-    public int getSlowCollectTime() {
-        return slowCollectTime;
-    }
-
-    public void setSlowCollectTime(int slowCollectTime) {
-        this.slowCollectTime = slowCollectTime;
     }
 
 }

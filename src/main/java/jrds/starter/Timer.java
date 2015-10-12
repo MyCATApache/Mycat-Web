@@ -47,13 +47,13 @@ public class Timer extends StarterNode {
     private final Stats stats = new Stats();
     private final int numCollectors;
     private final String name;
+    private TimerTask collector;
 
     public Timer(String name, PropertiesManager.TimerInfo ti) {
         super();
         this.name = name;
         setTimeout(ti.timeout);
         setStep(ti.step);
-        setSlowCollectTime(ti.slowCollectTime);
         this.numCollectors = ti.numCollectors;
     }
 
@@ -75,7 +75,7 @@ public class Timer extends StarterNode {
     }
 
     public void startTimer(java.util.Timer collectTimer) {
-        TimerTask collector = new TimerTask () {
+        collector = new TimerTask () {
             public void run() {
                 Thread subcollector = new Thread("Collector/" + Timer.this.name) {
                     @Override

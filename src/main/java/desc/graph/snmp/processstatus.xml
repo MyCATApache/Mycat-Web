@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+	<name>processstatus</name>
+	<graphName>pslist</graphName>
+	<graphTitle>Number of process on {1}</graphTitle>
+	<verticalLabel>Number (cumulated)</verticalLabel>
+	<add>
+		<name>R</name>
+		<graphType>area</graphType>
+		<color>green</color>
+		<legend>Runnable</legend>
+	</add>
+	<add>
+		<name>P</name>
+		<graphType>area</graphType>
+		<color>yellow</color>
+		<legend>In page wait</legend>
+	</add>
+	<add>
+		<name>S</name>
+		<graphType>area</graphType>
+		<color>blue</color>
+		<legend>Sleeping (less than 20 seconds)</legend>
+	</add>
+	<add>
+		<name>I</name>
+		<graphType>area</graphType>
+		<color>orange</color>
+		<legend>Idle (more than 20 seconds)</legend>
+	</add>
+	<add>
+		<name>D</name>
+		<graphType>area</graphType>
+		<color>BLACK</color>
+		<legend>Non-interruptable wait</legend>
+	</add>
+	<add>
+		<name>T</name>
+		<graphType>area</graphType>
+		<color>red</color>
+		<legend>Stopped</legend>
+	</add>
+	<add>
+		<name>Z</name>
+		<graphType>area</graphType>
+		<color>cyan</color>
+		<legend>Zombie</legend>
+	</add>
+	<hosttree>
+		<pathelement>HOST</pathelement>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>LOAD</pathelement>
+		<pathstring>Number of process</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>SYSTEM</pathelement>
+		<pathelement>LOAD</pathelement>
+		<pathstring>Number of process</pathstring>
+		<pathelement>HOST</pathelement>
+	</viewtree>
+</graphdesc>

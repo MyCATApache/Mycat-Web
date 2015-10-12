@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+	<name>tcpestablished</name>
+	<graphName>tcpest</graphName>
+	<graphTitle>Established TCP Connections TCP on ${host}</graphTitle>
+	<verticalLabel>Number</verticalLabel>
+	<add>
+		<name>CurrEstab</name>
+		<graphType>area</graphType>
+		<legend>ESTABLISHED or CLOSE-WAIT connections</legend>
+	</add>
+	<hosttree>
+		<pathstring>${host}</pathstring>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>Established TCP Connections</pathstring>
+	</hosttree>
+	<viewtree>
+		<pathelement>NETWORK</pathelement>
+		<pathelement>TCP</pathelement>
+		<pathstring>Established TCP Connections</pathstring>
+		<pathstring>${host}</pathstring>
+	</viewtree>
+</graphdesc>

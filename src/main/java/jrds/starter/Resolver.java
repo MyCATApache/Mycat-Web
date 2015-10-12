@@ -12,7 +12,6 @@ public class Resolver extends Starter {
 	String hostname = "";
 	InetAddress address = null;
 
-
 	public Resolver(String hostname) {
 		this.hostname = hostname;
         log(Level.DEBUG, "New dns resolver");
@@ -45,7 +44,7 @@ public class Resolver extends Starter {
 	}
 
 	public static Object makeKey(StarterNode node) {
-		HostInfo host;
+		HostInfo host = null;
 		if(node instanceof HostStarter)
 			host = ((HostStarter)node).getHost();
 		else if(node instanceof Probe<?,?>) {
@@ -62,7 +61,4 @@ public class Resolver extends Starter {
 	public static Object makeKey(String hostname) {
 		return "resolver:" + hostname;
 	}
-
-
-	
 }

@@ -38,6 +38,7 @@
 		<logger name="com.google" level="error" />
 		<logger name="net.rubyeye" level="error" />
 		<logger name="org.mybatis" level="error" />
+		<logger name="jrds" level="error" />
 		<logger name="org.apache" level="error" />
 		<logger name="org.hx.rainbow" level="error" />
 		<Root  level="DEBUG">

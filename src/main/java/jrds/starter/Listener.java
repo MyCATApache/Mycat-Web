@@ -85,7 +85,7 @@ public abstract class Listener<Message, KeyType> extends Starter {
     }
 
     /**
-     * The method used to wait on external input and feed back the result to the probe, using {@link jrds.probe.PassiveProbe#store(Date, Map)}.
+     * The method used to wait on external input and feed back the result to the probe, using jrds.probe.PassiveProbe.store(Date, Map<KeyType, Number>).
      * There is no need to manage exceptions and interruption in it. This method is called again in case of failure, with adaptative sleep between each call.
      * @throws Exception
      */

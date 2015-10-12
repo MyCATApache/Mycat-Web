@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>memwindowgraph</name>
+  <graphName>memwindowgraph</graphName>
+  <graphTitle>Memory usage on {1}</graphTitle>
+  <unit>
+    <binary/>
+  </unit>
+  <verticalLabel>Bytes</verticalLabel>
+  <add>
+    <name>Total</name>
+    <graphType>none</graphType>
+  </add>
+  <add>
+    <name>Used</name>
+    <graphType>area</graphType>
+    <color>BLUE</color>
+    <legend>Memory used</legend>
+  </add>
+  <add>
+    <name>Available</name>
+    <rpn>Total,Used,-</rpn>
+    <graphType>stack</graphType>
+    <color>GREEN</color>
+    <legend>Memory free</legend>
+  </add>
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Memory usage</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>SYSTEM</pathelement>
+    <pathelement>MEMORY</pathelement>
+    <pathstring>Memory usage</pathstring>
+    <pathelement>HOST</pathelement>
+  </viewtree>
+</graphdesc>

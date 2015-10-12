@@ -62,13 +62,17 @@
 
 	
 	    <!-- Jrds -->
- 	<servlet>
+	<servlet>
 		<servlet-name>CheckValues</servlet-name>
 		<servlet-class>jrds.webapp.CheckValues</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Graph</servlet-name>
 		<servlet-class>jrds.webapp.Graph</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>Last</servlet-name>
+		<servlet-class>jrds.webapp.Last</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>download</servlet-name>
@@ -98,36 +102,31 @@
 		<servlet-name>discover</servlet-name>
 		<display-name>discover</display-name>
 		<description></description>
-		<servlet-class>
-			jrds.webapp.Discover</servlet-class>
+		<servlet-class>jrds.webapp.Discover</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonTree</servlet-name>
 		<display-name>JSonTree</display-name>
 		<description></description>
-		<servlet-class>
-			jrds.webapp.JSonTree</servlet-class>
+		<servlet-class>jrds.webapp.JSonTree</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonGraph</servlet-name>
 		<display-name>JSonGraph</display-name>
 		<description></description>
-		<servlet-class>
-			jrds.webapp.JSonGraph</servlet-class>
+		<servlet-class>jrds.webapp.JSonGraph</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonPeriod</servlet-name>
 		<display-name>JSonPeriod</display-name>
 		<description></description>
-		<servlet-class>
-			jrds.webapp.JSonPeriod</servlet-class>
+		<servlet-class>jrds.webapp.JSonPeriod</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonQueryParams</servlet-name>
 		<display-name>JSonQueryParams</display-name>
 		<description></description>
-		<servlet-class>
-			jrds.webapp.JSonQueryParams</servlet-class>
+		<servlet-class>jrds.webapp.JSonQueryParams</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Cmd</servlet-name>
@@ -171,87 +170,91 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CheckValues</servlet-name>
-		<url-pattern>/jrds/values/*</url-pattern>
+		<url-pattern>/values/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Last</servlet-name>
+		<url-pattern>/last</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Graph</servlet-name>
-		<url-pattern>/jrds/graph</url-pattern>
+		<url-pattern>/graph</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Graph</servlet-name>
-		<url-pattern>/jrds/graph/*</url-pattern>
+		<url-pattern>/graph/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>download</servlet-name>
-		<url-pattern>/jrds/download</url-pattern>
+		<url-pattern>/download</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>download</servlet-name>
-		<url-pattern>/jrds/download/*</url-pattern>
+		<url-pattern>/download/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>reload</servlet-name>
-		<url-pattern>/jrds/reload</url-pattern>
+		<url-pattern>/reload</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>probesummary</servlet-name>
-		<url-pattern>/jrds/summary</url-pattern>
+		<url-pattern>/summary</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>probedetails</servlet-name>
-		<url-pattern>/jrds/details</url-pattern>
+		<url-pattern>/details</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>whichlibs</servlet-name>
-		<url-pattern>/jrds/whichlibs</url-pattern>
+		<url-pattern>/whichlibs</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>status</servlet-name>
-		<url-pattern>/jrds/status</url-pattern>
+		<url-pattern>/status</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>discover</servlet-name>
-		<url-pattern>/jrds/discover</url-pattern>
+		<url-pattern>/discover</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JSonTree</servlet-name>
-		<url-pattern>/jrds/jsontree</url-pattern>
+		<url-pattern>/jsontree</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JSonGraph</servlet-name>
-		<url-pattern>/jrds/jsongraph</url-pattern>
+		<url-pattern>/jsongraph</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JSonPeriod</servlet-name>
-		<url-pattern>/jrds/jsonperiod</url-pattern>
+		<url-pattern>/jsonperiod</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JSonQueryParams</servlet-name>
-		<url-pattern>/jrds/queryparams</url-pattern>
+		<url-pattern>/queryparams</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Cmd</servlet-name>
-		<url-pattern>/jrds/cmd/*</url-pattern>
+		<url-pattern>/cmd/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>XmlRpcServlet</servlet-name>
-		<url-pattern>/jrds/xmlrpc</url-pattern>
+		<url-pattern>/xmlrpc</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>XmlRpcServlet</servlet-name>
-		<url-pattern>/jrds/xmlrpc/*</url-pattern>
+		<url-pattern>/xmlrpc/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>JSonPack</servlet-name>
-		<url-pattern>/jrds/jsonpack/*</url-pattern>
+		<url-pattern>/jsonpack/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>upload</servlet-name>
-		<url-pattern>/jrds/upload</url-pattern>
+		<url-pattern>/upload</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>GetDiscoverHtmlCode</servlet-name>
-		<url-pattern>/jrds/discoverhtml</url-pattern>
+		<url-pattern>/discoverhtml</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

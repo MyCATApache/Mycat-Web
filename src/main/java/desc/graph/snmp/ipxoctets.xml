@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphdesc PUBLIC "-//jrds//DTD Graph Description//EN" "http://bidule">
+<graphdesc>
+  <name>IPxOctets</name>
+  <graphName>ipoctets-${index}</graphName>
+  <graphTitle>IP volume activity on {1}</graphTitle>
+  <verticalLabel>octets/s</verticalLabel>
+  <add>
+    <name>ipOutOctets</name>
+    <graphType>line</graphType>
+    <legend>Sent Octets</legend>
+  </add>
+  <add>
+    <name>ipInOctets</name>
+    <graphType>line</graphType>
+    <legend>Received Octets</legend>
+  </add>
+  <hosttree>
+    <pathelement>HOST</pathelement>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>INDEX</pathelement>
+    <pathstring>IP activity in octets</pathstring>
+  </hosttree>
+  <viewtree>
+    <pathelement>NETWORK</pathelement>
+    <pathelement>INDEX</pathelement>
+    <pathelement>HOST</pathelement>
+    <pathstring>IP activity in octets</pathstring>
+  </viewtree>
+</graphdesc>
