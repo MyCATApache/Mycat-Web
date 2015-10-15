@@ -1,12 +1,14 @@
 package org.mycat.web.util;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.SoaManager;
@@ -17,84 +19,103 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+
 
 public class DataSourceUtils {
 
-	// bean id 由{变量}+NAME_SIFFIX组成
-	public static final String NAME_SUFFIX = "dataSource";
-
-	public static String register(Map<String, Object> jdbc, String dbName) throws Exception {
-
-		String ip = (String) jdbc.get("ip");
-		String port = (String) jdbc.get("port");
-		String url = DialectUtils.getMySQLURL(ip, port, (String) jdbc.get("dbName"));
-		jdbc.put("url", url);
-
-		String beanName = dbName + NAME_SUFFIX;
-		ConfigurableApplicationContext applicationContext = (ConfigurableApplicationContext) SpringApplicationContext.getApplicationContext();
-		DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getBeanFactory();
-		boolean flag = beanFactory.isBeanNameInUse(beanName);
-		if (!flag) {
-			try {
-				beanFactory.registerBeanDefinition(beanName, getDefinition(jdbc));
-				BasicDataSource dbSource = (BasicDataSource) SpringApplicationContext.getBean(beanName);
-
-				try {
-					dbSource.getConnection();
-				} catch (Exception e) {
-					throw new Exception("连接数据库失败,请检查参数");
+	private static final Logger logger = LogManager
+			.getLogger(DataSourceUtils.class);
+	
+	private volatile static DataSourceUtils dataSourceUtils = null;
+	private DataSourceUtils(){};
+	
+	public static DataSourceUtils getInstance(){
+		if(dataSourceUtils == null){
+			synchronized (DataSourceUtils.class) {
+				if(dataSourceUtils == null){
+					dataSourceUtils = new DataSourceUtils();
 				}
-
-				if (dbSource != null) {
-					beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
-					Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
-					beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
-				}
-			} catch (Exception e1) {
-				remove(dbName);
-				throw e1;
 			}
 		}
+		return dataSourceUtils;
+	}
+	
+	private static final String NAME_SUFFIX = "dataSource";
 
-		return dbName;
-
+	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
+		Connection conn = null;
+		try {
+			String beanName = dbName + NAME_SUFFIX;
+			remove(dbName);
+			ConfigurableApplicationContext applicationContext = 
+					(ConfigurableApplicationContext) SpringApplicationContext.getApplicationContext();
+			DefaultListableBeanFactory beanFactory = 
+					(DefaultListableBeanFactory) applicationContext.getBeanFactory();
+				
+			beanFactory.registerBeanDefinition(beanName, getDefinition(jdbc));
+			
+			BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);
+			
+			conn = dbSource.getConnection();
+			
+			beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
+			Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
+			beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
+			beanFactory.registerBeanDefinition(dbName + "transactionManager", getTransactionManagerDef(dbSource));
+			
+			return true;
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e.getCause());
+			remove(dbName);
+			return false;
+		}finally{
+			if(conn != null){
+				conn.close();
+			}
+		}
+	}
+	
+	public boolean register(String dbName) throws Exception {
+		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + "NAME_SUFFIX")){
+			RainbowContext context = new RainbowContext("mycatService", "query");
+			context.addAttr("mycatName", dbName);
+			context = SoaManager.getInstance().invoke(context);
+			if (context.getRows() == null || context.getRows().size() == 0) {
+				return false;
+			}
+			Map<String, Object> row = context.getRow(0);
+			return register(row, dbName);
+		}
+		return true;
 	}
 
-	public static String register(String dbName) throws Exception {
-		RainbowContext context = new RainbowContext("mycatService", "query");
-		context.addAttr("mycatName", dbName);
-		context = SoaManager.getInstance().invoke(context);
-		if (context.getRows() == null || context.getRows().size() == 0) { throw new Exception("数据源不存在"); }
-		Map<String, Object> row = context.getRow(0);
-
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.putAll(row);
-		params.put("driverClassName", row.get("driverClass"));
-		register(params, dbName);
-		return dbName;
-	}
-
-	public static void remove(String mycatName) {
-		SpringApplicationContext.removeBeans(mycatName + NAME_SUFFIX, mycatName + "sqlSessionFactory", mycatName + "sqlSessionTemplate", mycatName
+	public  void remove(String dbName) {
+		SpringApplicationContext.removeBeans(dbName + NAME_SUFFIX, dbName + "sqlSessionFactory", dbName + "sqlSessionTemplate", dbName
 				+ "transactionManager");
 	}
 
-	private static GenericBeanDefinition getDefinition(Map<String, Object> jdbc) {
+	private  GenericBeanDefinition getDefinition(Map<String, Object> jdbc) {
 		GenericBeanDefinition messageSourceDefinition = new GenericBeanDefinition();
 		Map<String, Object> original = new HashMap<String, Object>();
-		String driverClassName = (String) jdbc.get("driverClassName");
-		original.put("driverClassName", StringUtils.isBlank(driverClassName) ? DialectUtils.DEFAULT_MYSQL_DRIVER_CLASS : driverClassName);
-		jdbc.put("driverClass", driverClassName);
-		original.put("url", jdbc.get("url"));
+		original.put("driverClassName", "com.mysql.jdbc.Driver");
+		original.put("url", DialectUtils.getMySQLURL((String)jdbc.get("ip"), (String)jdbc.get("port"), (String)jdbc.get("dbName")));
 		original.put("username", jdbc.get("username"));
 		original.put("password", jdbc.get("password"));
+		
+		original.put("maxActive", 20);
+		original.put("initialSize", 5);
+		original.put("maxWait", 60000);
+		original.put("minIdle", 5);
+
 		messageSourceDefinition.setBeanClass(BasicDataSource.class);
 		messageSourceDefinition.setDestroyMethodName("close");
 		messageSourceDefinition.setPropertyValues(new MutablePropertyValues(original));
 		return messageSourceDefinition;
 	}
 
-	private static GenericBeanDefinition getSqlSessionFactoryDef(Object dbSource) {
+	private  GenericBeanDefinition getSqlSessionFactoryDef(Object dbSource) {
 		GenericBeanDefinition sessionFactoryDef = new GenericBeanDefinition();
 		Map<String, Object> paramData = new HashMap<String, Object>();
 		paramData.put("dataSource", dbSource);
@@ -107,12 +128,22 @@ public class DataSourceUtils {
 		return sessionFactoryDef;
 	}
 
-	private static GenericBeanDefinition getSqlSessionTemplateDef(Object sqlSessionFacotry) {
+	private  GenericBeanDefinition getSqlSessionTemplateDef(Object sqlSessionFacotry) {
 		GenericBeanDefinition sqlSessionTemplateDef = new GenericBeanDefinition();
 		ConstructorArgumentValues values = new ConstructorArgumentValues();
 		values.addIndexedArgumentValue(0, sqlSessionFacotry);
 		sqlSessionTemplateDef.setConstructorArgumentValues(values);
 		sqlSessionTemplateDef.setBeanClass(SqlSessionTemplate.class);
 		return sqlSessionTemplateDef;
+	}
+	
+	
+	private  GenericBeanDefinition getTransactionManagerDef(Object dbSource) {
+		GenericBeanDefinition transactionManagerDef = new GenericBeanDefinition();
+		Map<String, Object> paramData = new HashMap<String, Object>();
+		paramData.put("dataSource", dbSource);
+		transactionManagerDef.setPropertyValues(new MutablePropertyValues(paramData));
+		transactionManagerDef.setBeanClass(DataSourceTransactionManager.class);
+		return transactionManagerDef;
 	}
 }
