@@ -25,7 +25,11 @@ public class DBSourceService extends BaseService {
 	public RainbowContext addMycat(RainbowContext context) {
 		try {
 			String mycatName = (String)context.getAttr("dbName"); 
-			DataSourceUtils.register( context.getAttr(), mycatName);
+			if(!DataSourceUtils.getInstance().register(context.getAttr(), mycatName)){
+				context.setSuccess(false);
+				context.setMsg("配置信息错误,连接服务失败!");
+				return context;
+			}
 			RainbowContext mycatContext = new RainbowContext("mycatService", "insert");
 			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
 			jrdsconfg = jrdsconfg + "D_" + context.getAttr("ip") + "_" + context.getAttr("port") + ".xml";
