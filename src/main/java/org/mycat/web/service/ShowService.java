@@ -26,5 +26,20 @@ public class ShowService extends BaseService {
 		super.query(context, SYSPARAM_NAMESPACE, "sysparam");
 		return context;
 	}
-
+	
+	public RainbowContext sql(RainbowContext context) {
+		String datasource = (String)context.getAttr("ds");
+		try {
+			if(!DataSourceUtils.getInstance().register(datasource)){
+				context.setSuccess(false);
+				context.setMsg("数据源连接失败!");
+				return context;
+			}
+		} catch (Exception e) {
+			
+		}
+		context.setDs(datasource);
+		super.query(context, SYSPARAM_NAMESPACE, "sql");
+		return context;
+	}
 }

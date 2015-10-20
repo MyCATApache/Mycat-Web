@@ -8,5 +8,7 @@
 	<select id="sysparam" resultType="map" parameterType="map">
 		show @@sysparam
 	</select>
-
+	<select id="sql" resultType="map" parameterType="map">
+		show @@sql
+	</select>
 </mapper>
