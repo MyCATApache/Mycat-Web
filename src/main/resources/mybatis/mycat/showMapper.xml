@@ -11,4 +11,7 @@
 	<select id="sql" resultType="map" parameterType="map">
 		show @@sql
 	</select>
+	<select id="sqlslow" resultType="map" parameterType="map">
+		show @@sql.slow
+	</select>	
 </mapper>
