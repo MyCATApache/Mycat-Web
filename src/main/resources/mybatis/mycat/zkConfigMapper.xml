@@ -9,12 +9,13 @@
 				id,  
 				zkid, 
 				name,
+				cluster,
 				ip,
 				port,
 				memo
 		FROM t_sys_zkconfig
 		<where>
-				and zkid = #{zkid}
+				and cluster = #{cluster}
 		</where>
 
 	</select>
@@ -24,6 +25,7 @@
 				id,  
 				zkid, 
 				name,
+				cluster,
 				ip,
 				port,
 				memo
@@ -61,12 +63,14 @@
 		INSERT INTO t_sys_zkconfig (
 				zkid, 
 				name,  
+				cluster,
 				ip, 
 				port, 
 				memo
 		)VALUES ( 
 				#{zkid, jdbcType=NVARCHAR}, 
 				#{name, jdbcType=NVARCHAR}, 
+				#{cluster, jdbcType=NVARCHAR}, 
 				#{ip, jdbcType=NVARCHAR}, 
 				#{port, jdbcType=NVARCHAR}, 
 				#{memo, jdbcType=NVARCHAR}				
@@ -76,7 +80,7 @@
 	<delete id="delete" parameterType="map">
 		DELETE FROM t_sys_zkconfig 
 		<where> 
-			id = #{id}
+			id = #{guid}
 		</where>
 	</delete>
 
@@ -89,6 +93,9 @@
 			<if test="name != null">
 				name = #{name, jdbcType=NVARCHAR},
 			</if>
+			<if test="cluster != null">
+				cluster = #{cluster, jdbcType=NVARCHAR},
+			</if>			
 			<if test="port != null">
 				port = #{port, jdbcType=NVARCHAR},
 			</if>

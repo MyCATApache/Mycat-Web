@@ -119,7 +119,7 @@
             <button type="button" class="btn btn-default" 
                data-dismiss="modal">关闭
             </button>
-            <button id="modify_btn" onclick="javascript:updateForm('mycatService','update','modify_form','updateForm_extra_call');" type="button" class="btn btn-primary">
+            <button id="modify_btn" onclick="javascript:updateForm('zkConfigService','update','modify_form','updateForm_extra_call');" type="button" class="btn btn-primary">
                	修改
             </button>
          </div>
@@ -157,10 +157,11 @@ $(document).ready(function() {
 		    var cols = [
 		    		{ title:'操作', name:'operation',width:100, align:'center',renderer:function(val,item,rowIndex){
 							 return '<button  class="btn btn-primary btn-xs modify"  onclick=ready4Update("'+item.id+'","showInfo","ready4Update_extra_call")>修改</button>&nbsp;'+
-								'<button class="btn btn-danger btn-xs" onclick=delObj("zkConfigService","delete","'+item.guid+'")>删除</button>&nbsp;'; 
+								'<button class="btn btn-danger btn-xs" onclick=delObj("zkConfigService","delete","'+item.id+'")>删除</button>&nbsp;'; 
 					}
 					},
 					{ title:'名称', name:'name' ,width:200, align:'center'},
+					{ title:'节点', name:'cluster' ,width:200, align:'center'},
 			        { title:'IP地址', name:'ip' ,width:200, align:'center'},
 			        { title:'端口', name:'port' ,width:150, align:'center'},
 			        { title:'说明', name:'memo' ,width:150, align:'center'}			        
