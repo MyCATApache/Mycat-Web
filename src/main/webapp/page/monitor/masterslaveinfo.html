@@ -98,6 +98,11 @@
 											hostHTML += '<div class="'+boxcss+'">';
 											hostHTML += '<div class="box-header with-border">';
 											hostHTML += '<h3 class="box-title">'+ row.name + '</h3>';
+											hostHTML += '<div class="box-tools pull-right">';
+											hostHTML += '<button class="btn btn-block btn-info"  onclick="showHostDetail(\''
+												+ row.name
+												+ '\');">时间同步曲线</button>';
+											hostHTML += '</div>';
 											hostHTML += '</div>';
 											hostHTML += '<div class="box-body">';
 											hostHTML += '<div class="row" >';
@@ -116,11 +121,6 @@
 											hostHTML += '<b>Slave_IO_State：</b>'+ row.Slave_IO_State + '<br>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
-											hostHTML += '</div>';
-											hostHTML += '<div class="box-footer text-center" >';
-											hostHTML += '<div align="right"><button class="btn btn-block btn-info" style="width: 30%"  onclick="showHostDetail(\''
-													+ row.name
-													+ '\');">时间同步曲线</button></div>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
