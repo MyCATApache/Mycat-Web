@@ -1,0 +1,99 @@
+<div id="heatbearline" style="height: 400px;"></div>
+<script type="text/javascript">
+$.AdminLTE.boxWidget.activate();
+var heatbearlineChart;
+var option;
+var showChars = function(dataList){
+	require.config({
+	    paths: {
+	        echarts: './static/echarts/build/dist'
+	    }
+	}); 
+
+	// 使用
+	require(
+	    [
+	        'echarts',
+	        'echarts/chart/line',
+	        'echarts/chart/bar' // 使用折线图就加载bar模块，按需加载
+	    ],
+	    function (ec) {
+	        // 基于准备好的dom，初始化echarts图表
+	        heatbearlineChart = ec.init(document.getElementById('heatbearline')); 
+	    	option = {
+	    		    tooltip : {
+	    		        trigger: 'axis'
+	    		    },
+	    		    legend: {
+	    		        data:[hostname + '心跳曲线']
+	    		    },
+	    		    toolbox: {
+	    		        show : true,
+	    		        orient : 'vertical',
+	    		        feature : {
+	    		            mark : {show: false},
+	    		            dataView : {show: false, readOnly: false},
+	    		            magicType : {show: true, type: ['line', 'bar']},
+	    		            restore : {show: true},
+	    		            saveAsImage : {show: true}
+	    		        }
+	    		    },
+	    		    calculable : true,
+	    		    xAxis : [
+	    		        {
+	    		            type : 'category',
+	    		            boundaryGap : false,
+	    		            data : []
+	    		        }
+	    		    ],
+	    		    yAxis : [
+	    		        {
+	    		            type : 'value',
+	    		            name : '毫秒'
+	    		        }
+	    		    ],
+	    		    series : [
+	    		        {
+	    		            name:hostname+'心跳曲线',
+	    		            type:'line',
+	    		            stack: '毫秒',
+	    		            data:[]
+	    		        }
+	    		    ]
+	    		};
+	    	var length = dataList.length;
+	    	for (var i = 0; i < length; i++) {
+	    		var row = dataList[i];
+	    		option.series[0].data.push(row.EXECUTE_TIME);
+	    		option.xAxis[0].data.push(row.TIME);
+	    	}
+	    	heatbearlineChart.setOption(option);
+	    }
+	);
+
+}
+
+ $(document).ready(
+		function() {
+			var rainbow = new Rainbow();
+			rainbow.setService("showService");
+			rainbow.setMethod("heartbeatDetail");
+			rainbow.setParam("ds", $('#datasource').val());
+			rainbow.setParam("dataHostName", hostname);
+			rainbowAjax.query(rainbow, new function(){
+				this.onSuccess = function(data) {
+					 try {
+						if (data.success) {
+							showChars(data.rows);
+						}
+					} catch (e) {
+						alert(e);
+					} 
+				};
+				this.onFail = function(jqXHR, textStatus, errorThrown) {
+				};
+	});
+}) 
+
+	
+</script>

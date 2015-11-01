@@ -8,10 +8,27 @@
 	<select id="sysparam" resultType="map" parameterType="map">
 		show @@sysparam
 	</select>
+	
 	<select id="sql" resultType="map" parameterType="map">
 		show @@sql
 	</select>
+	
 	<select id="sqlslow" resultType="map" parameterType="map">
 		show @@sql.slow
+	</select>	
+	
+	<select id="heartbeat" resultType="map" parameterType="map">
+		show @@heartbeat
+	</select>	
+	
+	<select id="heartbeatDetail" resultType="map" parameterType="map">
+		show @@heartbeat.detail where name=${dataHostName}
+	</select>	
+	
+	<select id="dataSouceSynstatus" resultType="map" parameterType="map">
+		 show @@datasource.synstatus
+	</select>	
+	<select id="dataSouceDetail" resultType="map" parameterType="map">
+		 show @@datasource.syndetail where name=${dataSouceName}
 	</select>	
 </mapper>
