@@ -101,6 +101,11 @@
 											hostHTML += '<div class="'+boxcss+'">';
 											hostHTML += '<div class="box-header with-border">';
 											hostHTML += '<h3 class="box-title">'+ row.NAME + '</h3>';
+											hostHTML += '<div class="box-tools pull-right">';
+											hostHTML += '<button class="btn btn-block btn-info"  onclick="showHostDetail(\''
+												+ row.NAME
+												+ '\');">心跳曲线</button>';
+											hostHTML += '</div>';
 											hostHTML += '</div>';
 											hostHTML += '<div class="box-body">';
 											hostHTML += '<div class="row" >';
@@ -118,11 +123,6 @@
 											hostHTML += '<b>last_active_time：</b>'+ row.LAST_ACTIVE_TIME+ '<br>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
-											hostHTML += '</div>';
-											hostHTML += '<div class="box-footer text-center" >';
-											hostHTML += '<div align="right"><button class="btn btn-block btn-info" style="width: 30%"  onclick="showHostDetail(\''
-													+ row.NAME
-													+ '\');">心跳曲线</button></div>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
 											hostHTML += '</div>';
