@@ -56,4 +56,8 @@ public class ShowService extends BaseService {
 		return base(context,"dataSouceSynstatus");
 	}
 	
+	public RainbowContext dataSouceDetail(RainbowContext context) {
+		return base(context,"dataSouceDetail");
+	}
+	
 }

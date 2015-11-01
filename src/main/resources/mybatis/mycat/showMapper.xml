@@ -28,4 +28,7 @@
 	<select id="dataSouceSynstatus" resultType="map" parameterType="map">
 		 show @@datasource.synstatus
 	</select>	
+	<select id="dataSouceDetail" resultType="map" parameterType="map">
+		 show @@datasource.syndetail where name=${dataSouceName}
+	</select>	
 </mapper>
