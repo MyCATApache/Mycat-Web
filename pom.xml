@@ -82,12 +82,11 @@
 		<commons-digester3>3.2</commons-digester3>
 		<commons-logging.version>1.2</commons-logging.version>
 		<commons-net.version>3.3</commons-net.version>
-		<jackson.version>1.9.0</jackson.version>
 		<jaxrs-api.version>2.3.4.Final</jaxrs-api.version>
 		<log4j.version>2.0-rc1</log4j.version>
 
-		<mybatis.version>3.1.1</mybatis.version>
-		<mybatis-spring.version>1.1.1</mybatis-spring.version>
+		<mybatis.version>3.2.8</mybatis.version>
+		<mybatis-spring.version>1.2.2</mybatis-spring.version>
 
 		<slf4j.version>1.6.6</slf4j.version>
 
@@ -96,7 +95,7 @@
 		<guice.version>1.0</guice.version>
 		<scannotation.version>1.0.2</scannotation.version>
 
-		<spring-framework.version>3.1.4.RELEASE</spring-framework.version>
+		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
 
 		<druid-version>1.0.14</druid-version>
 		<jstl.version>1.2</jstl.version>
@@ -105,13 +104,13 @@
 		<freemarker.version>2.3.9</freemarker.version>
 		<Memcached-Java-Client.version>3.0.0</Memcached-Java-Client.version>
 		<commons-discovery.version>0.2</commons-discovery.version>
-		<sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
+		<sqlite-jdbc.version>3.8.11.2</sqlite-jdbc.version>
 		<servlet-api.versioin>2.5-20081211</servlet-api.versioin>
 		<mysql.version>5.1.35</mysql.version>
 		<base64.version>2.3.8</base64.version>
 		<boot.version>1.0</boot.version>
 		<commmons-codec.version>1.9</commmons-codec.version>
-		<rainbow-common.version>1.5.6-RELEASE</rainbow-common.version>
+		<rainbow-common.version>1.5.11-RELEASE</rainbow-common.version>
 		<joda-time.version>2.3</joda-time.version>
 		<jrds.version>1.0</jrds.version>
 		<log4j1.version>1.2.17</log4j1.version>
@@ -128,9 +127,27 @@
         <curator.version>2.9.0</curator.version>
 		<version.template.file>version.txt.template</version.template.file>
 		<version.file>version.txt</version.file>
+		<jackson-annotations>2.3.0</jackson-annotations>
+		<jackson-core>2.3.1</jackson-core>
+		<jackson-databind>2.3.3</jackson-databind>
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-annotations}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-core}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-databind}</version>
+		</dependency>
 		<!--    zookeeper   -->
 		<dependency>
 			<groupId>org.apache.curator</groupId>
@@ -276,17 +293,6 @@
 				<version>${commons-logging.version}</version>
 			</dependency>
 
-			<!-- jsckson lib -->
-			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-core-asl</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
-				<version>${jackson.version}</version>
-			</dependency>
 
 			<!-- log4j2 lib -->
 			<dependency>

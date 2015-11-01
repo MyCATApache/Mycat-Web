@@ -22,14 +22,12 @@ import javax.management.remote.JMXServiceURL;
 
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.dao.Dao;
-import org.hx.rainbow.common.util.JsonUtil;
 import org.mycat.web.jmonitor.JMConnBean;
 import org.mycat.web.jmonitor.JMEevntCenter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.sun.management.HotSpotDiagnosticMXBean;
 import com.sun.management.OperatingSystemMXBean;
 

@@ -14,12 +14,12 @@ import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.SoaManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mycat.web.task.common.TaskManger;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 
 public class DataSourceUtils {
@@ -62,8 +62,7 @@ public class DataSourceUtils {
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
 			Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
-			beanFactory.registerBeanDefinition(dbName + "transactionManager", getTransactionManagerDef(dbSource));
-			
+			TaskManger.getInstance().addDBName(dbName);
 			return true;
 			
 		} catch (Exception e) {
@@ -137,13 +136,4 @@ public class DataSourceUtils {
 		return sqlSessionTemplateDef;
 	}
 	
-	
-	private  GenericBeanDefinition getTransactionManagerDef(Object dbSource) {
-		GenericBeanDefinition transactionManagerDef = new GenericBeanDefinition();
-		Map<String, Object> paramData = new HashMap<String, Object>();
-		paramData.put("dataSource", dbSource);
-		transactionManagerDef.setPropertyValues(new MutablePropertyValues(paramData));
-		transactionManagerDef.setBeanClass(DataSourceTransactionManager.class);
-		return transactionManagerDef;
-	}
 }

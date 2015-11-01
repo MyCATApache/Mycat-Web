@@ -13,6 +13,9 @@ public class ShowService extends BaseService {
 
 	public RainbowContext base(RainbowContext context,String cmd) {
 		String datasource = (String)context.getAttr("ds");
+		if(datasource ==  null || datasource.isEmpty()){
+			return context;
+		}
 		try {
 			if(!DataSourceUtils.getInstance().register(datasource)){
 				context.setSuccess(false);
@@ -37,5 +40,20 @@ public class ShowService extends BaseService {
 	
 	public RainbowContext sqlslow(RainbowContext context) {
 		return base(context,"sqlslow");
-	}	
+	}
+	
+	public RainbowContext heartbeat(RainbowContext context) {
+		context = base(context,"heartbeat");
+		System.out.println(context.getRows().toString());
+		return context;
+	}
+	
+	public RainbowContext heartbeatDetail(RainbowContext context) {
+		return base(context,"heartbeatDetail");
+	}
+	
+	public RainbowContext dataSouceSynstatus(RainbowContext context) {
+		return base(context,"dataSouceSynstatus");
+	}
+	
 }
