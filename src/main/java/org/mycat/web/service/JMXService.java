@@ -52,6 +52,24 @@ public class JMXService extends BaseService {
 		}
 		return context;
 	}
+
+	/**
+	 * 更新
+	 * @param context
+	 * @return
+	 */
+	public RainbowContext update(RainbowContext context) {
+		try {
+			// TODO update jrds config
+
+			update(context, NAMESPACE);
+		} catch (Exception e) {
+			logger.error("execute error, {} /r/n cause:{}", e.getMessage(), e.getCause());
+			context.setSuccess(Boolean.FALSE);
+			context.setMsg(e.getMessage());
+		}
+		return context;
+	}
 	
 	private boolean createjmxjrds(String jrdsconf, Map<String, Object> paramData) {
 			InputStream inputstate = null;
