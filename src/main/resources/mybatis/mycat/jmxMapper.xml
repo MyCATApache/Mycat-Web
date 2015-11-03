@@ -8,7 +8,7 @@
 	<select id="query" resultType="map" parameterType="map">
 		SELECT
 				GUID	as "guid",  <!-- GUID -->
-				JMXNAME as "name",  <!-- NAME -->
+				JMXNAME as "jmxname",  <!-- NAME -->
 				IP	as "ip",  <!-- IP -->
 				PORT	as "port",  <!-- PORT -->
 				USERNAME	as "username",  <!-- USERNAME -->
