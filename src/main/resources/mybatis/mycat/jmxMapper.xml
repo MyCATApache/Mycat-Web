@@ -19,8 +19,8 @@
 			<if test="guid != null">
 				and GUID = #{guid}
 			</if>
-			<if test="jmxName != null">
-				and JMXNAME = #{jmxName}
+			<if test="jmxname != null">
+				and JMXNAME = #{jmxname}
 			</if>
 			<if test="ip != null">
 				and IP = #{ip}
@@ -45,8 +45,8 @@
 			<if test="guid != null">
 				and GUID = #{guid}
 			</if>
-			<if test="name != null">
-				and JMXNAME = #{name}
+			<if test="jmxname != null">
+				and JMXNAME = #{jmxname}
 			</if>
 			<if test="ip != null">
 				and IP = #{ip}
@@ -94,8 +94,8 @@
 	<update id="update" parameterType="map">
 		UPDATE T_SYS_MYCAT_JMX  
 		<set>
-			<if test="name != null">
-				JMXNAME = #{name, jdbcType=NVARCHAR},
+			<if test="jmxname != null">
+				JMXNAME = #{jmxname, jdbcType=NVARCHAR},
 			</if>
 			<if test="ip != null">
 				IP = #{ip, jdbcType=NVARCHAR},
