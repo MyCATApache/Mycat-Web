@@ -19,8 +19,8 @@
 			<if test="guid != null">
 				and GUID = #{guid}
 			</if>
-			<if test="name != null">
-				and JMXNAME = #{name}
+			<if test="jmxName != null">
+				and JMXNAME = #{jmxName}
 			</if>
 			<if test="ip != null">
 				and IP = #{ip}
