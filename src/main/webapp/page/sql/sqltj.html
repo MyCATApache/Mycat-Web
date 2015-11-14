@@ -182,7 +182,7 @@ function initMap(json){
 	 option = {
      	    title : {
      	        text: '读次数/写次数',
-     	        subtext: '纯属虚构',
+     	        subtext: '读写次数分析',
      	        x:'center'
      	    },
      	    tooltip : {
@@ -217,7 +217,7 @@ function initMap(json){
  function initRequestMap(){
 	 option = {
 			    title : {
-			        text: '分段请求数'
+			        text: 'SQL执行时间分布'
 			    },
 			    tooltip : {
 			        trigger: 'axis'
@@ -275,8 +275,8 @@ function initMap(json){
  function initTimeMap(){
 	 option = {
 			    title : {
-			        text: '耗时请求数',
-			        subtext: '纯属虚构'
+			        text: 'SQL响应时间分布',
+			        subtext: '耗时请求数'
 			    },
 			    tooltip : {
 			        trigger: 'axis'
