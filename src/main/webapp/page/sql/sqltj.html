@@ -20,7 +20,13 @@
 		         </form>
 				</div>
 				<div class="box-body">
-					<div>
+				 
+				  <div style="float: left">
+				   <div id="redMap" style="height:400px;width: 460px;float: left"></div>
+				   <div id="requestMap" style="height:400px;width: 460px;float: left;margin-left: 50px"></div>
+				   <div id="timeMap" style="height:400px;width: 450px;float: left;margin-left: 50px"></div>
+				  </div>
+					<div style="clear: both;">
 						<table id="table"></table>
 						<div style="text-align: right;">
 							<div id="paginator"></div>
@@ -43,7 +49,14 @@
 
 var datasouce_change = function(){
 	queryForm('query_Form');
+	loadData();
 }
+
+var piexData = new Array();
+var requestData = new Array();
+var timeData = new Array();
+ 
+
 
 var Selected_Callback = function(target_select){
 	  this.onSuccess=function(data){
@@ -56,6 +69,7 @@ var Selected_Callback = function(target_select){
 						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
 					}
 				}
+				
 			} catch (e) {
 				alert("异常!")
 			}
@@ -74,6 +88,7 @@ var initDataSouce = function(){
 
 $(document).ready(function() {
 	initDataSouce();
+	
 		    var cols = [
 						{ title:'ID', name:'ID' ,width:60, align:'left'},
 						{ title:'用户', name:'USER' ,width:80, align:'left'},
@@ -93,5 +108,226 @@ $(document).ready(function() {
 	        root: 'items'
 	    });
 });
-  
+
+//加载配置文件
+require.config({
+    paths: {
+        echarts: './static/echarts/build/dist'
+    }
+});
+
+
+//获取数据
+$(function(){
+	
+  	var item = "{\"<10ms, 10ms-200ms, 200ms-1s, >1s\":\"[3, 9, 0, 0]\",\"R/W, R%\":\"11/1, 0.92\",\"ID\":1,\"LAST_TIME\":1447490909406,\"22-06h, 06-13h, 13-18h, 18-22h\":\"[0, 0, 12, 0]\",\"USER\":\"test\"}";
+  	var json =  eval('(' + item + ')');
+  	
+	
+});
+
+function loadData(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("sqlsum");
+	rainbow.setParam("ds", $('#datasource').val());
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				if (data.success) {
+					initMap(data.rows[0]);
+				}
+			} catch (e) {
+				alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+	
+}
+
+
+function initMap(json){
+	
+    		requestData.push(json["22-06h, 06-13h, 13-18h, 18-22h"]);
+    		timeData.push(json["<10ms, 10ms-200ms, 200ms-1s, >1s"]);
+    	 
+		require(
+            [
+                'echarts',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                var myChart_read = ec.init(document.getElementById('redMap'));
+                myChart_read.setOption(initReadMap(json["R/W, R%"]));
+                
+                var myChart_request = ec.init(document.getElementById('requestMap'));
+                myChart_request.setOption(initRequestMap());
+                
+                var myChart_timeMap = ec.init(document.getElementById('timeMap'));
+                myChart_timeMap.setOption(initTimeMap());
+            }
+        );
+}
+
+//饼图
+ function initReadMap(params){
+	
+	 var data = params.split(",");
+	 var array = data[0].split("/");
+	 
+	 option = {
+     	    title : {
+     	        text: '读次数/写次数',
+     	        subtext: '纯属虚构',
+     	        x:'center'
+     	    },
+     	    tooltip : {
+     	        trigger: 'item',
+     	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+     	    },
+     	    legend: {
+     	        orient : 'vertical',
+     	        x : 'left',
+     	        data:["读次数","写次数"]
+     	    },
+     	    toolbox: {
+     	        show : true
+     	    },
+     	    calculable : true,
+     	    series : [
+     	        {
+     	            name:'访问来源',
+     	            type:'pie',
+     	            radius : '55%',
+     	            center: ['50%', '60%'],
+     	            data:[
+     	                {value:array[0], name:'读次数'},
+     	                {value:array[1], name:'写次数'}
+     	            ]
+     	        }
+     	    ]
+     	};
+	 return option;
+ }
+ 
+ function initRequestMap(){
+	 option = {
+			    title : {
+			        text: '分段请求数'
+			    },
+			    tooltip : {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['时间段','请求次数']
+			    },
+			    toolbox: {
+			        show : true
+			    },
+			    calculable : true,
+			    xAxis : [
+			        {
+			            type : 'category',
+			            data : ['22-06h','06-13h','13-18h','18-22h']
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'请求次数',
+			            type:'bar',
+			            data:[2.0, 4.9, 7.0, 23.2],
+			            markPoint : {
+			                data : [
+			                    {type : 'max', name: '最大值'},
+			                    {type : 'min', name: '最小值'}
+			                ]
+			            },
+			            markLine : {
+			                data : [
+			                    {type : 'average', name: '平均值'}
+			                ]
+			            }
+			        },
+			        {
+			            name:'降水量',
+			            type:'bar',
+			            data:requestData,
+			            markLine : {
+			                data : [
+			                    {type : 'average', name : '平均值'}
+			                ]
+			            }
+			        }
+			    ]
+			};
+	return option;
+ }
+ 
+ function initTimeMap(){
+	 option = {
+			    title : {
+			        text: '耗时请求数',
+			        subtext: '纯属虚构'
+			    },
+			    tooltip : {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['时间','耗时请求数']
+			    },
+			    toolbox: {
+			        show : true
+			    },
+			    calculable : true,
+			    xAxis : [
+			        {
+			            type : 'category',
+			            data : ['<10ms','10ms-200ms','200ms-1s','>1s']
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'蒸发量',
+			            type:'bar',
+			            data:[2.0, 4.9, 7.0, 23.2],
+			            markPoint : {
+			                data : [
+			                    {type : 'max', name: '最大值'},
+			                    {type : 'min', name: '最小值'}
+			                ]
+			            },
+			            markLine : {
+			                data : [
+			                    {type : 'average', name: '平均值'}
+			                ]
+			            }
+			        },
+			        {
+			            name:'降水量',
+			            type:'bar',
+			            data:timeData,
+			            markLine : {
+			                data : [
+			                    {type : 'average', name : '平均值'}
+			                ]
+			            }
+			        }
+			    ]
+			};
+	return option;
+ }
 </script>
