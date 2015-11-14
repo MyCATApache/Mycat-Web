@@ -1,9 +1,9 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>慢SQL统计</h1>
+	<h1>SQL统计</h1>
 	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i>慢SQL统计</a></li>
-		<li><a href="#"></i>慢SQL统计</a></li>
+		<li><a href="#"><i class="fa fa-dashboard"></i>SQL统计</a></li>
+		<li><a href="#"></i>SQL统计</a></li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -75,18 +75,20 @@ var initDataSouce = function(){
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
-                    { title:'用户', name:'USER' ,width:100, align:'left'},
-					{ title:'节点', name:'DATASOURCE' ,width:300, align:'left'},
-			        { title:'开始时间', name:'START_TIME' ,width:120, align:'left'},
-					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left'},
-					{ title:'SQL', name:'SQL' ,width:400, align:'left'}
+						{ title:'ID', name:'ID' ,width:60, align:'left'},
+						{ title:'用户', name:'USER' ,width:80, align:'left'},
+				        { title:'读次数/写次数, 读占比', name:'R/W, R%' ,width:160, align:'left'},						
+						{ title:'分段请求数[22-06h,06-13h,13-18h,18-22h]', name:'22-06h, 06-13h, 13-18h, 18-22h' ,width:360, align:'left'},	
+				        { title:'耗时请求数[<10ms,10ms-200ms,200ms-1s,>1s]', name:'<10ms, 10ms-200ms, 200ms-1s, >1s' ,width:360, align:'left'},
+				        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left'}
+			        
 			    ];
 	  mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlslow',
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
 	        method: 'post',
 	        root: 'items'
 	    });

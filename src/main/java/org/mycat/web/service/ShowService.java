@@ -42,6 +42,10 @@ public class ShowService extends BaseService {
 		return base(context,"sqlslow");
 	}
 	
+	public RainbowContext sqlsum(RainbowContext context) {
+		return base(context,"sqlsum");
+	}
+	
 	public RainbowContext heartbeat(RainbowContext context) {
 		context = base(context,"heartbeat");
 		System.out.println(context.getRows().toString());
