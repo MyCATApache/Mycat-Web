@@ -17,6 +17,10 @@
 		show @@sql.slow
 	</select>	
 	
+	<select id="sqlsum" resultType="map" parameterType="map">
+		show @@sql.sum
+	</select>
+		
 	<select id="heartbeat" resultType="map" parameterType="map">
 		show @@heartbeat
 	</select>	
