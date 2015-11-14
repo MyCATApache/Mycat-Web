@@ -22,9 +22,9 @@
 				<div class="box-body">
 				 
 				  <div style="float: left">
-				   <div id="redMap" style="height:400px;width: 460px;float: left"></div>
-				   <div id="requestMap" style="height:400px;width: 460px;float: left;margin-left: 50px"></div>
-				   <div id="timeMap" style="height:400px;width: 450px;float: left;margin-left: 50px"></div>
+				   <div id="redMap" style="height:400px;width: 400px;float: left"></div>
+				   <div id="requestMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
+				   <div id="timeMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
 				  </div>
 					<div style="clear: both;">
 						<table id="table"></table>
@@ -51,8 +51,7 @@ var datasouce_change = function(){
 	queryForm('query_Form');
 	loadData();
 }
-
-var piexData = new Array();
+ 
 var requestData = new Array();
 var timeData = new Array();
  
@@ -111,18 +110,19 @@ $(document).ready(function() {
 
 //加载配置文件
 require.config({
-    paths: {
-        echarts: './static/echarts/build/dist'
-    }
-});
+	    paths: {
+	        echarts: './static/echarts/build/dist'
+	    }
+	}); 
+
 
 
 //获取数据
 $(function(){
 	
-  	var item = "{\"<10ms, 10ms-200ms, 200ms-1s, >1s\":\"[3, 9, 0, 0]\",\"R/W, R%\":\"11/1, 0.92\",\"ID\":1,\"LAST_TIME\":1447490909406,\"22-06h, 06-13h, 13-18h, 18-22h\":\"[0, 0, 12, 0]\",\"USER\":\"test\"}";
+  	var item = "{\"<10ms, 10ms-200ms, 200ms-1s, >1s\":\"[11, 22, 30, 13]\",\"R/W, R%\":\"11/1, 0.92\",\"ID\":1,\"LAST_TIME\":1447490909406,\"22-06h, 06-13h, 13-18h, 18-22h\":\"[12, 22, 31, 13]\",\"USER\":\"test\"}";
   	var json =  eval('(' + item + ')');
-  	
+  	//initMap(json);
 	
 });
 
@@ -135,7 +135,7 @@ function loadData(){
 		this.onSuccess = function(data) {
 			 try {
 				if (data.success) {
-					initMap(data.rows[0]);
+					initMap(data.rows[0])
 				}
 			} catch (e) {
 				alert(e);
@@ -149,10 +149,14 @@ function loadData(){
 
 
 function initMap(json){
-	
-    		requestData.push(json["22-06h, 06-13h, 13-18h, 18-22h"]);
-    		timeData.push(json["<10ms, 10ms-200ms, 200ms-1s, >1s"]);
-    	 
+			//eval
+			var r_str = json["22-06h, 06-13h, 13-18h, 18-22h"];
+			var t_str = json["<10ms, 10ms-200ms, 200ms-1s, >1s"];
+			
+			var r_array = eval( '(' + r_str + ')');
+			var t_array = eval( '(' + t_str + ')');
+		 
+			
 		require(
             [
                 'echarts',
@@ -165,10 +169,10 @@ function initMap(json){
                 myChart_read.setOption(initReadMap(json["R/W, R%"]));
                 
                 var myChart_request = ec.init(document.getElementById('requestMap'));
-                myChart_request.setOption(initRequestMap());
+                myChart_request.setOption(initRequestMap(r_array));
                 
                 var myChart_timeMap = ec.init(document.getElementById('timeMap'));
-                myChart_timeMap.setOption(initTimeMap());
+                myChart_timeMap.setOption(initTimeMap(t_array));
             }
         );
 }
@@ -182,7 +186,7 @@ function initMap(json){
 	 option = {
      	    title : {
      	        text: '读次数/写次数',
-     	        subtext: '读写次数分析',
+     	        subtext: '读写次数',
      	        x:'center'
      	    },
      	    tooltip : {
@@ -200,7 +204,7 @@ function initMap(json){
      	    calculable : true,
      	    series : [
      	        {
-     	            name:'访问来源',
+     	            name:'SQL类型',
      	            type:'pie',
      	            radius : '55%',
      	            center: ['50%', '60%'],
@@ -214,65 +218,42 @@ function initMap(json){
 	 return option;
  }
  
- function initRequestMap(){
+ function initRequestMap(params){
 	 option = {
-			    title : {
-			        text: 'SQL执行时间分布'
+			 title : {
+			        text: 'SQL执行时间分布',
+			        subtext: '时间分段请求数'			      
 			    },
-			    tooltip : {
-			        trigger: 'axis'
-			    },
-			    legend: {
-			        data:['时间段','请求次数']
-			    },
-			    toolbox: {
-			        show : true
-			    },
-			    calculable : true,
-			    xAxis : [
-			        {
-			            type : 'category',
-			            data : ['22-06h','06-13h','13-18h','18-22h']
-			        }
-			    ],
-			    yAxis : [
-			        {
-			            type : 'value'
-			        }
-			    ],
-			    series : [
-			        {
-			            name:'请求次数',
-			            type:'bar',
-			            data:[2.0, 4.9, 7.0, 23.2],
-			            markPoint : {
-			                data : [
-			                    {type : 'max', name: '最大值'},
-			                    {type : 'min', name: '最小值'}
-			                ]
-			            },
-			            markLine : {
-			                data : [
-			                    {type : 'average', name: '平均值'}
-			                ]
-			            }
-			        },
-			        {
-			            name:'降水量',
-			            type:'bar',
-			            data:requestData,
-			            markLine : {
-			                data : [
-			                    {type : 'average', name : '平均值'}
-			                ]
-			            }
-			        }
-			    ]
+			 tooltip : {
+					showContent : true
+				},
+				legend : {
+					data : [ '总计' ]
+				},
+				xAxis : [ {
+					type : 'category',
+					data : ['22-06h','06-13h','13-18h','18-22h']
+				} ],
+				yAxis : [ {
+					type : 'value'
+				} ],
+				 series : [
+				              {
+				                  name:'请求数耗时',
+				                  type:'bar',
+				                  data: params,
+				                  markLine : {
+				                      data : [
+				                          {type : 'average', name: '平均值'}
+				                      ]
+				                  }
+				              }
+				        ]
 			};
 	return option;
  }
  
- function initTimeMap(){
+ function initTimeMap(params){
 	 option = {
 			    title : {
 			        text: 'SQL响应时间分布',
@@ -291,7 +272,7 @@ function initMap(json){
 			    xAxis : [
 			        {
 			            type : 'category',
-			            data : ['<10ms','10ms-200ms','200ms-1s','>1s']
+			            data : ['1','10ms-200ms','200ms-1s','>1s']
 			        }
 			    ],
 			    yAxis : [
@@ -300,33 +281,17 @@ function initMap(json){
 			        }
 			    ],
 			    series : [
-			        {
-			            name:'蒸发量',
-			            type:'bar',
-			            data:[2.0, 4.9, 7.0, 23.2],
-			            markPoint : {
-			                data : [
-			                    {type : 'max', name: '最大值'},
-			                    {type : 'min', name: '最小值'}
-			                ]
-			            },
-			            markLine : {
-			                data : [
-			                    {type : 'average', name: '平均值'}
-			                ]
-			            }
-			        },
-			        {
-			            name:'降水量',
-			            type:'bar',
-			            data:timeData,
-			            markLine : {
-			                data : [
-			                    {type : 'average', name : '平均值'}
-			                ]
-			            }
-			        }
-			    ]
+			              {
+			                  name:'请求数耗时',
+			                  type:'bar',
+			                  data: params,
+			                  markLine : {
+			                      data : [
+			                          {type : 'average', name: '平均值'}
+			                      ]
+			                  }
+			              }
+			         ]
 			};
 	return option;
  }
