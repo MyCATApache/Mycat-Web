@@ -35,14 +35,26 @@ public class LBServer {
 			List<JSONObject> hosts = loadHostByZone(name);
 			List<JSONObject> lbGroups = loadLbGroupByZone(name);
 			List<JSONObject> clusters = loadClusterByZone(name);
+			List<JSONObject> mysql = loadMysqlGroupByZone(name);
 
-			hosts.addAll(lbGroups);
-			hosts.addAll(clusters);
+			clusters.addAll(lbGroups);
+			clusters.addAll(mysql);
+			clusters.addAll(hosts);
 
-			JSONObject root = createTreeNode(name, zoneIcon, hosts);
+			JSONObject root = createTreeNode(name, zoneIcon, clusters);
 			allClusters.add(root);
 		}
 		return allClusters;
+	}
+
+	private List<JSONObject> loadMysqlGroupByZone(String name) {
+		String hostIcon = "css/grp_24px.png";
+		List<JSONObject> mysqls = new ArrayList<JSONObject>();
+		List<String> gp1Child = new ArrayList<String>();
+		gp1Child.add("mysql0");
+		JSONObject node = createTreeNode("MysqlGroup", hostIcon, gp1Child);
+		mysqls.add(node);
+		return mysqls;
 	}
 
 	private List<JSONObject> loadLbGroupByZone(String name) {
@@ -50,8 +62,7 @@ public class LBServer {
 		List<JSONObject> hosts = new ArrayList<JSONObject>();
 		List<String> gp1Child = new ArrayList<String>();
 		gp1Child.add("group-1");
-		gp1Child.add("group-2");
-		JSONObject node = createTreeNode("lbgroup1", hostIcon, gp1Child);
+		JSONObject node = createTreeNode("LB Group", hostIcon, gp1Child);
 		hosts.add(node);
 		return hosts;
 	}
@@ -69,7 +80,7 @@ public class LBServer {
 	private List<JSONObject> loadClusterByZone(String name) {
 		String clusterIcon = "css/cluster_24px.png";
 		List<JSONObject> allClusters = new ArrayList<JSONObject>();
-		String clusterName = "cluster-0";
+		String clusterName = "MycatCluster";
 		List<JSONObject> nodes = loadNodeByClusterName(clusterName);
 		allClusters.add(createTreeNode(clusterName, clusterIcon, nodes));
 		return allClusters;
@@ -87,7 +98,6 @@ public class LBServer {
 		List<String> zones = new ArrayList<String>();
 		zones.add("成都中心[default]");
 		zones.add("北京中心");
-		zones.add("上海中心");
 		return zones;
 	}
 

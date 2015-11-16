@@ -107,7 +107,8 @@ function createTree() {
 	};
 	var types = {
 		"default" : {
-			'icon' : 'glyphicon glyphicon-leaf',
+			//'icon' : 'glyphicon glyphicon-leaf',
+			'icon':'css/mycat_16px.png',
 		}
 	};
 	var tree = $('#jstree');
