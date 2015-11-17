@@ -47,6 +47,27 @@
 
 <script type="text/javascript">
 
+/**
+ * 时间原型增加一个 format 函数
+ */
+Date.prototype.format = function(fmt) {
+  var o = {
+    "M+" : this.getMonth()+1,                 //月份
+    "d+" : this.getDate(),                    //日
+    "h+" : this.getHours(),                   //小时
+    "m+" : this.getMinutes(),                 //分
+    "s+" : this.getSeconds(),                 //秒
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度
+    "S"  : this.getMilliseconds()             //毫秒
+  };
+  if(/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+  return fmt;
+}
+
 var datasouce_change = function(){
 	queryForm('query_Form');
 	loadData();
@@ -88,15 +109,24 @@ var initDataSouce = function(){
 $(document).ready(function() {
 	initDataSouce();
 	
-		    var cols = [
-						{ title:'ID', name:'ID' ,width:60, align:'left'},
-						{ title:'用户', name:'USER' ,width:80, align:'left'},
-				        { title:'读次数/写次数, 读占比', name:'R/W, R%' ,width:160, align:'left'},						
-						{ title:'分段请求数[22-06h,06-13h,13-18h,18-22h]', name:'22-06h, 06-13h, 13-18h, 18-22h' ,width:360, align:'left'},	
-				        { title:'耗时请求数[<10ms,10ms-200ms,200ms-1s,>1s]', name:'<10ms, 10ms-200ms, 200ms-1s, >1s' ,width:360, align:'left'},
-				        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left'}
-			        
-			    ];
+    var cols = [
+				{ title:'ID', name:'ID', width:60, align:'left'},
+				{ title:'用户', name:'USER', width:80, align:'left'},
+				{ title:'读次数', name:'R', width:100, align:'left'},
+				{ title:'写次数', name:'W', width:100, align:'left'},
+				{ title:'读占比', name:'R%', width:60, align:'left'},
+				{ title:'最大并发数', name:'MAX', width:80, align:'left'},				
+				{ title:'分段请求数', name:'TIME_COUNT',width:200, align:'left'},	
+		        { title:'耗时请求数', name:'TTL_COUNT',width:200, align:'left'},
+		        { title:'最后执行', name:'LAST_TIME' ,width:120, align:'left', 
+		        	renderer: function(val){
+		        		console.debug( "vv:" + val);
+		        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
+		        		return d;
+		        	}
+		        }
+	    ];
+		    
 	  mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
@@ -149,12 +179,18 @@ function loadData(){
 
 
 function initMap(json){
-			//eval
-			var r_str = json["22-06h, 06-13h, 13-18h, 18-22h"];
-			var t_str = json["<10ms, 10ms-200ms, 200ms-1s, >1s"];
-			
-			var r_array = eval( '(' + r_str + ')');
-			var t_array = eval( '(' + t_str + ')');
+	
+	 if ( json == undefined) {		 
+		 var NULL_JSON = "{\"TTL_COUNT\":\"[0, 0, 0, 0]\",\"R\":\"0\",\"W\":\"0\",\"R%\":\"0\",\"MAX\":\"0\",\"ID\":1,\"LAST_TIME\":0,\"TIME_COUNT\":\"[0, 0, 0, 0]\",\"USER\":\"\"}";
+		 json =  eval('(' + NULL_JSON + ')');
+	 }
+	 
+	//eval
+	var r_str = json["TIME_COUNT"];
+	var t_str = json["TTL_COUNT"];
+	
+	var r_array = eval( '(' + r_str + ')');
+	var t_array = eval( '(' + t_str + ')');
 		 
 			
 		require(
@@ -166,7 +202,7 @@ function initMap(json){
             ],
             function (ec) {
                 var myChart_read = ec.init(document.getElementById('redMap'));
-                myChart_read.setOption(initReadMap(json["R/W, R%"]));
+                myChart_read.setOption(initReadMap(json["R"],json["W"]));
                 
                 var myChart_request = ec.init(document.getElementById('requestMap'));
                 myChart_request.setOption(initRequestMap(r_array));
@@ -178,10 +214,7 @@ function initMap(json){
 }
 
 //饼图
- function initReadMap(params){
-	
-	 var data = params.split(",");
-	 var array = data[0].split("/");
+ function initReadMap(rCount, wCount){
 	 
 	 option = {
      	    title : {
@@ -209,8 +242,8 @@ function initMap(json){
      	            radius : '55%',
      	            center: ['50%', '60%'],
      	            data:[
-     	                {value:array[0], name:'读次数'},
-     	                {value:array[1], name:'写次数'}
+     	                {value:rCount, name:'读次数'},
+     	                {value:wCount, name:'写次数'}
      	            ]
      	        }
      	    ]
@@ -232,7 +265,7 @@ function initMap(json){
 				},
 				xAxis : [ {
 					type : 'category',
-					data : ['22-06h','06-13h','13-18h','18-22h']
+					data : ['22点-06点','06点-13点','13点-18点','18点-22点']
 				} ],
 				yAxis : [ {
 					type : 'value'
@@ -272,7 +305,7 @@ function initMap(json){
 			    xAxis : [
 			        {
 			            type : 'category',
-			            data : ['1','10ms-200ms','200ms-1s','>1s']
+			            data : ['小于10ms','10~200ms之间','200ms-1s之间','大于1s']
 			        }
 			    ],
 			    yAxis : [
