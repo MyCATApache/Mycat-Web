@@ -8,12 +8,147 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 @Controller
 @RequestMapping("/lb")
 public class LBServer {
+
+	class Node {
+		String text;
+		String icon;
+		Object obj;
+		List<?> children;
+
+		public Object getObj() {
+			return obj;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public List<?> getChildren() {
+			return children;
+		}
+
+		public String getIcon() {
+			return icon;
+		}
+
+	}
+
+	class Zone {
+		int id;
+		String text;
+		String icon;
+		List<Node> children = new ArrayList<Node>();
+
+		void add(Node node) {
+			children.add(node);
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public List<Node> getChildren() {
+			return children;
+		}
+
+		public String getIcon() {
+			return icon;
+		}
+
+	}
+
+	class Mycat {
+		int id;
+		int port;
+		int clusterId;
+		String host;
+		String text;
+
+		public int getId() {
+			return id;
+		}
+
+		public int getPort() {
+			return port;
+		}
+
+		public int getClusterId() {
+			return clusterId;
+		}
+
+		public String getHost() {
+			return host;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+	}
+
+	class LBGroup {
+		int id;
+		int zoneId;
+		String text;
+
+		public int getId() {
+			return id;
+		}
+
+		public int getZoneId() {
+			return zoneId;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+	}
+
+	class Mysql {
+		int id;
+		int port;
+		int zoneId;
+		String host;
+		String text;
+
+		public int getId() {
+			return id;
+		}
+
+		public int getPort() {
+			return port;
+		}
+
+		public int getZoneId() {
+			return zoneId;
+		}
+
+		public String getHost() {
+			return host;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+	}
+
+	class Host {
+		int id;
+		int port;
+		int zoneId;
+		String host;
+		String text;
+	}
 
 	@ResponseBody
 	@RequestMapping("/loadAllZone")
@@ -21,92 +156,74 @@ public class LBServer {
 		if (path == null || path.isEmpty())
 			path = "mycat-zones";
 
-		List<String> zones = loadZoneNames();
-		List<JSONObject> clusters = loadAllCluster(zones);
-		JSONArray arr = new JSONArray();
-		arr.addAll(clusters);
-		return arr;
-	}
-
-	private List<JSONObject> loadAllCluster(List<String> zones) {
 		String zoneIcon = "css/zone_24px.png";
-		List<JSONObject> allClusters = new ArrayList<JSONObject>();
-		for (String name : zones) {
-			List<JSONObject> hosts = loadHostByZone(name);
-			List<JSONObject> lbGroups = loadLbGroupByZone(name);
-			List<JSONObject> clusters = loadClusterByZone(name);
-			List<JSONObject> mysql = loadMysqlGroupByZone(name);
 
-			clusters.addAll(lbGroups);
-			clusters.addAll(mysql);
-			clusters.addAll(hosts);
+		int zoneId = 1;
+		Node lbs = loadLBGroup(zoneId, null);
+		Node mycats = loadMycats(zoneId);
+		Node mysqls = loadMysql(zoneId);
+		Node host = loadHost(zoneId);
 
-			JSONObject root = createTreeNode(name, zoneIcon, clusters);
-			allClusters.add(root);
-		}
-		return allClusters;
+		Zone zone = new Zone();
+		zone.id = zoneId;
+		zone.text = "成都中心";
+		zone.icon = zoneIcon;
+		zone.add(lbs);
+		zone.add(mycats);
+		zone.add(mysqls);
+		zone.add(host);
+
+		return (JSON) JSON.toJSON(zone);
 	}
 
-	private List<JSONObject> loadMysqlGroupByZone(String name) {
-		String hostIcon = "css/grp_24px.png";
-		List<JSONObject> mysqls = new ArrayList<JSONObject>();
-		List<String> gp1Child = new ArrayList<String>();
-		gp1Child.add("mysql0");
-		JSONObject node = createTreeNode("MysqlGroup", hostIcon, gp1Child);
-		mysqls.add(node);
-		return mysqls;
+	private Node loadHost(int zoneId) {
+		return build("css/host_24px.png", "hosts", null, null);
 	}
 
-	private List<JSONObject> loadLbGroupByZone(String name) {
-		String hostIcon = "css/grp_24px.png";
-		List<JSONObject> hosts = new ArrayList<JSONObject>();
-		List<String> gp1Child = new ArrayList<String>();
-		gp1Child.add("group-1");
-		JSONObject node = createTreeNode("LB Group", hostIcon, gp1Child);
-		hosts.add(node);
-		return hosts;
+	private Node loadMysql(int id) {
+		List<Node> mysqls = new ArrayList<Node>();
+		Mysql sql = new Mysql();
+		sql.id = 0;
+		sql.port = 3306;
+		sql.zoneId = id;
+		sql.text = "mysql";
+		sql.host = "127.0.0.1";
+		mysqls.add(build("", sql.text, null, sql));
+
+		return build("css/grp_24px.png", "MysqlGroup", mysqls, null);
 	}
 
-	private List<JSONObject> loadHostByZone(String name) {
-		String hostIcon = "css/host_24px.png";
-		List<JSONObject> hosts = new ArrayList<JSONObject>();
-		List<String> host1Child = new ArrayList<String>();
-		host1Child.add("host1");
-		JSONObject node = createTreeNode("hosts", hostIcon, host1Child);
-		hosts.add(node);
-		return hosts;
+	private Node loadLBGroup(int id, List<Mycat> nodes) {
+
+		List<Node> lbs = new ArrayList<Node>();
+		LBGroup gp = new LBGroup();
+		gp.zoneId = id;
+		gp.text = "group1";
+		lbs.add(build("", gp.text, null, gp));
+
+		return build("css/grp_24px.png", "LBGroup", lbs, null);
 	}
 
-	private List<JSONObject> loadClusterByZone(String name) {
-		String clusterIcon = "css/cluster_24px.png";
-		List<JSONObject> allClusters = new ArrayList<JSONObject>();
-		String clusterName = "MycatCluster";
-		List<JSONObject> nodes = loadNodeByClusterName(clusterName);
-		allClusters.add(createTreeNode(clusterName, clusterIcon, nodes));
-		return allClusters;
+	private Node loadMycats(int id) {
+		List<Node> mycats = new ArrayList<Node>();
+		Mycat m = new Mycat();
+		m.id = 1;
+		m.port = 8066;
+		m.clusterId = 2;
+		m.text = "node1";
+		m.host = "127.0.0.1";
+		mycats.add(build("", m.text, null, m));
+		return build("css/cluster_24px.png", "MycatCluster", mycats, null);
 	}
 
-	private List<JSONObject> loadNodeByClusterName(String clusterName) {
-		String instIcon = "css/mycat_16px.png";
-		List<JSONObject> names = new ArrayList<JSONObject>();
-		JSONObject node = createTreeNode("node1", instIcon, null);
-		names.add(node);
-		return names;
-	}
+	private Node build(String icon, String text, List<?> clds, Object obj) {
+		Node nodes = new Node();
+		nodes.text = text;
+		nodes.children = clds;
+		nodes.icon = icon;
+		nodes.obj = obj;
+		return nodes;
 
-	private List<String> loadZoneNames() {
-		List<String> zones = new ArrayList<String>();
-		zones.add("成都中心[default]");
-		zones.add("北京中心");
-		return zones;
-	}
-
-	private JSONObject createTreeNode(String text, String icon, List<?> childs) {
-		JSONObject node = new JSONObject();
-		node.put("text", text);
-		node.put("icon", icon);
-		node.put("children", childs);
-		return node;
 	}
 
 	public static void main(String[] args) {

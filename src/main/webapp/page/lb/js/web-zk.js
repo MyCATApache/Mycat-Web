@@ -9,7 +9,20 @@ var appNavTree;
 $(function() {
 	createTree();
 	loadAllZone();
+	bindClick();
 });
+
+function bindClick() {
+	var link = $("a,.app");
+	for (var i = 0; i < link.length; i++) {
+		link[i].onclick = onAppClick;
+	}
+}
+
+function onAppClick() {
+	window.open('/main.html?to=' + this.href);
+	return false;
+}
 
 function loadAllZone() {
 	$.get("/lb/loadAllZone", function(data) {
@@ -68,7 +81,8 @@ function onTreeNodeSelect(e, data) {
 		return false;
 	var path = data.instance.get_path(data.node, '/');
 	var zkpath = convertToZkPath(path);
-	$('#content').text(zkpath);
+	var data = data.node.original.obj;
+	$('#ctx').text("Path:"+zkpath+" Content:"+JSON.stringify(data));
 }
 
 /**
@@ -107,8 +121,8 @@ function createTree() {
 	};
 	var types = {
 		"default" : {
-			//'icon' : 'glyphicon glyphicon-leaf',
-			'icon':'css/mycat_16px.png',
+			// 'icon' : 'glyphicon glyphicon-leaf',
+			'icon' : 'css/mycat_16px.png',
 		}
 	};
 	var tree = $('#jstree');
