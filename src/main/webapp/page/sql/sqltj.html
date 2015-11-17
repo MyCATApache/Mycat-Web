@@ -46,7 +46,7 @@
 </script>
 
 <script type="text/javascript">
-
+var mmgrid;
 /**
  * 时间原型增加一个 format 函数
  */
@@ -69,7 +69,6 @@ Date.prototype.format = function(fmt) {
 }
 
 var datasouce_change = function(){
-	queryForm('query_Form');
 	loadData();
 }
  
@@ -123,16 +122,16 @@ $(document).ready(function() {
 		        		console.debug( "vv:" + val);
 		        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
 		        		return d;
-		        	}
+		        	} 
 		        }
 	    ];
 		    
-	  mmgrid = $('#table').mmGrid({
+   		mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
+	        autoLoad: false,
 	        method: 'post',
 	        root: 'items'
 	    });
@@ -164,8 +163,11 @@ function loadData(){
 	rainbowAjax.query(rainbow, new function(){
 		this.onSuccess = function(data) {
 			 try {
+				
 				if (data.success) {
-					initMap(data.rows[0])
+					var dataRow = data.rows[0];
+					initMap(dataRow);
+					mmgrid.load(data.rows);
 				}
 			} catch (e) {
 				alert(e);
@@ -180,9 +182,11 @@ function loadData(){
 
 function initMap(json){
 	
-	 if ( json == undefined) {		 
+	 if ( json == undefined) {	
 		 var NULL_JSON = "{\"TTL_COUNT\":\"[0, 0, 0, 0]\",\"R\":\"0\",\"W\":\"0\",\"R%\":\"0\",\"MAX\":\"0\",\"ID\":1,\"LAST_TIME\":0,\"TIME_COUNT\":\"[0, 0, 0, 0]\",\"USER\":\"\"}";
 		 json =  eval('(' + NULL_JSON + ')');
+	 }else{
+		
 	 }
 	 
 	//eval

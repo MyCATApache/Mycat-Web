@@ -77,7 +77,7 @@ public class DataSourceUtils {
 	}
 	
 	public boolean register(String dbName) throws Exception {
-		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + "NAME_SUFFIX")){
+		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + NAME_SUFFIX)){
 			RainbowContext context = new RainbowContext("mycatService", "query");
 			context.addAttr("mycatName", dbName);
 			context = SoaManager.getInstance().invoke(context);

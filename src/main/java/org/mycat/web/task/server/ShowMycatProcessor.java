@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class ShowMycatProcessor extends BaseService implements ITask {
 	private static final String NAMESPACE = "MYCATSHOWPROCESSOR";
 	
-	public ShowMycatProcessor(){
-		Long period = Long.parseLong((String)RainbowProperties.getProperties("show.period"));
-		if(period == null || period < 30000){
-			period = UPDATE_PERIOD;
-		}
-		TaskManger.getInstance().addTask(this, period);
-	}
+//	public ShowMycatProcessor(){
+//		Long period = Long.parseLong((String)RainbowProperties.getProperties("show.period"));
+//		if(period == null || period < 30000){
+//			period = UPDATE_PERIOD;
+//		}
+//		TaskManger.getInstance().addTask(this, period);
+//	}
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {
