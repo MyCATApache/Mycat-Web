@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.hx.rainbow.common.context.RainbowContext;
@@ -37,13 +38,15 @@ public class JMXService extends BaseService {
 	public RainbowContext insert(RainbowContext context) {
 		try {
 
-			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-			jrdsconfg = jrdsconfg + "JMX_" +  context.getAttr("jmxname")+ "_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
-			
-			//JMX SAVE JSR
-			context.addAttr("jrdsfile", jrdsconfg);
-			context.addAttr("fileName", jrdsconfg);
-			context.addAttr("guid", new ObjectId().toString());
+//			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
+//			jrdsconfg = jrdsconfg + "JMX_" +  context.getAttr("jmxname")+ "_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
+//
+//			//JMX SAVE JSR
+//			context.addAttr("jrdsfile", jrdsconfg);
+//			context.addAttr("fileName", jrdsconfg);
+//			context.addAttr("guid", new ObjectId().toString());
+			String jrdsconfg = buildJrdsPath(context, new ObjectId().toString());
+
 			super.insert(context, NAMESPACE);
 			createjmxjrds(jrdsconfg, context.getAttr());
 		} catch (Exception e) {
@@ -51,6 +54,49 @@ public class JMXService extends BaseService {
 			context.setMsg(e.getMessage());
 		}
 		return context;
+	}
+
+	/**
+	 * 更新
+	 * @param context
+	 * @return
+	 */
+	public RainbowContext update(RainbowContext context) {
+		try {
+			Map<String, Object> queryMap = new HashMap<>(1);
+			queryMap.put("guid", context.getAttr("guid"));
+			Map<String, Object> data = super.getDao().get(NAMESPACE, "query", queryMap);
+			String jrdsfile = (String)data.get("fileName");
+			if(jrdsfile != null && !jrdsfile.isEmpty()){
+				new File(jrdsfile).delete();
+			}
+
+			String jrdsconfg = buildJrdsPath(context, context.getAttr("guid"));
+			update(context, NAMESPACE);
+			createjmxjrds(jrdsconfg, context.getAttr());
+		} catch (Exception e) {
+			logger.error("execute error, {} /r/n cause:{}", e.getMessage(), e.getCause());
+			context.setSuccess(Boolean.FALSE);
+			context.setMsg(e.getMessage());
+		}
+		return context;
+	}
+
+	/**
+	 * 构建路径及设置jrdsfile、fileName、guid的值
+	 * @param context
+	 * @param guid
+	 * @return
+	 */
+	private String buildJrdsPath(RainbowContext context, Object guid) {
+		String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
+		jrdsconfg = jrdsconfg + "JMX_" +  context.getAttr("jmxname")+ "_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
+
+		//JMX SAVE JSR
+		context.addAttr("jrdsfile", jrdsconfg);
+		context.addAttr("fileName", jrdsconfg);
+		context.addAttr("guid", guid);
+		return jrdsconfg;
 	}
 	
 	private boolean createjmxjrds(String jrdsconf, Map<String, Object> paramData) {
