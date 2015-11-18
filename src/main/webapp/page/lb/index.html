@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mycat-Eye</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/jstree.min.css" rel="stylesheet" type="text/css" />
+
+<!--[if lt IE 9]>
+      <script src="js/html5shiv-3.7.0.min.js"></script>
+      <script src="js/respond-1.3.0.min.js"></script>
+    <![endif]-->
+<style type="text/css">
+.app {
+	width: 70px;
+	height: 70px;
+	text-align: center;
+	padding-top: 28px;
+	margin-left: 10px;
+	padding-left: 7px;
+	font-weight: bold;
+	text-align: center;
+}
+
+body {
+	background-color: #e7e8eb;
+}
+</style>
+</head>
+<body>
+	<div id="progressdiv" class="loading">
+		<div class="load-context">
+			<img src="css/loading.gif">Please wait
+		</div>
+	</div>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<ul class="nav navbar-nav" id="nav">
+				<li role="presentation">
+					<div class="glyphicon glyphicon-cog"
+						style="color: rgb(40, 248, 255); font-size: 30px;">Mycat-LB</div>
+					<div class="glyphicon glyphicon-cog"
+						style="color: rgb(40, 248, 255); font-size: 30px;"></div>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row ">
+			<div class="col-sm-3">
+				<div class="panel panel-primary">
+					<div class="panel-heading">选择数据中心</div>
+					<div class="row nomargin" id="jstree"></div>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<strong>Mycat-EYE 功能导航</strong>
+					</div>
+					<div class="panel-body">
+					    <label class="label label-danger" id="ctx"></label>
+					    <hr>
+						<strong>Mycat监控及配置</strong>
+						<hr>
+						<div class="row">
+							<a class="btn btn-large btn-success app"
+								href="/page/manger/mycat.html" target="_blank">服务配置</a> <a
+								class="btn btn-large btn-success app"
+								href="/page/manger/jmx.html" target="_blank">VM管理</a> <a
+								class="btn btn-large btn-success app"
+								href="/page/manger/sysparam.html" target="_blank">系统参数</a> <a
+								class="btn btn-large btn-success app"
+								href="/page/sys/role/role.html" target="_blank">分库管理</a> <a
+								class="btn btn-large btn-success app"
+								href="/page/manger/zkconfig.html/" target="_blank">Zk配置</a> <a
+								class="btn btn-large btn-success app"
+								href="/page/manger/zkread.html" target="_blank">Zk信息</a> <a
+								class="btn btn-large btn-danger app" href="/page/sql/sqltj.html"
+								target="_blank">SQL统计</a> <a
+								class="btn btn-large btn-danger app" href="/page/sql/sql.html"
+								target="_blank">SQL监控</a> <a
+								class="btn btn-large btn-danger app"
+								href="/page/sql/sqlslow.html/" target="_blank">慢SQL</a>
+						</div>
+						<hr>
+					</div>
+					<div class="panel-footer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer class="navbar-inverse navbar-fixed-bottom text-center">
+		<div style="color: white;">
+			<h4>Copyright &copy; 2015 mycat.io All Rights Reserved</h4>
+		</div>
+	</footer>
+	<script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/bootstrap-3.0.0.min.js"></script>
+	<script src="js/jstree-3.1.1.min.js"></script>
+	<script src="js/web-zk.js"></script>
+
+</body>
+</html>
