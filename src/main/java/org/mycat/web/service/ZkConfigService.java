@@ -1,5 +1,6 @@
 package org.mycat.web.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,15 @@ import org.springframework.stereotype.Service;
 @Service("zkConfigService")
 public class ZkConfigService  extends BaseService {
 	private static final String NAMESPACE = "SYSZOOKEEPER";
-
+	
+	private static final String MENU_TYPE_ZONE = "1";
+	private static final String MENU_TYPE_CLUSTER_GROUP = "2";
+	private static final String MENU_TYPE_CLUSTER_NODE = "3";
+	private static final String MENU_TYPE_HOST_GROUP = "4";	
+	private static final String MENU_TYPE_HOST_NODE = "5";
+	private static final String MENU_TYPE_PROJECT_GROUP = "6";
+	private static final String MENU_TYPE_PROJECT_NODE = "7";
+	
 	public RainbowContext query(RainbowContext context) {
 		super.query(context, NAMESPACE);
 		return context;
@@ -139,13 +149,53 @@ public class ZkConfigService  extends BaseService {
         //获取子节点列表
         List<String> children = client.getChildren().forPath(aPath);
         if (children.size()>0) {
-         // System.out.println("Children: " + children);        
+          System.out.println("Children: " + children);        
           for(int i = 0; i < children.size(); i++)  {
       	    readNode(context,client,aPath+"/"+children.get(i));
           }
         }
     }
-    //public static void main(String[] args) throws Exception {
-    	//readZkinfo("127.0.0.1:2181","/cluster1");
-   // }
+    
+    public RainbowContext allZone(RainbowContext context){
+		List<Menu> menus =new ArrayList<Menu>();
+		//菜单4
+		Menu firstMenu4 = new Menu("4","My project","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenu4Sub = new Menu("4_1","xxxProject","",MENU_TYPE_PROJECT_NODE);
+		firstMenu4.getSubMenus().add(firstMenu4Sub);
+		menus.add(firstMenu4);
+		//菜单1
+		Menu firstMenus1 = new Menu("1","Zone1","",MENU_TYPE_ZONE);
+		//菜单1 第二级 submenu
+		Menu firstMenuSub1 = new Menu("1_1","K8s Cluster","",MENU_TYPE_CLUSTER_GROUP);
+		//菜单1 第三级 菜单即第二级的子菜单
+		Menu firstMenuSsuba = new Menu("1_1_1","ClusterA","",MENU_TYPE_CLUSTER_NODE);
+		firstMenuSub1.getSubMenus().add(firstMenuSsuba);
+		Menu firstMenuSsubb = new Menu("1_1_1","ClusterB","",MENU_TYPE_CLUSTER_NODE);
+		firstMenuSub1.getSubMenus().add(firstMenuSsubb);
+		firstMenus1.getSubMenus().add(firstMenuSub1);
+		Menu firstMenuSub2 = new Menu("1_2","Host Pool","",MENU_TYPE_HOST_GROUP);
+		Menu firstMenuSub2_1 = new Menu("1_2_1","Host1","",MENU_TYPE_HOST_NODE);
+		Menu firstMenuSub2_2 = new Menu("1_2_2","Host2","",MENU_TYPE_HOST_NODE);
+		firstMenuSub2.getSubMenus().add(firstMenuSub2_1);
+		firstMenuSub2.getSubMenus().add(firstMenuSub2_2);
+		firstMenus1.getSubMenus().add(firstMenuSub2);
+		menus.add(firstMenus1);
+		//菜单2
+		Menu firstMenus2 = new Menu("2","Zone2","",MENU_TYPE_ZONE);
+		menus.add(firstMenus2);
+		//菜单3
+		Menu firstMenus3 = new Menu("3","Zone3","",MENU_TYPE_ZONE);
+		menus.add(firstMenus3);
+		//context.addAttr("menu",menus);  
+		Map<String, Object> attr = new HashMap<String, Object>();
+		attr.put("menu", menus);
+		context.addRow(attr);
+    	return context;
+    }
+    
+    public static void main(String[] args) throws Exception {
+    	RainbowContext context=new RainbowContext();
+    	readZkinfo(context,"10.2.35.25:2181","/brokers");
+    	 System.out.println("Children: " + context.toString()); 
+    }
 }
