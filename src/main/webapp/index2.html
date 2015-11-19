@@ -46,6 +46,7 @@
 	src="static/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- 菜单库 -->
 <script type="text/javascript" src="resources/menu/MenuWeaver.js"></script>
+<script type="text/javascript" src="resources/menu/main.js"></script>
 <!-- 基础css表 -->
 <link rel="stylesheet" type="text/css" href="resources/css/base.css">
 </head>
@@ -127,7 +128,10 @@
 									class="fa fa-circle-o"></i>Zookeeper配置</a></li>						
 							<li><a
 								href="javascript:loadContext('page/manger/zkread.html');"><i
-									class="fa fa-circle-o"></i>Zookeeper信息</a></li>															
+									class="fa fa-circle-o"></i>Zookeeper信息</a></li>	
+							<li><a
+								href="javascript:loadContext('page/lb/index.html');"><i
+									class="fa fa-circle-o"></i>LB信息</a></li>																								
 						</ul></li>
 					<li class="treeview"><a href="#"> <i
 							class="fa fa-dashboard"></i><span>Mycat-监控</span><i
@@ -239,5 +243,38 @@
 		src="resources/select/CommonSelectWeaver.js"></script>
 	<script type="text/javascript"
 		src="resources/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+	// To make Pace works on Ajax calls    
+    function loadData(){
+    	var rainbow = new Rainbow();
+    	rainbow.setService("zkConfigService");
+    	rainbow.setMethod("allZone");
+    	rainbow.setParam("ds", $('#datasource').val());
+    	rainbowAjax.query(rainbow, new function(){
+    		this.onSuccess = function(data) {
+    			 try {
+    				
+    				if (data.success) {
+    					
+    					var dataRow = data.rows[0].menu;
+    					//initMap(dataRow);
+    					//console.log(dataRow);
+    					//alert(Object.prototype.toString.apply(dataRow).toString());
+    					setMenu($('.sidebar-menu'),dataRow);
+    					//mmgrid.load(data.rows);
+    				}
+    			} catch (e) {
+    				alert(e);
+    			} 
+    		};
+    		this.onFail = function(jqXHR, textStatus, errorThrown) {
+    		};
+    	});
+    	
+    }
+    $(document).ready(function() {
+    	loadData();
+    });
+</script>		
 </body>
 </html>
