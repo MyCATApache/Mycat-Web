@@ -31,7 +31,7 @@ public class ZkConfigService  extends BaseService {
 	private static final String MENU_TYPE_HOST_NODE = "5";
 	private static final String MENU_TYPE_PROJECT_GROUP = "6";
 	private static final String MENU_TYPE_PROJECT_NODE = "7";
-	
+	private static final String MENU_TYPE_NODE = "8";
 	public RainbowContext query(RainbowContext context) {
 		super.query(context, NAMESPACE);
 		return context;
@@ -159,33 +159,48 @@ public class ZkConfigService  extends BaseService {
     public RainbowContext allZone(RainbowContext context){
 		List<Menu> menus =new ArrayList<Menu>();
 		//菜单4
-		Menu firstMenu4 = new Menu("4","My project","",MENU_TYPE_PROJECT_GROUP);
-		Menu firstMenu4Sub = new Menu("4_1","xxxProject","",MENU_TYPE_PROJECT_NODE);
+		Menu firstMenu4 = new Menu("4","SQL-监控","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenu4Sub = new Menu("4_1","SQL统计","page/sql/sqltj.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub2 = new Menu("4_2","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub3 = new Menu("4_3","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
 		firstMenu4.getSubMenus().add(firstMenu4Sub);
+		firstMenu4.getSubMenus().add(firstMenu4Sub2);
+		firstMenu4.getSubMenus().add(firstMenu4Sub3);
 		menus.add(firstMenu4);
 		//菜单1
-		Menu firstMenus1 = new Menu("1","Zone1","",MENU_TYPE_ZONE);
+		Menu firstMenus1 = new Menu("1","Mycat Zone","",MENU_TYPE_ZONE);
 		//菜单1 第二级 submenu
-		Menu firstMenuSub1 = new Menu("1_1","K8s Cluster","",MENU_TYPE_CLUSTER_GROUP);
+		Menu firstMenuSub1 = new Menu("1_1","Mycat Cluster","",MENU_TYPE_CLUSTER_GROUP);
 		//菜单1 第三级 菜单即第二级的子菜单
-		Menu firstMenuSsuba = new Menu("1_1_1","ClusterA","",MENU_TYPE_CLUSTER_NODE);
+		Menu firstMenuSsuba = new Menu("1_1_1","Mycat Server1","page/sql/sqltj.html",MENU_TYPE_CLUSTER_NODE);
 		firstMenuSub1.getSubMenus().add(firstMenuSsuba);
-		Menu firstMenuSsubb = new Menu("1_1_1","ClusterB","",MENU_TYPE_CLUSTER_NODE);
+		Menu firstMenuSsubb = new Menu("1_1_1","Mycat Server2","page/sql/sqltj.html",MENU_TYPE_CLUSTER_NODE);
 		firstMenuSub1.getSubMenus().add(firstMenuSsubb);
 		firstMenus1.getSubMenus().add(firstMenuSub1);
-		Menu firstMenuSub2 = new Menu("1_2","Host Pool","",MENU_TYPE_HOST_GROUP);
-		Menu firstMenuSub2_1 = new Menu("1_2_1","Host1","",MENU_TYPE_HOST_NODE);
-		Menu firstMenuSub2_2 = new Menu("1_2_2","Host2","",MENU_TYPE_HOST_NODE);
+		
+		Menu firstMenuSub2 = new Menu("1_2","MySQL Group","",MENU_TYPE_HOST_GROUP);
+		Menu firstMenuSub2_1 = new Menu("1_2_1","MySQL Host1","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
+		Menu firstMenuSub2_2 = new Menu("1_2_2","MySQL Host2","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
 		firstMenuSub2.getSubMenus().add(firstMenuSub2_1);
 		firstMenuSub2.getSubMenus().add(firstMenuSub2_2);
 		firstMenus1.getSubMenus().add(firstMenuSub2);
-		menus.add(firstMenus1);
+		
+		Menu firstMenuSub3 = new Menu("1_3","Mycat LB","",MENU_TYPE_HOST_GROUP);
+		Menu firstMenuSub3_1 = new Menu("1_3_1","LB Host1","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
+		Menu firstMenuSub3_2 = new Menu("1_3_2","LB Host2","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
+		firstMenuSub3.getSubMenus().add(firstMenuSub3_1);
+		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);
+		firstMenus1.getSubMenus().add(firstMenuSub3);	
+		
+		menus.add(firstMenus1);		
+		/*
 		//菜单2
 		Menu firstMenus2 = new Menu("2","Zone2","",MENU_TYPE_ZONE);
 		menus.add(firstMenus2);
 		//菜单3
 		Menu firstMenus3 = new Menu("3","Zone3","",MENU_TYPE_ZONE);
 		menus.add(firstMenus3);
+		*/
 		//context.addAttr("menu",menus);  
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
