@@ -26,6 +26,7 @@ public class DataSourceUtils {
 
 	private static final Logger logger = LogManager
 			.getLogger(DataSourceUtils.class);
+	private static final String DEFULAT_MYCAT_MANGER = "9066";
 	
 	private volatile static DataSourceUtils dataSourceUtils = null;
 	private DataSourceUtils(){};
@@ -42,10 +43,12 @@ public class DataSourceUtils {
 	}
 	
 	private static final String NAME_SUFFIX = "dataSource";
-
-	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
+	
+	
+	public  boolean register(Map<String, Object> jdbc, String dbName, String mycatType) throws Exception {
 		Connection conn = null;
 		try {
+			dbName = dbName + mycatType;
 			String beanName = dbName + NAME_SUFFIX;
 			remove(dbName);
 			ConfigurableApplicationContext applicationContext = 
@@ -76,8 +79,8 @@ public class DataSourceUtils {
 		}
 	}
 	
-	public boolean register(String dbName) throws Exception {
-		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + NAME_SUFFIX)){
+	public boolean register(String dbName, String mycatType) throws Exception {
+		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + mycatType + NAME_SUFFIX)){
 			RainbowContext context = new RainbowContext("mycatService", "query");
 			context.addAttr("mycatName", dbName);
 			context = SoaManager.getInstance().invoke(context);
@@ -85,9 +88,18 @@ public class DataSourceUtils {
 				return false;
 			}
 			Map<String, Object> row = context.getRow(0);
-			return register(row, dbName);
+			row.put("port", mycatType);
+			return register(row, dbName, mycatType);
 		}
 		return true;
+	}
+
+	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
+		return register(jdbc, dbName, DEFULAT_MYCAT_MANGER);
+	}
+	
+	public boolean register(String dbName) throws Exception {
+		return register(dbName, DEFULAT_MYCAT_MANGER);
 	}
 
 	public  void remove(String dbName) {

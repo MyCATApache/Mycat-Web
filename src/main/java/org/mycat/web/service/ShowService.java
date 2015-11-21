@@ -25,7 +25,7 @@ public class ShowService extends BaseService {
 		} catch (Exception e) {
 			
 		}
-		context.setDs(datasource);
+		context.setDs(datasource + "9066");
 		super.query(context, SYSPARAM_NAMESPACE, cmd);
 		return context;
 	}

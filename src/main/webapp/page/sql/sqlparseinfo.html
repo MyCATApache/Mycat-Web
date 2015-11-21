@@ -1,0 +1,65 @@
+<table id="mysqlexplainDetail" />
+<script type="text/javascript">
+	$(document).ready(function() {
+		var mysqlexplain_cols = [ {
+			title : 'id',
+			name : 'id',
+			width : 50,
+			align : 'left'
+		}, {
+			title : 'select_type',
+			name : 'select_type',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'table',
+			name : 'table',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'type',
+			name : 'type',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'possible_keys',
+			name : 'possible_keys',
+			width : 120,
+			align : 'left'
+		}, {
+			title : 'key',
+			name : 'key',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'key_len',
+			name : 'key_len',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'ref',
+			name : 'ref',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'rows',
+			name : 'rows',
+			width : 100,
+			align : 'left'
+		}, {
+			title : 'Extra',
+			name : 'Extra',
+			width : 100,
+			align : 'left'
+		} ];
+		$('#mysqlexplainDetail').mmGrid({
+			indexCol : true,
+			url : './dispatcherAction/queryByMMGrid.do?service=explainService&method=explainMysql&dataNode='+dataNodeParam + '&sql=' + sqlParam + '&ds=' + $('#datasource').val(),
+			height : '400',
+			indexColWidth : 35,
+			cols : mysqlexplain_cols,
+			method : 'get'
+		});
+	});
+
+</script>
