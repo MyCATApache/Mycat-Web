@@ -24,7 +24,7 @@ public class DBSourceService extends BaseService {
 
 	public RainbowContext addMycat(RainbowContext context) {
 		try {
-			String mycatName = (String)context.getAttr("dbName"); 
+			String mycatName = (String)context.getAttr("mycatName"); 
 			if(!DataSourceUtils.getInstance().register(context.getAttr(), mycatName)){
 				context.setSuccess(false);
 				context.setMsg("配置信息错误,连接服务失败!");

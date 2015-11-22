@@ -158,6 +158,12 @@
 			<groupId>org.apache.curator</groupId>
 			<artifactId>curator-framework</artifactId>
 			<version>${curator.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>	
 			<dependency>
 				<groupId>org.xerial</groupId>
@@ -416,11 +422,11 @@
 				<artifactId>jrds</artifactId>
 				<version>${jrds.version}</version>
 			</dependency> -->
-			<dependency>
+ 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>${log4j1.version}</version>
-			</dependency>
+			</dependency> 
 <!-- 			<dependency>
 				<groupId>org.rrd4j</groupId>
 				<artifactId>rrd4j</artifactId>

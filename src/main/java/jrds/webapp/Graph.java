@@ -58,6 +58,10 @@ public final class Graph extends JrdsServlet {
 				showAllGraphs(req, res);
 				return;
 			}
+			if (pathInf.startsWith("/hostList")) {
+				getHostList(req, res);
+				return;
+			}
 			Date start = new Date();
 			HostsList hl = getHostsList();
 
@@ -151,17 +155,39 @@ public final class Graph extends JrdsServlet {
 		}
 	}
 
+	private void getHostList(HttpServletRequest req, HttpServletResponse res) {
+		HostsList hl = this.getHostsList();
+		
+		List<String> hostList = new ArrayList<String>();
+		
+		for (HostInfo hostInf : hl.getHosts()) {
+			hostList.add(hostInf.getName());
+		}
+		
+		try {
+			Writer out = res.getWriter();
+			out.write(JsonUtil.getInstance().object2JSON(hostList));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void showAllGraphs(HttpServletRequest req, HttpServletResponse res) {
 		HostsList hl = this.getHostsList();
-		
+		String hostName = req.getParameter("hostName");
 		List<Map<String, Object>> hostList = new ArrayList<Map<String, Object>>();
-		
+		if(hostName == null || hostName.isEmpty()){
+			return;
+		}
 
 		for (HostInfo hostInf : hl.getHosts()) {
 			Map<String,Object> hostMap = new LinkedHashMap<String, Object>();
+			String hostInfName = hostInf.getName();
+			if(!hostName.equals(hostInfName)){
+				continue;
+			}
 			hostMap.put("host", hostInf.getName());
-
 			Iterator<Probe<?, ?>> itors = hostInf.getProbes().iterator();
 			
 			List<Map<String, Object>> probeList = new ArrayList<Map<String, Object>>();
@@ -180,7 +206,6 @@ public final class Graph extends JrdsServlet {
 					String url = req.getContextPath()
 							+ "/graph/" + hostInf.getName();
 					nameMap.put("url",  url + "/" + gn.getName() + "?probe=" + probeName);
-//					sb.append("&nbsp;&nbsp;<a href='" + url + "'>" + gNname + "</a><br>");
 					nameList.add(nameMap);
 				}
 				probeMap.put("graph", nameList);
@@ -188,6 +213,7 @@ public final class Graph extends JrdsServlet {
 			}
 			hostMap.put("probe", probeList);
 			hostList.add(hostMap);
+			break;
 		}
 		
 		try {
