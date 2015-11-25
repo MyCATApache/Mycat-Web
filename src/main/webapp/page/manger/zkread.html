@@ -16,6 +16,7 @@
 				 <form action="" id="query_Form">
 					<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
 		                  	<option value="">请选择注册中心</option>
+		                  	<option value="mycat-zone">mycat-zone</option>
 		            </select>
 		         </form>
 				</div>
@@ -38,7 +39,21 @@
 <script type="text/javascript">
    $.AdminLTE.boxWidget.activate();
 </script>
-
+<Script language="javascript">
+function GetRequest() {
+  
+  var url = location.search; //获取url中"?"符后的字串
+   var theRequest = new Object();
+   if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+         theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+      }
+   }
+   return theRequest;
+}
+</Script>
 <script type="text/javascript">
 
 var datasouce_change = function(){
@@ -65,18 +80,23 @@ var Selected_Callback = function(target_select){
 };
 
 var initDataSouce = function(){
+	var Request = new Object();
+	Request = GetRequest();
+	var path;
+	path = Request['path'];
 	var rainbow = new Rainbow();
 	rainbow.setService("zkConfigService");
 	rainbow.setMethod("query");
-	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+	rainbow.setParam("path", path);
+	//rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
 
 
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
-					{ title:'Path', name:'Path' ,width:500, align:'left'},
-			        { title:'Data', name:'Data' ,width:500, align:'left'}
+					{ title:'Path', name:'Path' ,width:400, align:'left'},
+			        { title:'Data', name:'Data' ,width:600, align:'left'}
 			        
 			    ];
 	  mmgrid = $('#table').mmGrid({
