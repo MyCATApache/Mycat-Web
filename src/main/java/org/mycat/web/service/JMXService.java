@@ -12,6 +12,7 @@ import java.util.Map;
 
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
+import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -25,26 +26,37 @@ public class JMXService extends BaseService {
 	private static final String NAMESPACE = "SYSJMX";
 
 	public RainbowContext query(RainbowContext context) {
-		super.query(context, NAMESPACE);
+		//super.query(context, NAMESPACE);
+		context.addRows(ZookeeperService.getInstance().getJmx());
+		context.setTotal(context.getRows().size());		
 		return context;
 	}
 	
 	public RainbowContext queryByPage(RainbowContext context) {
-		super.queryByPage(context, NAMESPACE);
+		//super.queryByPage(context, NAMESPACE);
+		context.addRows(ZookeeperService.getInstance().getJmx());
+		context.setTotal(context.getRows().size());
 		return context;
 	}
 
 
 	public RainbowContext insert(RainbowContext context) {
+		String guid=new ObjectId().toString();
+		try{
+			String jrdsconfg = buildJrdsPath(context, guid);
+			
+			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());			
+			context.setMsg("新增成功!");
+			context.setSuccess(true);
+			createjmxjrds(jrdsconfg, context.getAttr());
+		}catch (Exception e) {
+			logger.error(e.getCause());
+			context.setSuccess(false);
+			throw new AppException("新增失败,系统异常!case:" + e.getMessage(), e.getCause());
+		}
+		return context;		
+		/*
 		try {
-
-//			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-//			jrdsconfg = jrdsconfg + "JMX_" +  context.getAttr("jmxname")+ "_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
-//
-//			//JMX SAVE JSR
-//			context.addAttr("jrdsfile", jrdsconfg);
-//			context.addAttr("fileName", jrdsconfg);
-//			context.addAttr("guid", new ObjectId().toString());
 			String jrdsconfg = buildJrdsPath(context, new ObjectId().toString());
 
 			super.insert(context, NAMESPACE);
@@ -54,6 +66,7 @@ public class JMXService extends BaseService {
 			context.setMsg(e.getMessage());
 		}
 		return context;
+		*/
 	}
 
 	/**
@@ -62,6 +75,25 @@ public class JMXService extends BaseService {
 	 * @return
 	 */
 	public RainbowContext update(RainbowContext context) {
+		try{		
+		   String guid=(String)context.getAttr("guid");
+		   Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
+			String jrdsfile = (String)data.get("fileName");
+			if(jrdsfile != null && !jrdsfile.isEmpty()){
+				new File(jrdsfile).delete();
+			}
+			String jrdsconfg = buildJrdsPath(context,guid);
+			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());		
+			context.setMsg("更新成功!");
+			context.setSuccess(true);
+			createjmxjrds(jrdsconfg, context.getAttr());			
+		} catch (Exception e) {
+			logger.error("execute error, {} /r/n cause:{}", e.getMessage(), e.getCause());
+			context.setSuccess(Boolean.FALSE);
+			context.setMsg(e.getMessage());
+		}
+		return context;
+		/*
 		try {
 			Map<String, Object> queryMap = new HashMap<>(1);
 			queryMap.put("guid", context.getAttr("guid"));
@@ -80,6 +112,7 @@ public class JMXService extends BaseService {
 			context.setMsg(e.getMessage());
 		}
 		return context;
+		*/		
 	}
 
 	/**
@@ -140,7 +173,7 @@ public class JMXService extends BaseService {
 
 
 	public RainbowContext delete(RainbowContext context) {
-		
+		/*
 		Map<String, Object> data = super.getDao().get(NAMESPACE, "query", context.getAttr());
 		super.getDao().delete(NAMESPACE, "delete", context.getAttr());
 		String jrdsfile = (String)data.get("fileName");
@@ -149,5 +182,26 @@ public class JMXService extends BaseService {
 		}
 		context.getAttr().clear();
 		return context;
-	}
+		*/
+		String jrdsfile ="";
+		try{
+			String guid=(String)context.getAttr("guid");
+			Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
+			ZookeeperService.getInstance().delJmx(guid);
+			context.setMsg("删除成功!");
+			context.setSuccess(true);
+			jrdsfile = (String)data.get("fileName");
+	
+		}catch (Exception e) {
+			logger.error(e.getCause());
+			context.setSuccess(false);
+			throw new AppException("删除失败,系统异常!case:" + e.getMessage(), e.getCause());
+		}				
+		if(jrdsfile != null && !jrdsfile.isEmpty()){
+			new File(jrdsfile).delete();
+		}		
+		context.getAttr().clear();
+		return context;
+	}		
+
 }

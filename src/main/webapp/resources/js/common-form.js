@@ -300,6 +300,26 @@ function addForm(serviceName,method,_formid,extra_call){
 	   rainbowAjax.excute(rainbow,new Add_Callback());
 }
 
+ function getParam(url,name){
+        var search = url;
+        var pattern = new RegExp("[?&]"+name+"\=([^&]+)", "g");
+        var matcher = pattern.exec(search);
+        var items = null;
+        if(null != matcher){
+                try{
+                        items = decodeURIComponent(decodeURIComponent(matcher[1]));
+                }catch(e){
+                        try{
+                                items = decodeURIComponent(matcher[1]);
+                        }catch(e){
+                                items = matcher[1];
+                        }
+                }
+        }
+        return items;
+};
+var zkPath = "";
+var zkId = "";
 function loadContext(url,copy){
 	if(copy && mmgrid){
 		var rows =  mmgrid.selectedRows();
@@ -311,6 +331,9 @@ function loadContext(url,copy){
 			return;
 		}
 	}
+
+	zkPath=getParam(url,"zkpath");
+	zkId=getParam(url,"zkid");
    	$(".content-wrapper").load(url,function(response,status,xhr){
    		$(".content").resize(function(){});
    		
