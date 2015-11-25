@@ -3,12 +3,14 @@ package org.mycat.web.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.apache.curator.utils.ZKPaths;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
@@ -18,6 +20,8 @@ import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONObject;
 
 @Lazy
 @Service("zkConfigService")
@@ -32,14 +36,62 @@ public class ZkConfigService  extends BaseService {
 	private static final String MENU_TYPE_PROJECT_GROUP = "6";
 	private static final String MENU_TYPE_PROJECT_NODE = "7";
 	private static final String MENU_TYPE_NODE = "8";
+	
+	private static final String CONFIG_MYCAT_ZONE= "/mycat-zone";
+	
+	
 	public RainbowContext query(RainbowContext context) {
-		super.query(context, NAMESPACE);
+		//super.query(context, NAMESPACE);
+	    String zkpath=(String)context.getAttr("zkpath");
+	    String zkid=(String)context.getAttr("zkid");	
+	    String config=(String)context.getAttr("config");	
+	    List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+zkpath+"/"+zkid+"/"+config+"-config");
+	    for(int i = 0; i < configid.size(); i++)  { 
+	        Map<String, Object> attr = new HashMap<String, Object>();
+	        attr.put("id", i);
+	        attr.put("child", configid.get(i));
+	    	context.getRows().add(attr);
+	    }
+		context.setMsg("OK!");
+		context.setSuccess(true);	
 		return context;
 	}
-
-
-	public RainbowContext queryByPage(RainbowContext context) {
-		super.queryByPage(context, NAMESPACE);
+	private List<Map<String, Object>> getMmgrid(List<Map<String, Object>> mapList,String child){
+		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+		for (int i=0;i<mapList.size();i++){			
+			//Iterator it = mapList.get(i).keySet().iterator();  
+			int l=1;			
+			for(Map.Entry<String, Object> entry:mapList.get(i).entrySet()) {
+				Map<String, Object> map=new HashMap<>();
+	             map.put("name", l++);
+	             map.put("param", entry.getKey());
+	             map.put("value", entry.getValue());	
+	             rows.add(map);
+			}            
+		}
+		return rows;
+	 }
+	
+	
+	public RainbowContext queryChilds(RainbowContext context) throws Exception {
+	    String zkpath=(String)context.getAttr("zkpath");
+	    String zkid=(String)context.getAttr("zkid");
+	    String config=(String)context.getAttr("config");	
+	    String ds=(String)context.getAttr("ds");
+		if(ds ==  null || ds.isEmpty()){
+			return context;
+		}
+		
+	    String childPath =ZKPaths.makePath(CONFIG_MYCAT_ZONE+"/"+zkpath,"/"+zkid+"/"+config+"-config");
+	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+"/"+ds),ds));//.getServerNodeConfig(childPath,ds));
+	  //  List<Map<String,JSONObject>> jsonList=;
+	   // for (int i=0;i<jsonList.size();i++){
+	   // 	jsonList.get(i)
+	   //   context.addRows(ZookeeperService.getInstance().getServerNodeConfig(childPath,ds));	    
+	   // }
+	    context.setTotal(context.getRows().size());	
+		context.setMsg("OK!");
+		context.setSuccess(true);	
 		return context;
 	}
 
@@ -57,41 +109,8 @@ public class ZkConfigService  extends BaseService {
  		  context.setSuccess(true);
            return context;    	   
        }
-       /*
-		RainbowContext query = new RainbowContext();
-		query.addAttr("name", context.getAttr("name"));
-		query = super.query(query, NAMESPACE);
-
-		if (query.getRows() != null && query.getRows().size() > 0) {
-			context.setMsg("名称已存在");
-			context.setSuccess(false);
-			return context;
-		}
-
-		context.addAttr("zkid", 1);
-		//context.addAttr("createTime", new Date());
-		super.insert(context, NAMESPACE);
-		return context;
-		*/
-	}
-	
-	public synchronized RainbowContext insertCluster(RainbowContext context) throws Exception {
-
-		RainbowContext query = new RainbowContext();
-		query.addAttr("name", context.getAttr("name"));
-		query = super.query(query, NAMESPACE);
-
-		if (query.getRows() != null && query.getRows().size() > 0) {
-			context.setMsg("名称已存在");
-			context.setSuccess(false);
-			return context;
-		}
-
-		context.addAttr("zkid", 2);
-		//context.addAttr("createTime", new Date());
-		super.insert(context, NAMESPACE);
-		return context;
 	}	
+
 	
 	public RainbowContext update(RainbowContext context) {
 		super.update(context, NAMESPACE);
@@ -104,72 +123,7 @@ public class ZkConfigService  extends BaseService {
 	    context.getAttr().clear();
 	    return context;
    }
-	
-	public RainbowContext getZkconfig(RainbowContext context) throws Exception {	
-     	String cluster = (String)context.getAttr("ds");
-		try {
-			if(cluster==null){
-				context.setSuccess(false);
-				context.setMsg("请选择注册中心!");
-				return context;
-			}
-		} catch (Exception e) {
-			
-		}     	
-     	RainbowContext query = new RainbowContext();
-     	query.addAttr("cluster", cluster);
-     	Map<String, Object> data = super.getDao().get(NAMESPACE, "load", query.getAttr());
-     	System.out.println(data.toString());
-     	String ip = (String)data.get("ip");
-     	String port= data.get("port").toString();
-     	context.getAttr().clear();
-     	readZkinfo(context,ip+":"+port,"/"+cluster);
-     	return context;
-	}
-	 public static void readZkinfo(RainbowContext context,String zk,String path) throws Exception {    
-          CuratorFramework client = CuratorFrameworkFactory.builder()
-        		  .connectString(zk)  // 服务器列表
-                  .sessionTimeoutMs(5000) // 会话超时时间，单位毫秒
-                  .connectionTimeoutMs(3000)// 连接创建超时时间，单位毫秒
-                  .retryPolicy(new ExponentialBackoffRetry(1000, 3))// 重试策略
-                  .build();
-          client.start();
-         String mainPath=path;
-          Stat systemPropertiesNodeStat = client.checkExists().forPath(mainPath);
-          if (systemPropertiesNodeStat == null) {
-          	//client.create().creatingParentsIfNeeded().forPath(mainPath);
-            //}     
-            //创建节点
-            //client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(mainPath, "xxxxx".getBytes());
-          }     
-          readNode(context,client,mainPath);
-          //删除
-          //client.delete().guaranteed().deletingChildrenIfNeeded().withVersion(-1).forPath(mainPath);
-          client.close();
-      }   
-    
-    public static void readNode(RainbowContext context,CuratorFramework client,String aPath) throws Exception {
-        //读取节点
-        Stat stat = new Stat();
-        byte[] nodeData = client.getData().storingStatIn(stat).forPath(aPath);
-      
-        Map<String, Object> attr = new HashMap<String, Object>();
-        attr.put("Path", aPath);
-        attr.put("Data", new String(nodeData));
-      //  attr.put("Stat", stat);
-        context.addRow(attr);        
-        //更新节点
-       // client.setData().withVersion(-1).forPath(mainPath, "Data".getBytes());     
-        //获取子节点列表
-        List<String> children = client.getChildren().forPath(aPath);
-        if (children.size()>0) {
-          System.out.println("Children: " + children);        
-          for(int i = 0; i < children.size(); i++)  {
-      	    readNode(context,client,aPath+"/"+children.get(i));
-          }
-        }
-    }
-    
+	  
     public  RainbowContext allZone(RainbowContext context){
     	 if (ZookeeperService.getInstance().Connected()){
     		 return zkConnectOK(context);
@@ -225,6 +179,7 @@ public class ZkConfigService  extends BaseService {
 		firstMenu4.getSubMenus().add(firstMenu4Sub4);
 		menus.add(firstMenu4);
 		
+		/*
 		//菜单1
 		Menu firstMenus1 = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);
 		//菜单1 第二级 submenu
@@ -249,20 +204,114 @@ public class ZkConfigService  extends BaseService {
 		firstMenuSub3.getSubMenus().add(firstMenuSub3_1);
 		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);
 		firstMenus1.getSubMenus().add(firstMenuSub3);	
-		
-		menus.add(firstMenus1);		
-
+		*/
+		menus.add(getMycatZoneMenu());		
 		//context.addAttr("menu",menus);  
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
 		context.addRow(attr);
     	return context;
     }
-    
+    private Menu getMycatZoneMenu(){
+      Menu mycatZone = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);
+      List<String> cluster=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE);
+      if (cluster!=null){
+    	  for(int i = 0; i < cluster.size(); i++)  { 
+    		  Menu clusterMenu = new Menu("5."+i,"Mycat "+cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP);
+    		  List<String> mycatid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i));
+    		  if (mycatid!=null){
+    			  for(int j = 0; j < mycatid.size(); j++)  {  
+    				  Menu mycatMenu = new Menu("5."+i+j,"Mycat"+mycatid.get(i),"page/zk/zkread.html?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(i),MENU_TYPE_CLUSTER_NODE); 
+    				 /*
+    				  List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i)+"/"+mycatid.get(i));
+    				  if (configid!=null){
+    					  for(int m = 0; m < configid.size(); m++)  { 
+    						  Menu configMenu = new Menu("5."+i+j+m,"Mycat"+configid.get(m),"page/zk/zkread.html?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(i),MENU_TYPE_CLUSTER_NODE); 
+    						  mycatMenu.getSubMenus().add(configMenu);
+    					  }
+    					  
+    				  }
+    				  */
+    				  clusterMenu.getSubMenus().add(mycatMenu);
+    			  }
+    		  }
+    		  mycatZone.getSubMenus().add(clusterMenu);    		  
+    	  }
+      }
+      return mycatZone;	
+    }
+	public RainbowContext getZkconfig(RainbowContext context) throws Exception {	
+     	String cluster = (String)context.getAttr("ds");
+		try {
+			if(cluster==null){
+				context.setSuccess(false);
+				context.setMsg("请选择注册中心!");
+				return context;
+			}
+		} catch (Exception e) {
+			
+		}     	
+     	RainbowContext query = new RainbowContext();
+     	query.addAttr("cluster", cluster);
+     	Map<String, Object> data = super.getDao().get(NAMESPACE, "load", query.getAttr());
+     	System.out.println(data.toString());
+     	String ip = (String)data.get("ip");
+     	String port= data.get("port").toString();
+     	context.getAttr().clear();
+     	readZkinfo(context,ip+":"+port,"/"+cluster);
+     	return context;
+	}
+	
+	 public static void readZkinfo(RainbowContext context,String zk,String path) throws Exception {    
+         CuratorFramework client = CuratorFrameworkFactory.builder()
+       		  .connectString(zk)  // 服务器列表
+                 .sessionTimeoutMs(5000) // 会话超时时间，单位毫秒
+                 .connectionTimeoutMs(3000)// 连接创建超时时间，单位毫秒
+                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))// 重试策略
+                 .build();
+         client.start();
+        String mainPath=path;
+         Stat systemPropertiesNodeStat = client.checkExists().forPath(mainPath);
+         if (systemPropertiesNodeStat == null) {
+         	//client.create().creatingParentsIfNeeded().forPath(mainPath);
+           //}     
+           //创建节点
+           //client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(mainPath, "xxxxx".getBytes());
+         }     
+         readNode(context,client,mainPath);
+         //删除
+         //client.delete().guaranteed().deletingChildrenIfNeeded().withVersion(-1).forPath(mainPath);
+         client.close();
+     }   
+   
+   public static void readNode(RainbowContext context,CuratorFramework client,String aPath) throws Exception {
+       //读取节点
+       Stat stat = new Stat();
+       byte[] nodeData = client.getData().storingStatIn(stat).forPath(aPath);
+     
+       Map<String, Object> attr = new HashMap<String, Object>();
+       attr.put("Path", aPath);
+       attr.put("Data", new String(nodeData));
+       System.out.println("path: " +attr.get("Path")); 
+       System.out.println("Data: " +attr.get("Data"));    
+     //  attr.put("Stat", stat);
+       context.addRow(attr);        
+       //更新节点
+      // client.setData().withVersion(-1).forPath(mainPath, "Data".getBytes());     
+       //获取子节点列表
+       List<String> children = client.getChildren().forPath(aPath);
+       if (children.size()>0) {
+         System.out.println("Children: " +aPath+"-----"+ children);        
+         System.out.println("---------------------------"); 
+         for(int i = 0; i < children.size(); i++)  {
+     	    readNode(context,client,aPath+"/"+children.get(i));
+         }
+       }
+   }    
     public static void main(String[] args) throws Exception {
     	RainbowContext context=new RainbowContext();
-    	//readZkinfo(context,"10.2.35.25:2181","/brokers");
-    	readZkinfo(context,"127.0.0.1:2181","/mycat-eye");
-    	 System.out.println("Children: " + context.toString()); 
+    	readZkinfo(context,"127.0.0.1:2181","/mycat-zone");
+    	//readZkinfo(context,"127.0.0.1:2181","/mycat-eye");
+    	 //System.out.println("Children: " + context); 
     }
 }
