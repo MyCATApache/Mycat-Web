@@ -26,6 +26,12 @@ public class ShowService extends BaseService {
 			
 		}
 		context.setDs(datasource + "9066");
+		if (cmd.equals("sqlslow")){
+			String threshold = (String)context.getAttr("threshold");
+			if (!(threshold ==  null || threshold.isEmpty())){
+				super.query(context, SYSPARAM_NAMESPACE, "setsqlslow");
+			}			
+		}
 		super.query(context, SYSPARAM_NAMESPACE, cmd);
 		return context;
 	}
@@ -45,7 +51,9 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlsum(RainbowContext context) {
 		return base(context,"sqlsum");
 	}
-	
+	public RainbowContext syslog(RainbowContext context) {
+		return base(context,"syslog");
+	}	
 	public RainbowContext heartbeat(RainbowContext context) {
 		context = base(context,"heartbeat");
 		System.out.println(context.getRows().toString());

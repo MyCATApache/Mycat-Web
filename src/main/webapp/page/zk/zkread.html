@@ -19,9 +19,9 @@
 				  <tr>
 				  <td><button class="btn btn-block btn-primary" onclick="showTable('server')">server</button></td>
 				  <td><button class="btn btn-block btn-primary" onclick="showTable('schema')">schema</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('datahost')">datahost</button></td>
 				  <td><button class="btn btn-block btn-primary" onclick="showTable('datanode')">datanode</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('datanode')">datahost</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('datahost')">rule</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('rule')">rule</button></td>
 				  <td><button class="btn btn-block btn-primary" onclick="showTable('sequence')">sequence</button></td>     
 				  </tr></tbody></table></div>
 					<div class="box-header">
@@ -77,7 +77,15 @@ var datasouce_change = function(){
 var showTable = function(url) {
 	//$('#contentGraph').attr('src', url);
 	zkconfig=url;
-	initDataSouce(url);
+	if (url=="datanode"){
+		$('#datasource').empty();
+		$('#datasource').append("<option value=\"\">请选择子路径</option>");		
+		loadData();	
+	}
+	else {
+	  initDataSouce(url);
+	}
+	
 }
 var Selected_Callback = function(target_select){
 	  this.onSuccess=function(data){

@@ -114,7 +114,9 @@ public class ZookeeperService {
 		}
 
 	}
-	
+	public String getZookeeper(){
+		return zookeeper;
+	}
 	public boolean createMainPath() {
 		if (!isExitPath(mycat_eye)) {
 			createPath(mycat_eye,"mycat eye");
@@ -210,7 +212,8 @@ public class ZookeeperService {
         byte[] nodeData;
 		try {
 			nodeData = framework.getData().storingStatIn(stat).forPath(aPath);
-			return JsonUtils.json2Map(new String(nodeData));
+			String dataNode = new String(nodeData);//.replace("[", "").replace("]", "").trim();
+			return JsonUtils.json2Map(dataNode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -299,25 +302,98 @@ public class ZookeeperService {
 		return children;
 	} 
 	//获取节点的子节点数据，如果没子节点直接获取节点的数据
-	public List<Map<String, Object>> getNodeOrChildNodes(String ParentPath){
-		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-		try {
-			List<String> children=null;
-			children = framework.getChildren().forPath(ParentPath);
-			if ((children!=null)  && children.size()>0) {
-		          for(int i = 0; i < children.size(); i++)  {
-		        	  rows.add( readNode(ParentPath+"/"+children.get(i)));
-		            }
+	public List<Map<String, Object>> getNodeOrChildNodes(String ParentPath,String configKey,String childKey) throws Exception{
+	
+		if (configKey.equals("datanode-config")){
+			return getDatanodeConfig(ParentPath,configKey);
+		}
+		else if (configKey.equals("schema-config")){
+			return getSchemaConfig(ParentPath,configKey);	
 			}
-			else {
-				rows.add(readNode(ParentPath));
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();		
-		}     		
-		return rows;		
+		else if (configKey.equals("server-config")){
+			return getServerNodeConfig(ParentPath,configKey);	
+			}			
+		else if (configKey.equals("datahost-config")){
+			return getDataHostNodeConfig(ParentPath,configKey);	
+			}			
+		else {
+			String nodePath = ParentPath + "/" + configKey+childKey;
+			List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+			try {
+				List<String> children=null;
+				children = framework.getChildren().forPath(nodePath);
+				if ((children!=null)  && children.size()>0) {
+			          for(int i = 0; i < children.size(); i++)  {
+			        	  rows.add( readNode(nodePath+"/"+children.get(i)));
+			            }
+				}
+				else {
+					rows.add(readNode(nodePath));
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();		
+			}     		
+			return rows;	
+	
+		}
+		
 	}
+    //Datanode Config
+    public  List<Map<String,Object>> getDatanodeConfig(String PARENT_PATH ,String configKey)throws Exception {
+        String nodePath = PARENT_PATH + "/" + configKey;
+        LOGGER.trace("child path is {}", nodePath);
+        List<Map<String,Object>> listServer = new ArrayList<>();
+        listServer = getDatanodeConfig(listServer, nodePath);
+        return listServer;
+    }
+
+    //Datanode Child Config
+    private  List<Map<String,Object>> getDatanodeConfig(List<Map<String,Object>> listServer,String childPath) throws Exception {
+
+        List list = new ArrayList<>();
+        list = framework.getChildren().forPath(childPath);
+        Iterator<String> iterator = list.iterator();
+        int nodeSize = list.size();
+        if (nodeSize==0 ){
+            //处理叶子节点数据
+            listServer=getConfigData(listServer, childPath);
+        }else  {
+            for (int i = 0; i < nodeSize; i++) {
+                String leaf = iterator.next();
+                if (leaf.endsWith("config")){
+                    listServer=getConfigData(listServer, childPath);
+                }else {
+                    String childPath1 = childPath + "/" + leaf;
+                    getServerChildConfig(listServer, childPath1);
+                }
+            }
+        }
+        return listServer;
+    }	
+    //DataHost Config
+    public  List<Map<String,Object>> getDataHostNodeConfig(String PARENT_PATH ,String configKey)throws Exception {
+        String nodePath = PARENT_PATH + "/" + configKey;
+        LOGGER.trace("child path is {}", nodePath);
+        List<Map<String,Object>> listServer = new ArrayList<>();
+        listServer = getDataHostChildConfig(listServer, nodePath);
+        return listServer;
+    }
+
+    //DataHost Child Config
+    private  List<Map<String,Object>> getDataHostChildConfig(List<Map<String,Object>> listServer,String childPath) throws Exception {
+        List list = new ArrayList<>();
+        list = framework.getChildren().forPath(childPath);
+        Iterator<String> iterator = list.iterator();
+        int nodeSize = list.size();
+        for (int i = 0; i < nodeSize; i++) {
+            String leaf = iterator.next();
+            String childPath1 = childPath + "/" + leaf;
+            listServer=getConfigData(listServer, childPath1);
+            getDataHostChildConfig(listServer, childPath1);
+        }
+        return listServer;
+    }	
     //Schema Config
     public  List<Map<String,Object>> getSchemaConfig(String PARENT_PATH ,String configKey)throws Exception {
         String nodePath = PARENT_PATH + "/" + configKey;
@@ -375,12 +451,12 @@ public class ZookeeperService {
     }    
     private  List<Map<String,Object>> getConfigData(List<Map<String,Object>> list,String childPath) throws IOException {
 
-        Map<String,JSONObject> map = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
         String data= null;
         try {
             data = new String(framework.getData().forPath(childPath),"utf8");
-            list.add(JsonUtils.json2Map(new String(data)));  
-            /*
+            //list.add(JsonUtils.json2Map(new String(data)));  
+            
             if (data.startsWith("[")&&data.endsWith("]")){ //JsonArray
                 JSONArray jsonArray = JSONArray.parseArray(data);
 //                System.out.println("----------------------JSONARRAY------------------------");
@@ -402,7 +478,6 @@ public class ZookeeperService {
                 return list;
                 //write json to xml
             }
-           */
         } catch (Exception e) {
             e.printStackTrace();
         }

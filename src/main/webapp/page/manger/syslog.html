@@ -1,9 +1,9 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>Zookeeper信息</h1>
+	<h1>Mycat监控</h1>
 	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i>Zookeeper信息</a></li>
-		<li><a href="#"></i>Zookeeper信息</a></li>
+		<li><a href="#"><i class="fa fa-dashboard"></i>Mycat监控</a></li>
+		<li><a href="#"></i>Mycat监控</a></li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -15,8 +15,7 @@
 				<div class="box-header">
 				 <form action="" id="query_Form">
 					<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
-		                  	<option value="">请选择注册中心</option>
-		                  	<option value="mycat-zone">mycat-zone</option>
+		                  	<option value="">请选择数据源</option>
 		            </select>
 		         </form>
 				</div>
@@ -67,7 +66,7 @@ var Selected_Callback = function(target_select){
 				if (j_obj.success) {
 					var length = j_obj.rows.length;
 					for(var i=0;i<length;i++){
-						var mycatName = j_obj.rows[i].cluster;
+						var mycatName = j_obj.rows[i].mycatName;
 						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
 					}
 				}
@@ -80,23 +79,18 @@ var Selected_Callback = function(target_select){
 };
 
 var initDataSouce = function(){
-	var Request = new Object();
-	Request = GetRequest();
-	var path;
-	path = Request['path'];
 	var rainbow = new Rainbow();
-	rainbow.setService("zkConfigService");
+	rainbow.setService("mycatService");
 	rainbow.setMethod("query");
-	rainbow.setParam("path", path);
-	//rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
 
 
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
-					{ title:'Path', name:'Path' ,width:400, align:'left'},
-			        { title:'Data', name:'Data' ,width:600, align:'left'}
+					{ title:'日期', name:'DATE' ,width:300, align:'left'},
+			        { title:'日志', name:'LOG' ,width:700, align:'left'}
 			        
 			    ];
 	  mmgrid = $('#table').mmGrid({
@@ -104,7 +98,7 @@ $(document).ready(function() {
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        url: './dispatcherAction/queryByMMGrid.do?service=zkConfigService&method=getZkconfig',
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=syslog',
 	        method: 'post',
 	        root: 'items'
 	    });

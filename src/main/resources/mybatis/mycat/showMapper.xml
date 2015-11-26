@@ -13,10 +13,15 @@
 		show @@sql
 	</select>
 	
+	<select id="setsqlslow" resultType="map" parameterType="map">
+		reload @@sqlslow=${threshold}
+	</select>		
 	<select id="sqlslow" resultType="map" parameterType="map">
 		show @@sql.slow
 	</select>	
-	
+	<select id="syslog" resultType="map" parameterType="map">
+		show @@syslog limit=50
+	</select>		
 	<select id="sqlsum" resultType="map" parameterType="map">
 		show @@sql.sum
 	</select>
