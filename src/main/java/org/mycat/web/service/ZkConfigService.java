@@ -178,6 +178,13 @@ public class ZkConfigService  extends BaseService {
 		firstMenu4.getSubMenus().add(firstMenu4Sub4);
 		menus.add(firstMenu4);
 		
+		
+		Menu firstMenu5 = new Menu("5","MSQL","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenu5Sub1 = new Menu("5-1","MySQL Group","page/manger/myrep.html",MENU_TYPE_NODE);
+		Menu firstMenu5Sub2 = new Menu("5-2","MySQL Servers","page/manger/mysql.html",MENU_TYPE_NODE);
+		firstMenu5.getSubMenus().add(firstMenu5Sub1);
+		firstMenu5.getSubMenus().add(firstMenu5Sub2);
+		menus.add(firstMenu5);
 		/*
 		//菜单1
 		Menu firstMenus1 = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);

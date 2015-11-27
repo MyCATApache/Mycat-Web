@@ -162,7 +162,10 @@ var Add_Callback = function(){
 				showDialog($("#container"),"新增","操作成功!","success");
 				$(':input','#add_form').not(':button, :submit, :reset, :hidden,select').val('');
 			}else{
-				showDialog($("#container"),"","操作失败!","danger");
+				var failmsg="操作失败!";
+				if(j_obj.msg!=null)
+					failmsg=j_obj.msg;
+				showDialog($("#container"),"",failmsg,"danger");
 			}
 		} catch (e) {
 			alert("异常!")
@@ -189,7 +192,10 @@ var Callback = function(){
 						mmgrid.load();
 					}
 				}else{
-					showDialog($("#container"),"","操作失败!","danger");
+					var failmsg="操作失败!";
+					if(j_obj.msg!=null)
+						failmsg=j_obj.msg;
+					showDialog($("#container"),"",failmsg,"danger");
 				}
 			} catch (e) {
 				alert("异常!")
@@ -209,13 +215,13 @@ function delObj(serviceName,method,_id,extra_call){
 	if(confirm("你确定删除这条记录吗?")){
 		var rainbow = new Rainbow();
 		var row = {"guid":_id};
-		var rows =  mmgrid.rows();
+		/*var rows =  mmgrid.rows();
 		for(var i=0;i<rows.length;i++){
 			if(rows[i].guid == _id){
 				row = rows[i];
 				break;
 			}
-		}
+		}*/
 		rainbow.addRows(row);
 		rainbow.setAttr(row);
 		if(extra_call){

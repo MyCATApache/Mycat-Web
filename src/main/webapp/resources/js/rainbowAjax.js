@@ -114,6 +114,7 @@ var sendCommand = function(url, rainbow, mothod, callback) {
 //ajax回调处理
 var Callback = function(dialog,relod){
 		this.onSuccess=function(data){
+			alert(data.success);
 			try {
 				if (data.success) {
 					relod();
