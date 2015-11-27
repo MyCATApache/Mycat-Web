@@ -179,39 +179,26 @@ public class ZkConfigService  extends BaseService {
 		menus.add(firstMenu4);
 		
 		
-		Menu firstMenu5 = new Menu("5","MSQL","",MENU_TYPE_PROJECT_GROUP);
-		Menu firstMenu5Sub1 = new Menu("5-1","MySQL Group","page/manger/myrep.html",MENU_TYPE_NODE);
-		Menu firstMenu5Sub2 = new Menu("5-2","MySQL Servers","page/manger/mysql.html",MENU_TYPE_NODE);
+
+		Menu mycatzone=getMycatZoneMenu();
+		
+		Menu firstMenu5 = new Menu("5","MySQL Group1","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenu5Sub1 = new Menu("5-1","MySQLGroup管理","page/manger/myrep.html",MENU_TYPE_NODE);
+		Menu firstMenu5Sub2 = new Menu("5-2","MySQL Server1","page/manger/mysql.html",MENU_TYPE_NODE);
 		firstMenu5.getSubMenus().add(firstMenu5Sub1);
 		firstMenu5.getSubMenus().add(firstMenu5Sub2);
-		menus.add(firstMenu5);
-		/*
-		//菜单1
-		Menu firstMenus1 = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);
-		//菜单1 第二级 submenu
-		Menu firstMenuSub1 = new Menu("5_1","Mycat Cluster","",MENU_TYPE_CLUSTER_GROUP);
-		//菜单1 第三级 菜单即第二级的子菜单
-		Menu firstMenuSsuba = new Menu("5_1_1","Mycat Server1","page/sql/sqltj.html",MENU_TYPE_CLUSTER_NODE);
-		firstMenuSub1.getSubMenus().add(firstMenuSsuba);
-		Menu firstMenuSsubb = new Menu("5_1_1","Mycat Server2","page/sql/sqltj.html",MENU_TYPE_CLUSTER_NODE);
-		firstMenuSub1.getSubMenus().add(firstMenuSsubb);
-		firstMenus1.getSubMenus().add(firstMenuSub1);
-		
-		Menu firstMenuSub2 = new Menu("5_2","MySQL Group","",MENU_TYPE_HOST_GROUP);
-		Menu firstMenuSub2_1 = new Menu("5_2_1","MySQL Host1","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
-		Menu firstMenuSub2_2 = new Menu("5_2_2","MySQL Host2","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
-		firstMenuSub2.getSubMenus().add(firstMenuSub2_1);
-		firstMenuSub2.getSubMenus().add(firstMenuSub2_2);
-		firstMenus1.getSubMenus().add(firstMenuSub2);
+		//menus.add(firstMenu5);		
+		mycatzone.getSubMenus().add(firstMenu5);
 		
 		Menu firstMenuSub3 = new Menu("5_3","Mycat LB","",MENU_TYPE_HOST_GROUP);
-		Menu firstMenuSub3_1 = new Menu("5_3_1","LB Host1","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
-		Menu firstMenuSub3_2 = new Menu("5_3_2","LB Host2","page/sql/sqltj.html",MENU_TYPE_HOST_NODE);
+		Menu firstMenuSub3_1 = new Menu("5_3_1","LB Host1","",MENU_TYPE_HOST_NODE);
+		Menu firstMenuSub3_2 = new Menu("5_3_2","LB Host2","",MENU_TYPE_HOST_NODE);
 		firstMenuSub3.getSubMenus().add(firstMenuSub3_1);
 		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);
-		firstMenus1.getSubMenus().add(firstMenuSub3);	
-		*/
-		menus.add(getMycatZoneMenu());		
+		
+		mycatzone.getSubMenus().add(firstMenuSub3);			
+		
+		menus.add(mycatzone);		
 		//context.addAttr("menu",menus);  
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
@@ -311,8 +298,8 @@ public class ZkConfigService  extends BaseService {
    }    
     public static void main(String[] args) throws Exception {
     	RainbowContext context=new RainbowContext();
-    	readZkinfo(context,"127.0.0.1:2181","/mycat-zone");
-    	//readZkinfo(context,"127.0.0.1:2181","/mycat-eye");
+    	//readZkinfo(context,"127.0.0.1:2181","/mycat-zone");
+    	readZkinfo(context,"127.0.0.1:2181","/mycat-eye");
     	 //System.out.println("Children: " + context); 
     }
 }

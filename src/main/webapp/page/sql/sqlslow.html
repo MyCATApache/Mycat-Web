@@ -124,7 +124,7 @@ $(document).ready(function() {
 		    var cols = [
                     { title:'用户', name:'USER' ,width:100, align:'left'},
 					{ title:'节点', name:'DATASOURCE' ,width:300, align:'left'},
-			        { title:'开始时间', name:'START_TIME' ,width:170, align:'left',
+			        { title:'开始时间', name:'START_TIME' ,width:170, align:'left', sortable:true,
 			        	renderer: function(val){
 			        		console.debug( "vv:" + val);
 			        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;

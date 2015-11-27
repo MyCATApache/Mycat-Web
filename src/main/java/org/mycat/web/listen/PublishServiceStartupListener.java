@@ -19,7 +19,7 @@ public class PublishServiceStartupListener implements ServletContextListener {
     	System.out
 				.println("PublishServiceStartupListener.contextInitialized()");
     	
-    	ZookeeperCuratorHandler.getInstance().connect("127.0.0.1", "org/mycat");
+    	ZookeeperCuratorHandler.getInstance().connect("127.0.0.1", "/mycat-zone/mysql-group1");
        
     }
 
