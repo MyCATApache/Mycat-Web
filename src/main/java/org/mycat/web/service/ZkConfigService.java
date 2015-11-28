@@ -190,6 +190,19 @@ public class ZkConfigService  extends BaseService {
 		//menus.add(firstMenu5);		
 		mycatzone.getSubMenus().add(firstMenu5);
 		
+		
+		
+		Menu firstMenu6 = new Menu("6","ZONE","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenuSsubb1 = new Menu("6_1_1","Server","page/cluster/mycat_server_list.html",MENU_TYPE_CLUSTER_NODE);
+		Menu firstMenuSsuba1 = new Menu("6_1_1","cluster","page/cluster/mycat_cluster_list.html",MENU_TYPE_CLUSTER_NODE);
+		Menu firstMenuSsubb2 = new Menu("6_1_1","zone","page/cluster/mycat_zone_list.html",MENU_TYPE_CLUSTER_NODE);
+		firstMenu6.getSubMenus().add(firstMenuSsuba1);
+		firstMenu6.getSubMenus().add(firstMenuSsubb2);
+		firstMenu6.getSubMenus().add(firstMenuSsubb1);
+		menus.add(firstMenu6);
+		
+		
+		
 		Menu firstMenuSub3 = new Menu("5_3","Mycat LB","",MENU_TYPE_HOST_GROUP);
 		Menu firstMenuSub3_1 = new Menu("5_3_1","LB Host1","",MENU_TYPE_HOST_NODE);
 		Menu firstMenuSub3_2 = new Menu("5_3_2","LB Host2","",MENU_TYPE_HOST_NODE);

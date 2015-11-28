@@ -1,0 +1,187 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+          Mycat配置管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>Mycat管理</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>Procedure</a></li>
+    <li class="active">新增ProcedureMycat</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Mycat配置管理</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        
+	        <form action="" id="add_form">
+		        <div class="box-body">
+		          <div class="row">
+		             <div class="col-xs-6">
+		             <div class="form-group">
+	                      <label for="zoneName">地址中心:</label>
+	                      <select id="zoneName" name="zoneName" class="form-control" >
+						    
+						  </select>
+	                  </div>
+		             <div class="form-group">
+	                      <label for="clusterName">集群名称:</label>
+	                      <select id="clusterName" name="clusterName" class="form-control" >
+						    
+						  </select>
+	                  </div>
+		              <div class="form-group">
+	                      <label for="hostId">hostId:</label>
+	                      <select id="hostId" name="hostId" class="form-control" >
+						    
+						  </select>
+	                  </div>
+	                  <div class="form-group">
+	                      <label for="host">主机名称:</label>
+		                  <input id="host" type="text" name="host" class="form-control" placeholder="主机名称" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="leader">leader:</label>
+		                  <input id="leader" type="text" name="leader" class="form-control" placeholder="leader" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="weigth">负载权重:</label>
+	                     <select id="weigth" name="weigth" class="form-control" >
+						    <option value="0">0</option>
+						    <option value="1">1</option>
+						 </select>
+	                  </div>
+	                   <div class="form-group">
+	                     <label for="state">状态:</label>
+	                     <select id="state" name="state" class="form-control" >
+						    <option value="red">red</option>
+						    <option value="green">green</option>
+						    <option value="yellow">yellow</option>
+						 </select>
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="systemParams">系统参数文件路径:</label>
+		                  <input id="systemParams" type="text" name="systemParams" class="form-control" placeholder="系统参数文件" validateType="lengthRange-1-100">
+	                  </div>
+		            </div> 
+		        </div>
+		        </div>
+	        </form>
+	        
+	        
+	        <div class="box-footer">
+	         <div class="form-group">
+	            <button class="btn btn-primary" onclick="addForm('mycatServerService','insert','add_form','addForm_extra_call')">保存</button>
+	            <button class="btn btn-primary" onclick="loadContext('page/cluster/mycat_server_list.html')">返回列表</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+	function addForm_extra_call(_formid,data){
+		   var value_obj = {};
+		   value_obj.state = data.state;
+		   value_obj.hostId = data.hostId;
+		   value_obj.host = data.host;
+		   value_obj.weigth = data.weigth;
+		   value_obj.leader = data.leader;
+		   value_obj.systemParams = data.systemParams;
+		   value_obj.clusterName = data.clusterName;
+		   value_obj.zoneName = data.zoneName;
+		   value_obj.guid = data.guid;
+		   data.value = JSON.stringify(value_obj);
+	}
+
+   $(document).ready(function(){
+	    loadAllZone();
+	    loadAllCluster();
+	    loadHosts();
+	   	ready4AddForm("ready4Update_extra_call");
+   });
+   
+   function loadHosts(){
+		var rainbow = new Rainbow();
+		rainbow.setService("hostService");
+		rainbow.setMethod("queryAll");
+		rainbowAjax.query(rainbow, new function(){
+			this.onSuccess = function(data) {
+				 try {
+					if (data.success) {
+						console.log(data);
+						if(data.rows!= null){
+							$.each(data.rows,function(n,item){
+								$("#hostId").append("<option value=\'"+item.hostname+"'\" >" +item.hostname+ "</option>");
+							})
+						}
+					}
+				} catch (e) {
+					alert(e);
+				} 
+			};
+			this.onFail = function(jqXHR, textStatus, errorThrown) {
+			};
+		});
+		
+	}
+   
+    function loadAllCluster(){
+		var rainbow = new Rainbow();
+		rainbow.setService("mycatClusterService");
+		rainbow.setMethod("queryAll");
+		rainbowAjax.query(rainbow, new function(){
+			this.onSuccess = function(data) {
+				 try {
+					if (data.success) {
+						console.log(data);
+						if(data.rows!= null){
+							$.each(data.rows,function(n,item){
+								$("#clusterName").append("<option value=\'"+item.clusterName+"'\" >" +item.clusterName+ "</option>");
+							})
+						}
+					}
+				} catch (e) {
+					alert(e);
+				} 
+			};
+			this.onFail = function(jqXHR, textStatus, errorThrown) {
+			};
+		});
+		
+	}
+    
+    function loadAllZone(){
+		var rainbow = new Rainbow();
+		rainbow.setService("mycatZoneService");
+		rainbow.setMethod("queryAllZone");
+		rainbowAjax.query(rainbow, new function(){
+			this.onSuccess = function(data) {
+				 try {
+					if (data.success) {
+						console.log(data);
+						if(data.rows!= null){
+							$.each(data.rows,function(n,item){
+								$("#zoneName").append("<option value=\'"+item.name+"'\" >" +item.name+ "</option>");
+							})
+						}
+					}
+				} catch (e) {
+					alert(e);
+				} 
+			};
+			this.onFail = function(jqXHR, textStatus, errorThrown) {
+			};
+		});
+	}
+	
+
+</script>
