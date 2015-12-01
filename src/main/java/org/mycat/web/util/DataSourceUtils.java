@@ -83,7 +83,7 @@ public class DataSourceUtils {
 		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + mycatType + NAME_SUFFIX)){
 			RainbowContext context = new RainbowContext("mycatService", "query");
 			context.addAttr("mycatName", dbName);
-			context = SoaManager.getInstance().invoke(context);
+			context = SoaManager.getInstance().invokeNoTx(context);
 			if (context.getRows() == null || context.getRows().size() == 0) {
 				return false;
 			}
