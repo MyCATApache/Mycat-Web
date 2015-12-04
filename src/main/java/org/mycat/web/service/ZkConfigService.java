@@ -170,13 +170,15 @@ public class ZkConfigService  extends BaseService {
 		//菜单4
 		Menu firstMenu4 = new Menu("4","SQL-监控","",MENU_TYPE_PROJECT_GROUP);
 		Menu firstMenu4Sub = new Menu("4_1","SQL统计","page/sql/sqltj.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub2 = new Menu("4_2","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub3 = new Menu("4_3","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub4 = new Menu("4_4","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub2 = new Menu("4_2","SQL表分析","page/sql/sqltable.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub3 = new Menu("4_3","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub4= new Menu("4_4","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub5 = new Menu("4_5","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
 		firstMenu4.getSubMenus().add(firstMenu4Sub);
 		firstMenu4.getSubMenus().add(firstMenu4Sub2);
 		firstMenu4.getSubMenus().add(firstMenu4Sub3);
 		firstMenu4.getSubMenus().add(firstMenu4Sub4);
+		firstMenu4.getSubMenus().add(firstMenu4Sub5);
 		menus.add(firstMenu4);
 		
 		
