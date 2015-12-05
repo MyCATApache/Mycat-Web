@@ -158,13 +158,15 @@ public class ZkConfigService  extends BaseService {
 		
 		Menu monitorMenu= new Menu("2","Mycat-监控","",MENU_TYPE_PROJECT_GROUP);
 		Menu monitorMenuSub1= new Menu("2-1","mycat性能监控","page/monitor/jrds.html",MENU_TYPE_NODE);
-		Menu monitorMenuSub2= new Menu("2-2","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
-		Menu monitorMenuSub3= new Menu("2-3","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub2= new Menu("2-2","mycatJVM性能监控","page/monitor/jrdsjvm.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub3= new Menu("2-3","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
+		Menu monitorMenuSub4= new Menu("2-4","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
 		//Menu monitorMenuSub4= new Menu("2-4","节点负载监控","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
 		//Menu monitorMenuSub5= new Menu("2-5","数据节点监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);				
 		monitorMenu.getSubMenus().add(monitorMenuSub1);
 		monitorMenu.getSubMenus().add(monitorMenuSub2);
 		monitorMenu.getSubMenus().add(monitorMenuSub3);
+		monitorMenu.getSubMenus().add(monitorMenuSub4);
 		menus.add(monitorMenu);		
 		
 		//菜单4

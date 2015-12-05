@@ -54,12 +54,12 @@ public final class Graph extends JrdsServlet {
 			throws ServletException, IOException {
 		try {
 			String pathInf = req.getPathInfo();
-			if (pathInf.startsWith("/showAllGraphs")) {
-				showAllGraphs(req, res);
+			if (pathInf.startsWith("/showMycatGraphs")) {
+				showMycatGraphs(req, res);
 				return;
 			}
-			if (pathInf.startsWith("/hostList")) {
-				getHostList(req, res);
+			if (pathInf.startsWith("/hostMycatList")) {
+				hostMycatList(req, res);
 				return;
 			}
 			Date start = new Date();
@@ -155,13 +155,16 @@ public final class Graph extends JrdsServlet {
 		}
 	}
 
-	private void getHostList(HttpServletRequest req, HttpServletResponse res) {
+	private void hostMycatList(HttpServletRequest req, HttpServletResponse res) {
 		HostsList hl = this.getHostsList();
-		
+		String hostprefix = req.getParameter("hostprefix");
 		List<String> hostList = new ArrayList<String>();
 		
 		for (HostInfo hostInf : hl.getHosts()) {
-			hostList.add(hostInf.getName());
+			String hostName = hostInf.getName();
+			if(hostName.startsWith(hostprefix)){
+				hostList.add(hostInf.getName());
+			}
 		}
 		
 		try {
@@ -173,14 +176,14 @@ public final class Graph extends JrdsServlet {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void showAllGraphs(HttpServletRequest req, HttpServletResponse res) {
+	private void showMycatGraphs(HttpServletRequest req, HttpServletResponse res) {
 		HostsList hl = this.getHostsList();
 		String hostName = req.getParameter("hostName");
 		List<Map<String, Object>> hostList = new ArrayList<Map<String, Object>>();
 		if(hostName == null || hostName.isEmpty()){
 			return;
 		}
-
+		List<String> probeNames = new ArrayList<String>();
 		for (HostInfo hostInf : hl.getHosts()) {
 			Map<String,Object> hostMap = new LinkedHashMap<String, Object>();
 			String hostInfName = hostInf.getName();

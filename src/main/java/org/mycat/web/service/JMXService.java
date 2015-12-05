@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.hx.rainbow.common.context.RainbowContext;
@@ -43,12 +42,12 @@ public class JMXService extends BaseService {
 	public RainbowContext insert(RainbowContext context) {
 		String guid=new ObjectId().toString();
 		try{
-			//String jrdsconfg = buildJrdsPath(context, guid);
+			String jrdsconfg = buildJrdsPath(context, guid);
 			
 			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());			
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
-			//createjmxjrds(jrdsconfg, context.getAttr());
+			createjmxjrds(jrdsconfg, context.getAttr());
 		}catch (Exception e) {
 			logger.error(e.getCause());
 			context.setSuccess(false);
@@ -82,11 +81,11 @@ public class JMXService extends BaseService {
 			if(jrdsfile != null && !jrdsfile.isEmpty()){
 				new File(jrdsfile).delete();
 			}
-			//String jrdsconfg = buildJrdsPath(context,guid);
+			String jrdsconfg = buildJrdsPath(context,guid);
 			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());		
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
-			//createjmxjrds(jrdsconfg, context.getAttr());			
+			createjmxjrds(jrdsconfg, context.getAttr());			
 		} catch (Exception e) {
 			logger.error("execute error, {} /r/n cause:{}", e.getMessage(), e.getCause());
 			context.setSuccess(Boolean.FALSE);
