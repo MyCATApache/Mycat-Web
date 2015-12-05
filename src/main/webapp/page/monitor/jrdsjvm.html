@@ -1,9 +1,9 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>Mycat服务监控</h1>
+	<h1>MycatJVM服务监控</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i>Mycat-监控</a></li>
-		<li><a href="#"></i>Mycat服务监控</a></li>
+		<li><a href="#"></i>MycatJVM服务监控</a></li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -54,14 +54,6 @@
 </script>
 
 <script type="text/javascript">
-	var graphTitles = {
-		"MycatFluxGraph" : "Mycat流量分析",
-		"MycatConnectionGraph" : "Mycat连接分析",
-		"MycatActiveThreadGraph" : "Mycat活动线程分析",
-		"MycatTaskQueueGraph" : "Mycat缓冲队列分析",
-		"MycatTPSGraph" : "MycatTPS分析",
-		"MycatMemoryGraph" : "Mycat内存分析"
-	}
 
 	
 
@@ -80,9 +72,10 @@
 		$('#contentGraph').attr('src', '');
 		rainbowAjax
 				.get(
-						"./graph/showAllGraphs?hostName=" + $("#hosts").val(),
+						"./graph/showMycatGraphs?hostName=" + $("#hosts").val(),
 						"",
 						function callback(data) {
+							alert(data);
 							var jrdsHtml = '';
 							var jrds = JSON.parse(data);
 							for ( var i in jrds) {
@@ -97,7 +90,7 @@
 										jrdsHtml += '<td><button class="btn btn-block btn-primary" onclick="showgraph(\''
 												+ graph[k].url
 												+ '\')">'
-												+ graphTitles[graph[k].name]
+												+ graph[k].name
 												+ '</button></td>';
 									}
 								}
@@ -110,7 +103,7 @@
 	}
 
 	var create_host = function() {
-		rainbowAjax.get("./graph/hostList", "", function callback(data) {
+		rainbowAjax.get("./graph/hostMycatList?hostprefix=JMX", "", function callback(data) {
 			var jrds = JSON.parse(data);
 			for (var i in jrds) {
 				$("#hosts").append(
