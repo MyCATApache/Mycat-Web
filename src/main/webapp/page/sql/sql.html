@@ -24,7 +24,7 @@
 							</div>
 							<div class="col-xs-8">
 								<div class="form-group">
-									 <button class="btn btn-primary"  onclick="exportcsv();" type="button">导出CSV</button>
+									 <button class="btn btn-primary"  onclick="exportcsv()">导出CSV</button>
 								</div>
 							</div>
 						</div>
@@ -97,7 +97,7 @@ var Selected_Callback = function(target_select){
 };
 
 var exportcsv =function(){
-	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sql&ds="+$('#datasource').val()+"&fileName=sql";
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=slq&ds="+$('#datasource').val()+"&fileName=sql";
 	window.location = url;
 }
 
