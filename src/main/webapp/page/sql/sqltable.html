@@ -22,9 +22,13 @@
 				<div class="box-body">
 				 
 				  <div style="float: left">
-				   <div id="redMap" style="height:400px;width: 400px;float: left"></div>
-				   <div id="requestMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
-				   <div id="timeMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
+				   <div id="redMap0" style="height:250px;width: 250px;float: left"></div>
+				   <div id="redMap1" style="height:250px;width: 250px;float: left;margin-left: 50px"></div>
+				   <div id="redMap2" style="height:250px;width: 250px;float: left;margin-left: 50px"></div>
+				   <div id="redMap3" style="height:250px;width: 250px;float: left;margin-left: 60px"></div>
+				   <div id="redMap4" style="height:250px;width: 250px;float: left;margin-left: 60px"></div>
+				  <!-- <div id="requestMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
+				   <div id="timeMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>-->
 				  </div>
 					<div style="clear: both;">
 						<table id="table"></table>
@@ -114,6 +118,8 @@ $(document).ready(function() {
 				{ title:'读次数', name:'R', width:100, align:'left'},
 				{ title:'写次数', name:'W', width:100, align:'left'},
 				{ title:'读占比', name:'R%', width:60, align:'left'},
+				{ title:'关联表', name:'RELATABLE', width:60, align:'left'},
+				{ title:'关联次数', name:'RELACOUNT', width:60, align:'left'},
 		        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left', 
 		        	renderer: function(val){
 		        		console.debug( "vv:" + val);
@@ -165,9 +171,12 @@ function loadData(){
 					//var dataRow = data.rows[0];
 					//initMap(dataRow);
 					var length = data.rows.length;
+					if (length>5){
+						length=5;
+					}
 					for(var i=0;i<length;i++){
 						var dataRow = data.rows[i];
-						initMap(dataRow);
+						initMap(dataRow,i);
 					}
 					mmgrid.load(data.rows);
 				}
@@ -182,7 +191,7 @@ function loadData(){
 }
 
 
-function initMap(json){
+function initMap(json,i){
 	
 	 if ( json == undefined) {	
 		 var NULL_JSON = "{\"TTL_COUNT\":\"[0, 0, 0, 0]\",\"R\":\"0\",\"W\":\"0\",\"R%\":\"0\",\"MAX\":\"0\",\"ID\":1,\"LAST_TIME\":0,\"TIME_COUNT\":\"[0, 0, 0, 0]\",\"USER\":\"\"}";
@@ -207,7 +216,7 @@ function initMap(json){
                 'echarts/chart/pie'
             ],
             function (ec) {
-                var myChart_read = ec.init(document.getElementById('redMap'));
+                var myChart_read = ec.init(document.getElementById('redMap'+i));
                    myChart_read.setOption(initReadMap(json["TABLE"],json["R"],json["W"]));
                // var myChart_request = ec.init(document.getElementById('requestMap'));
                 //myChart_request.setOption(initRequestMap(r_array));
@@ -223,7 +232,7 @@ function initMap(json){
 	 
 	 option = {
      	    title : {
-     	        text: tname+'读次数/写次数',
+     	        text: tname,
      	        subtext: '读写次数',
      	        x:'center'
      	    },
@@ -234,7 +243,7 @@ function initMap(json){
      	    legend: {
      	        orient : 'vertical',
      	        x : 'left',
-     	        data:["读次数","写次数"]
+     	        data:["读","写"]
      	    },
      	    toolbox: {
      	        show : true
@@ -247,8 +256,8 @@ function initMap(json){
      	            radius : '55%',
      	            center: ['50%', '60%'],
      	            data:[
-     	                {value:rCount, name:'读次数'},
-     	                {value:wCount, name:'写次数'}
+     	                {value:rCount, name:'读'},
+     	                {value:wCount, name:'写'}
      	            ]
      	        }
      	    ]
