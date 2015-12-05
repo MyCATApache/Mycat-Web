@@ -26,7 +26,7 @@
 		           
 		            <div class="col-xs-3">
 		              <div class="form-group">
-		               <input type="text" name="threshold"
+		               <input type="text" name="threshold"  id="threshold"
 										class="form-control" placeholder="慢SQL阀值，单位是毫秒">
 					  </div>	
 					</div>
@@ -39,9 +39,10 @@
 				</div>
 				<div class="box-footer">
 					<div class="form-group">
-						<div class="col-lg-offset-3 col-lg-2">
+						<div class="col-lg-offset-3 col-lg-3">
 							<button class="btn btn-primary" onclick="queryForm('query_Form')">阀值设置</button>
 							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+							<button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button>
 						</div>
 					</div>
 				</div>			
@@ -90,6 +91,11 @@ Date.prototype.format = function(fmt) {
 
 var datasouce_change = function(){
 	queryForm('query_Form');
+}
+
+var exportcsv =function(){
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlslow&ds="+$('#datasource').val()+"&threshold="+$('#threshold').val()+"&fileName=sqlslow";
+	window.location = url;
 }
 
 var Selected_Callback = function(target_select){
