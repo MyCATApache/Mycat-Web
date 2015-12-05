@@ -183,7 +183,6 @@ public final class Graph extends JrdsServlet {
 		if(hostName == null || hostName.isEmpty()){
 			return;
 		}
-		List<String> probeNames = new ArrayList<String>();
 		for (HostInfo hostInf : hl.getHosts()) {
 			Map<String,Object> hostMap = new LinkedHashMap<String, Object>();
 			String hostInfName = hostInf.getName();

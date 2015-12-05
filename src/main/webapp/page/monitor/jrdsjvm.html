@@ -75,7 +75,6 @@
 						"./graph/showMycatGraphs?hostName=" + $("#hosts").val(),
 						"",
 						function callback(data) {
-							alert(data);
 							var jrdsHtml = '';
 							var jrds = JSON.parse(data);
 							for ( var i in jrds) {
