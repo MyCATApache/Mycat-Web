@@ -51,6 +51,9 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlsum(RainbowContext context) {
 		return base(context,"sqlsum");
 	}
+	public RainbowContext sqlsumtable(RainbowContext context) {
+		return base(context,"sqlsumtable");
+	}	
 	public RainbowContext syslog(RainbowContext context) {
 		return base(context,"syslog");
 	}	

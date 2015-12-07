@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import org.mycat.web.util.JsonUtils;
+import org.mycat.web.util.MycatPathConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class ZookeeperService {
 	private  static  ZookeeperService  zookeeperService;
 	private final String zooKey="zookeeper";
 	
-	private final String mycat_eye="/mycat-eye";
+	private final String mycat_eye=MycatPathConstant.MYCAT_EYE;
 	private final String mycats=mycat_eye+"/mycat";
 	private final String mycat_jmx=mycat_eye+"/mycat_jmx";
 	private final String mycat_snmp=mycat_eye+"/mycat_snmp";
@@ -88,7 +89,7 @@ public class ZookeeperService {
 	}
 	
 	public boolean Connected(String value){
-		framework = createConnection(value);
+		framework = createConnection(value).usingNamespace(MycatPathConstant.MYCAT_NAME_SPACE);
 		if (framework!=null){
 			zookeeper=value;
 			createMainPath();

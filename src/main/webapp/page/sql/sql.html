@@ -14,9 +14,22 @@
 
 				<div class="box-header">
 				 <form action="" id="query_Form">
-					<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
-		                  	<option value="">请选择数据源</option>
-		            </select>
+				 		<div class="row">
+							<div class="col-xs-3">
+								<div class="form-group">
+									<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		                  				<option value="">请选择数据源</option>
+		            				</select>
+								</div>
+							</div>
+							<div class="col-xs-8">
+								<div class="form-group">
+									 <button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button>
+								</div>
+							</div>
+						</div>
+					
+		           
 		         </form>
 				</div>
 				<div class="box-body">
@@ -82,6 +95,11 @@ var Selected_Callback = function(target_select){
 		this.onFail = function(jqXHR, textStatus, errorThrown){
 		};
 };
+
+var exportcsv =function(){
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sql&ds="+$('#datasource').val()+"&fileName=sql";
+	window.location = url;
+}
 
 var initDataSouce = function(){
 	var rainbow = new Rainbow();

@@ -16,8 +16,10 @@ import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.MycatPathConstant;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,6 @@ public class ZkConfigService  extends BaseService {
 	private static final String MENU_TYPE_PROJECT_NODE = "7";
 	private static final String MENU_TYPE_NODE = "8";
 	
-	private static final String CONFIG_MYCAT_ZONE= "/mycat-zone";
 	
 	
 	public RainbowContext query(RainbowContext context) {
@@ -45,7 +46,7 @@ public class ZkConfigService  extends BaseService {
 	    String zkpath=(String)context.getAttr("zkpath");
 	    String zkid=(String)context.getAttr("zkid");	
 	    String config=(String)context.getAttr("config");	
-	    List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+zkpath+"/"+zkid+"/"+config+"-config");
+	    List<String> configid=ZookeeperService.getInstance().getChilds(MycatPathConstant.MYCAT_NAME_SPACE+"/"+zkpath+"/"+zkid+"/"+config+"-config");
 	    for(int i = 0; i < configid.size(); i++)  { 
 	        Map<String, Object> attr = new HashMap<String, Object>();
 	        attr.put("id", i);
@@ -82,7 +83,7 @@ public class ZkConfigService  extends BaseService {
 			ds="/"+ds;
 		}
 		
-	    String childPath =ZKPaths.makePath(CONFIG_MYCAT_ZONE+"/"+zkpath,"/"+zkid);
+	    String childPath =ZKPaths.makePath(MycatPathConstant.MYCAT_NAME_SPACE+"/"+zkpath,"/"+zkid);
 	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,config+"-config",ds),ds));
 	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
 	    context.setTotal(context.getRows().size());	
@@ -157,31 +158,36 @@ public class ZkConfigService  extends BaseService {
 		
 		Menu monitorMenu= new Menu("2","Mycat-监控","",MENU_TYPE_PROJECT_GROUP);
 		Menu monitorMenuSub1= new Menu("2-1","mycat性能监控","page/monitor/jrds.html",MENU_TYPE_NODE);
-		Menu monitorMenuSub2= new Menu("2-2","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
-		Menu monitorMenuSub3= new Menu("2-3","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub2= new Menu("2-2","mycatJVM性能监控","page/monitor/jrdsjvm.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub3= new Menu("2-3","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
+		Menu monitorMenuSub4= new Menu("2-4","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
 		//Menu monitorMenuSub4= new Menu("2-4","节点负载监控","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
 		//Menu monitorMenuSub5= new Menu("2-5","数据节点监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);				
 		monitorMenu.getSubMenus().add(monitorMenuSub1);
 		monitorMenu.getSubMenus().add(monitorMenuSub2);
 		monitorMenu.getSubMenus().add(monitorMenuSub3);
+		monitorMenu.getSubMenus().add(monitorMenuSub4);
 		menus.add(monitorMenu);		
 		
 		//菜单4
 		Menu firstMenu4 = new Menu("4","SQL-监控","",MENU_TYPE_PROJECT_GROUP);
 		Menu firstMenu4Sub = new Menu("4_1","SQL统计","page/sql/sqltj.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub2 = new Menu("4_2","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub3 = new Menu("4_3","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub4 = new Menu("4_4","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub2 = new Menu("4_2","SQL表分析","page/sql/sqltable.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub3 = new Menu("4_3","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub4= new Menu("4_4","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub5 = new Menu("4_5","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
 		firstMenu4.getSubMenus().add(firstMenu4Sub);
 		firstMenu4.getSubMenus().add(firstMenu4Sub2);
 		firstMenu4.getSubMenus().add(firstMenu4Sub3);
 		firstMenu4.getSubMenus().add(firstMenu4Sub4);
+		firstMenu4.getSubMenus().add(firstMenu4Sub5);
 		menus.add(firstMenu4);
 		
 		
 
 		Menu mycatzone=getMycatZoneMenu();
 		
+		/*先屏蔽 2015-12-3 sohudo
 		Menu firstMenu5 = new Menu("5","MySQL Group1","",MENU_TYPE_PROJECT_GROUP);
 		Menu firstMenu5Sub1 = new Menu("5-1","MySQLGroup管理","page/manger/myrep.html",MENU_TYPE_NODE);
 		Menu firstMenu5Sub2 = new Menu("5-2","MySQL Server1","page/manger/mysql.html",MENU_TYPE_NODE);
@@ -189,8 +195,7 @@ public class ZkConfigService  extends BaseService {
 		firstMenu5.getSubMenus().add(firstMenu5Sub2);
 		//menus.add(firstMenu5);		
 		mycatzone.getSubMenus().add(firstMenu5);
-		
-		
+			
 		
 		Menu firstMenu6 = new Menu("6","ZONE","",MENU_TYPE_PROJECT_GROUP);
 		Menu firstMenuSsubb1 = new Menu("6_1_1","Server","page/cluster/mycat_server_list.html",MENU_TYPE_CLUSTER_NODE);
@@ -199,17 +204,17 @@ public class ZkConfigService  extends BaseService {
 		firstMenu6.getSubMenus().add(firstMenuSsuba1);
 		firstMenu6.getSubMenus().add(firstMenuSsubb2);
 		firstMenu6.getSubMenus().add(firstMenuSsubb1);
-		menus.add(firstMenu6);
+		menus.add(firstMenu6);		
+		*/	
 		
-		
-		
+		/*先屏蔽 2015-12-3 sohudo
 		Menu firstMenuSub3 = new Menu("5_3","Mycat LB","",MENU_TYPE_HOST_GROUP);
 		Menu firstMenuSub3_1 = new Menu("5_3_1","LB Host1","",MENU_TYPE_HOST_NODE);
 		Menu firstMenuSub3_2 = new Menu("5_3_2","LB Host2","",MENU_TYPE_HOST_NODE);
 		firstMenuSub3.getSubMenus().add(firstMenuSub3_1);
-		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);
-		
+		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);		
 		mycatzone.getSubMenus().add(firstMenuSub3);			
+		*/
 		
 		menus.add(mycatzone);		
 		//context.addAttr("menu",menus);  
@@ -220,15 +225,16 @@ public class ZkConfigService  extends BaseService {
     }
     private Menu getMycatZoneMenu(){
       Menu mycatZone = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);
-      List<String> cluster=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE);
+      List<String> cluster=ZookeeperService.getInstance().getChilds("/");
       if (cluster!=null){
     	  for(int i = 0; i < cluster.size(); i++)  { 
-    		  Menu clusterMenu = new Menu("5."+i,"Mycat "+cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP);
-    		  List<String> mycatid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i));
+    		if (!cluster.get(i).equals("mycat-eye")){ 
+    		  Menu clusterMenu = new Menu("5."+i,cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP);
+    		  List<String> mycatid=ZookeeperService.getInstance().getChilds("/"+cluster.get(i));
     		  if (mycatid!=null){
     			  for(int j = 0; j < mycatid.size(); j++)  {  
-    				  Menu mycatMenu = new Menu("5."+i+j,"Mycat"+mycatid.get(i),"page/zk/zkread.html?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(i),MENU_TYPE_CLUSTER_NODE); 
-    				 /*
+   				    Menu mycatMenu = new Menu("5."+i+j,mycatid.get(j),"page/zk/zkread.html?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(j),MENU_TYPE_NODE); 
+      				  /*
     				  List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i)+"/"+mycatid.get(i));
     				  if (configid!=null){
     					  for(int m = 0; m < configid.size(); m++)  { 
@@ -238,10 +244,11 @@ public class ZkConfigService  extends BaseService {
     					  
     				  }
     				  */
-    				  clusterMenu.getSubMenus().add(mycatMenu);
+    				  clusterMenu.getSubMenus().add(mycatMenu);    				 
     			  }
     		  }
-    		  mycatZone.getSubMenus().add(clusterMenu);    		  
+    		  mycatZone.getSubMenus().add(clusterMenu);    	
+    		  }  
     	  }
       }
       return mycatZone;	
@@ -259,60 +266,12 @@ public class ZkConfigService  extends BaseService {
 		}     	
      	RainbowContext query = new RainbowContext();
      	context.getAttr().clear();
-     	readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
+     	ZkTestReadConfig.readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
      	return context;
 	}
 	
-	 public static void readZkinfo(RainbowContext context,String zk,String path) throws Exception {    
-         CuratorFramework client = CuratorFrameworkFactory.builder()
-       		  .connectString(zk)  // 服务器列表
-                 .sessionTimeoutMs(5000) // 会话超时时间，单位毫秒
-                 .connectionTimeoutMs(3000)// 连接创建超时时间，单位毫秒
-                 .retryPolicy(new ExponentialBackoffRetry(1000, 3))// 重试策略
-                 .build();
-         client.start();
-        String mainPath=path;
-         Stat systemPropertiesNodeStat = client.checkExists().forPath(mainPath);
-         if (systemPropertiesNodeStat == null) {
-         	//client.create().creatingParentsIfNeeded().forPath(mainPath);
-           //}     
-           //创建节点
-           //client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(mainPath, "xxxxx".getBytes());
-         }     
-         readNode(context,client,mainPath);
-         //删除
-         //client.delete().guaranteed().deletingChildrenIfNeeded().withVersion(-1).forPath(mainPath);
-         client.close();
-     }   
+ 
    
-   public static void readNode(RainbowContext context,CuratorFramework client,String aPath) throws Exception {
-       //读取节点
-       Stat stat = new Stat();
-       byte[] nodeData = client.getData().storingStatIn(stat).forPath(aPath);
-     
-       Map<String, Object> attr = new HashMap<String, Object>();
-       attr.put("Path", aPath);
-       attr.put("Data", new String(nodeData));
-       System.out.println("path: " +attr.get("Path")); 
-       System.out.println("Data: " +attr.get("Data"));    
-     //  attr.put("Stat", stat);
-       context.addRow(attr);        
-       //更新节点
-      // client.setData().withVersion(-1).forPath(mainPath, "Data".getBytes());     
-       //获取子节点列表
-       List<String> children = client.getChildren().forPath(aPath);
-       if (children.size()>0) {
-         System.out.println("Children: " +aPath+"-----"+ children);        
-         System.out.println("---------------------------"); 
-         for(int i = 0; i < children.size(); i++)  {
-     	    readNode(context,client,aPath+"/"+children.get(i));
-         }
-       }
-   }    
-    public static void main(String[] args) throws Exception {
-    	RainbowContext context=new RainbowContext();
-    	//readZkinfo(context,"127.0.0.1:2181","/mycat-zone");
-    	readZkinfo(context,"127.0.0.1:2181","/mycat-eye");
-    	 //System.out.println("Children: " + context); 
-    }
+ 
+
 }
