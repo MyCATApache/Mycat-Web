@@ -1,0 +1,140 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>高频SQL监控</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>高频SQL监控</a></li>
+		<li><a href="#"></i>高频SQL监控</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+				<div class="box-header">
+				 <form action="" id="query_Form">
+				 		<div class="row">
+							<div class="col-xs-3">
+								<div class="form-group">
+									<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		                  				<option value="">请选择数据源</option>
+		            				</select>
+								</div>
+							</div>
+							<div class="col-xs-8">
+								<div class="form-group">
+									 <button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button>
+								</div>
+							</div>
+						</div>
+					
+		           
+		         </form>
+				</div>
+				<div class="box-body">
+					<div>
+						<table id="table"></table>
+						<div style="text-align: right;">
+							<div id="paginator"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+/**
+ * 时间原型增加一个 format 函数
+ */
+Date.prototype.format = function(fmt) {
+  var o = {
+    "M+" : this.getMonth()+1,                 //月份
+    "d+" : this.getDate(),                    //日
+    "h+" : this.getHours(),                   //小时
+    "m+" : this.getMinutes(),                 //分
+    "s+" : this.getSeconds(),                 //秒
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度
+    "S"  : this.getMilliseconds()             //毫秒
+  };
+  if(/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+  return fmt;
+}
+var datasouce_change = function(){
+	queryForm('query_Form');
+}
+
+var Selected_Callback = function(target_select){
+	  this.onSuccess=function(data){
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					var length = j_obj.rows.length;
+					for(var i=0;i<length;i++){
+						var mycatName = j_obj.rows[i].mycatName;
+						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+					}
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown){
+		};
+};
+
+var exportcsv =function(){
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlhigh&ds="+$('#datasource').val()+"&fileName=sqlhigh";
+	window.location = url;
+}
+
+var initDataSouce = function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("mycatService");
+	rainbow.setMethod("query");
+	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+};
+
+
+$(document).ready(function() {
+	initDataSouce();
+		    var cols = [
+						
+						{ title:'频率', name:'FREQUENCY' ,width:100, align:'left'},	
+						{ title:'SQL', name:'SQL' ,width:600, align:'left'},						
+						{ title:'耗时(ms)', name:'AVG_TIME' ,width:100, align:'left'},	
+						{ title:'最大耗时(ms)', name:'MAX_TIME' ,width:100, align:'left'},	
+						{ title:'最小耗时(ms)', name:'MIN_TIME' ,width:100, align:'left'},	
+				        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left', sortable:true,
+				        	renderer: function(val){
+				        		console.debug( "vv:" + val);
+				        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
+				        		return d;
+				        	} }
+			        
+			    ];
+	  mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlhigh',
+	        method: 'post',
+	        root: 'items'
+	    });
+});
+  
+</script>
