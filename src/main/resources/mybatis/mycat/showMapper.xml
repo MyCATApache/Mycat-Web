@@ -19,6 +19,9 @@
 	<select id="sqlslow" resultType="map" parameterType="map">
 		show @@sql.slow
 	</select>	
+	<select id="sqlhigh" resultType="map" parameterType="map">
+		show @@sql.high
+	</select>		
 	<select id="syslog" resultType="map" parameterType="map">
 		show @@syslog limit=50
 	</select>		
