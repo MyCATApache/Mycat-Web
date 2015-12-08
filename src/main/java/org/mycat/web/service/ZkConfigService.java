@@ -16,7 +16,7 @@ import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.util.ObjectId;
-import org.mycat.web.ZkTestReadConfig;
+//import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.MycatPathConstant;
@@ -268,7 +268,7 @@ public class ZkConfigService  extends BaseService {
 		}     	
      	RainbowContext query = new RainbowContext();
      	context.getAttr().clear();
-     	ZkTestReadConfig.readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
+     	//ZkTestReadConfig.readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
      	return context;
 	}
 	
