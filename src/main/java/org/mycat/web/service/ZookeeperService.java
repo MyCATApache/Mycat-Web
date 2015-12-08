@@ -89,6 +89,7 @@ public class ZookeeperService {
 	}
 	
 	public boolean Connected(String value){
+	  try {	
 		framework = createConnection(value).usingNamespace(MycatPathConstant.MYCAT_NAME_SPACE);
 		if (framework!=null){
 			zookeeper=value;
@@ -98,6 +99,10 @@ public class ZookeeperService {
 		else {
 			return false;
 		}
+	  } catch (Exception e) {
+		// TODO Auto-generated catch block
+		  return false;
+	  }	  
 	}	
 	public void UpdateZkConfig(){
 		Properties properties = new Properties();
