@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.CreateMode;
@@ -104,6 +105,18 @@ public class ZookeeperService {
 		  return false;
 	  }	  
 	}	
+	public boolean reConnected() {
+	  boolean isConnect	=isConnected();
+	  if (!isConnect){
+		  isConnect=Connected();  
+	  }
+	  return isConnect;
+	}
+	public boolean isConnected() {
+		return framework != null
+				&& framework.getState() == CuratorFrameworkState.STARTED;
+	}
+	
 	public void UpdateZkConfig(){
 		Properties properties = new Properties();
 		try {
@@ -135,6 +148,9 @@ public class ZookeeperService {
 	}
 	
 	private boolean isExitPath(String mainPath){
+    	if (!reConnected()){
+    		return false;
+    	}		
         Stat nodeStat= null;
 		try {
 			nodeStat = framework.checkExists().forPath(mainPath);
@@ -230,6 +246,9 @@ public class ZookeeperService {
     //获取所有子节点下的数据
     private List<Map<String, Object>> getPath(String ParentPath){
 		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+    	if (!reConnected()){
+    		return rows;
+    	}
 		try {
 			List<String> children=null;
 			children = framework.getChildren().forPath(ParentPath);
@@ -240,7 +259,7 @@ public class ZookeeperService {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();		
+			LOGGER.error("Zk.getPath:"+ParentPath+" error:"+e.toString());
 		}     		
 		return rows;
 	}
