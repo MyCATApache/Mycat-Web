@@ -113,11 +113,11 @@ $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
 						
-						{ title:'频率', name:'FREQUENCY' ,width:100, align:'left'},	
+						{ title:'频率', name:'FREQUENCY' ,width:100, align:'left', sortable:true},	
 						{ title:'SQL', name:'SQL' ,width:600, align:'left'},						
-						{ title:'耗时(ms)', name:'EXECUTE_TIME' ,width:100, align:'left'},	
-						{ title:'最大耗时(ms)', name:'MAX_TIME' ,width:100, align:'left'},	
-						{ title:'最小耗时(ms)', name:'MIN_TIME' ,width:100, align:'left'},	
+						{ title:'耗时(ms)', name:'AVG_TIME' ,width:100, align:'left', sortable:true},	
+						{ title:'最大耗时(ms)', name:'MAX_TIME' ,width:100, align:'left', sortable:true},	
+						{ title:'最小耗时(ms)', name:'MIN_TIME' ,width:100, align:'left', sortable:true},	
 				        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left', sortable:true,
 				        	renderer: function(val){
 				        		console.debug( "vv:" + val);
