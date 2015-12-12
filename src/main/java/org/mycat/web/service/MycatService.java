@@ -24,7 +24,8 @@ public class MycatService extends BaseService {
 
 	public RainbowContext queryByPage(RainbowContext context) {
 		//super.queryByPage(context, NAMESPACE);
-		context.addRows(ZookeeperService.getInstance().getMycat());
+		String mycatName=(String)context.getAttr("mycatName");	
+		context.addRows(ZookeeperService.getInstance().getMycat("mycatName",mycatName));
 		context.setTotal(context.getRows().size());
 		return context;
 	}
