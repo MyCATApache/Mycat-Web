@@ -270,11 +270,32 @@ public class ZookeeperService {
 	//获取节点
 	public Map<String, Object> getMycatNode(String Key) {
 		return readNode(mycats+"/"+Key);
-	}		
+	}	
+	
 	//获取全部节点
 	public List<Map<String, Object>> getMycat() {
 		return getPath(mycats);
 	}	
+	//获取指定节点
+	public List<Map<String, Object>> getMycat(String field,String dbname) {
+		if(dbname ==  null || dbname.isEmpty()){
+			return getMycat();
+		}		
+		else {
+		  List<Map<String, Object>> mycatlist= getMycat();
+		  for (int i=0;i<mycatlist.size();i++){	
+			  Map<String, Object> dbinfo= mycatlist.get(i);
+			  String db=(String)dbinfo.get(field);
+			  if (db.equals(dbname)){
+				  mycatlist.clear();
+				  mycatlist.add(dbinfo);
+				  break;
+			  }
+		  }
+		  return mycatlist;
+		}
+	}	
+	
 	//删除节点
 	public boolean delMycat(String guid){
 		return del(mycats,guid);
