@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.CreateMode;
@@ -89,6 +90,7 @@ public class ZookeeperService {
 	}
 	
 	public boolean Connected(String value){
+	  try {	
 		framework = createConnection(value).usingNamespace(MycatPathConstant.MYCAT_NAME_SPACE);
 		if (framework!=null){
 			zookeeper=value;
@@ -98,7 +100,23 @@ public class ZookeeperService {
 		else {
 			return false;
 		}
+	  } catch (Exception e) {
+		// TODO Auto-generated catch block
+		  return false;
+	  }	  
 	}	
+	public boolean reConnected() {
+	  boolean isConnect	=isConnected();
+	  if (!isConnect){
+		  isConnect=Connected();  
+	  }
+	  return isConnect;
+	}
+	public boolean isConnected() {
+		return framework != null
+				&& framework.getState() == CuratorFrameworkState.STARTED;
+	}
+	
 	public void UpdateZkConfig(){
 		Properties properties = new Properties();
 		try {
@@ -130,6 +148,9 @@ public class ZookeeperService {
 	}
 	
 	private boolean isExitPath(String mainPath){
+    	if (!reConnected()){
+    		return false;
+    	}		
         Stat nodeStat= null;
 		try {
 			nodeStat = framework.checkExists().forPath(mainPath);
@@ -225,6 +246,9 @@ public class ZookeeperService {
     //获取所有子节点下的数据
     private List<Map<String, Object>> getPath(String ParentPath){
 		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+    	if (!reConnected()){
+    		return rows;
+    	}
 		try {
 			List<String> children=null;
 			children = framework.getChildren().forPath(ParentPath);
@@ -235,7 +259,7 @@ public class ZookeeperService {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();		
+			LOGGER.error("Zk.getPath:"+ParentPath+" error:"+e.toString());
 		}     		
 		return rows;
 	}
@@ -246,11 +270,32 @@ public class ZookeeperService {
 	//获取节点
 	public Map<String, Object> getMycatNode(String Key) {
 		return readNode(mycats+"/"+Key);
-	}		
+	}	
+	
 	//获取全部节点
 	public List<Map<String, Object>> getMycat() {
 		return getPath(mycats);
 	}	
+	//获取指定节点
+	public List<Map<String, Object>> getMycat(String field,String dbname) {
+		if(dbname ==  null || dbname.isEmpty()){
+			return getMycat();
+		}		
+		else {
+		  List<Map<String, Object>> mycatlist= getMycat();
+		  for (int i=0;i<mycatlist.size();i++){	
+			  Map<String, Object> dbinfo= mycatlist.get(i);
+			  String db=(String)dbinfo.get(field);
+			  if (db.equals(dbname)){
+				  mycatlist.clear();
+				  mycatlist.add(dbinfo);
+				  break;
+			  }
+		  }
+		  return mycatlist;
+		}
+	}	
+	
 	//删除节点
 	public boolean delMycat(String guid){
 		return del(mycats,guid);
