@@ -3,12 +3,15 @@ package org.mycat.web.service;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.util.DataSourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Lazy
 @Service
 public class ShowService extends BaseService {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";
 
 	public RainbowContext base(RainbowContext context,String cmd) {
@@ -19,12 +22,13 @@ public class ShowService extends BaseService {
 		try {
 			if(!DataSourceUtils.getInstance().register(datasource)){
 				context.setSuccess(false);
-				context.setMsg("数据源连接失败!");
+				context.setMsg("数据源["+datasource+"]连接失败!");
 				return context;
 			}
 		} catch (Exception e) {
 			
 		}
+		LOGGER.info("数据源["+datasource+"]");
 		context.setDs(datasource + "9066");
 		if (cmd.equals("sqlslow")){
 			String threshold = (String)context.getAttr("threshold");
@@ -47,7 +51,9 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlslow(RainbowContext context) {
 		return base(context,"sqlslow");
 	}
-	
+	public RainbowContext sqlhigh(RainbowContext context) {
+		return base(context,"sqlhigh");
+	}	
 	public RainbowContext sqlsum(RainbowContext context) {
 		return base(context,"sqlsum");
 	}

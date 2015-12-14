@@ -42,7 +42,7 @@
 						<div class="col-lg-offset-3 col-lg-3">
 							<button class="btn btn-primary" onclick="queryForm('query_Form')">阀值设置</button>
 							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
-							<button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button>
+						<!-- 	<button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button> -->
 						</div>
 					</div>
 				</div>			
@@ -128,16 +128,16 @@ var initDataSouce = function(){
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
-                    { title:'用户', name:'USER' ,width:100, align:'left'},
-					{ title:'节点', name:'DATASOURCE' ,width:300, align:'left'},
+                    { title:'用户', name:'USER' ,width:80, align:'left'},
+					{ title:'节点', name:'DATASOURCE' ,width:100, align:'left'},
 			        { title:'开始时间', name:'START_TIME' ,width:170, align:'left', sortable:true,
 			        	renderer: function(val){
 			        		console.debug( "vv:" + val);
 			        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
 			        		return d;
 			        	} },
-					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left'},
-					{ title:'SQL', name:'SQL' ,width:400, align:'left'}
+					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true},
+					{ title:'SQL', name:'SQL' ,width:600, align:'left'}
 			    ];
 	  mmgrid = $('#table').mmGrid({
 	        indexCol: true,

@@ -16,7 +16,7 @@ import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.util.ObjectId;
-import org.mycat.web.ZkTestReadConfig;
+//import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.MycatPathConstant;
@@ -148,12 +148,12 @@ public class ZkConfigService  extends BaseService {
 		Menu mycatMenuSub2= new Menu("1-2","mycat-VM管理","page/manger/jmx.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub3= new Menu("1-3","mycat系统参数","page/manger/sysparam.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub4= new Menu("1-4","mycat日志管理","page/manger/syslog.html",MENU_TYPE_NODE);
-		Menu mycatMenuSub5= new Menu("1-5","Zookeeper信息","page/manger/zkread.html",MENU_TYPE_NODE);		 
+		//Menu mycatMenuSub5= new Menu("1-5","Zookeeper信息","page/manger/zkread.html",MENU_TYPE_NODE);		 
 		mycatMenu.getSubMenus().add(mycatMenuSub1);
 		mycatMenu.getSubMenus().add(mycatMenuSub2);
 		mycatMenu.getSubMenus().add(mycatMenuSub3);
 		mycatMenu.getSubMenus().add(mycatMenuSub4);
-		mycatMenu.getSubMenus().add(mycatMenuSub5);
+		//mycatMenu.getSubMenus().add(mycatMenuSub5);
 		menus.add(mycatMenu);
 		
 		Menu monitorMenu= new Menu("2","Mycat-监控","",MENU_TYPE_PROJECT_GROUP);
@@ -174,18 +174,20 @@ public class ZkConfigService  extends BaseService {
 		Menu firstMenu4Sub = new Menu("4_1","SQL统计","page/sql/sqltj.html",MENU_TYPE_NODE);
 		Menu firstMenu4Sub2 = new Menu("4_2","SQL表分析","page/sql/sqltable.html",MENU_TYPE_NODE);
 		Menu firstMenu4Sub3 = new Menu("4_3","SQL监控","page/sql/sql.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub4= new Menu("4_4","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
-		Menu firstMenu4Sub5 = new Menu("4_5","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub4 = new Menu("4_4","高频SQL","page/sql/sqlhigh.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub5= new Menu("4_5","慢SQL统计","page/sql/sqlslow.html",MENU_TYPE_NODE);
+		Menu firstMenu4Sub6 = new Menu("4_6","SQL解析","page/sql/sqlparse.html",MENU_TYPE_NODE);
 		firstMenu4.getSubMenus().add(firstMenu4Sub);
 		firstMenu4.getSubMenus().add(firstMenu4Sub2);
 		firstMenu4.getSubMenus().add(firstMenu4Sub3);
 		firstMenu4.getSubMenus().add(firstMenu4Sub4);
 		firstMenu4.getSubMenus().add(firstMenu4Sub5);
+		firstMenu4.getSubMenus().add(firstMenu4Sub6);
 		menus.add(firstMenu4);
 		
 		
-
-		Menu mycatzone=getMycatZoneMenu();
+        //屏蔽 2015-12-12 sohudo  
+		//Menu mycatzone=getMycatZoneMenu();
 		
 		/*先屏蔽 2015-12-3 sohudo
 		Menu firstMenu5 = new Menu("5","MySQL Group1","",MENU_TYPE_PROJECT_GROUP);
@@ -216,7 +218,7 @@ public class ZkConfigService  extends BaseService {
 		mycatzone.getSubMenus().add(firstMenuSub3);			
 		*/
 		
-		menus.add(mycatzone);		
+		//menus.add(mycatzone);		
 		//context.addAttr("menu",menus);  
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
@@ -266,7 +268,7 @@ public class ZkConfigService  extends BaseService {
 		}     	
      	RainbowContext query = new RainbowContext();
      	context.getAttr().clear();
-     	ZkTestReadConfig.readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
+     	//ZkTestReadConfig.readZkinfo(context,ZookeeperService.getInstance().getZookeeper(),"/"+cluster);
      	return context;
 	}
 	

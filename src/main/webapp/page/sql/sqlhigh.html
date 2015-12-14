@@ -1,9 +1,9 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>SQL监控</h1>
+	<h1>高频SQL监控</h1>
 	<ol class="breadcrumb">
-		<li><a href="#"><i class="fa fa-dashboard"></i>SQL监控</a></li>
-		<li><a href="#"></i>SQL监控</a></li>
+		<li><a href="#"><i class="fa fa-dashboard"></i>高频SQL监控</a></li>
+		<li><a href="#"></i>高频SQL监控</a></li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -97,7 +97,7 @@ var Selected_Callback = function(target_select){
 };
 
 var exportcsv =function(){
-	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sql&ds="+$('#datasource').val()+"&fileName=sql";
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlhigh&ds="+$('#datasource').val()+"&fileName=sqlhigh";
 	window.location = url;
 }
 
@@ -112,11 +112,13 @@ var initDataSouce = function(){
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
-						{ title:'ID', name:'ID' ,width:100, align:'left'},
-						{ title:'用户', name:'USER' ,width:100, align:'left'},
-				        { title:'SQL', name:'SQL' ,width:600, align:'left'},						
-						{ title:'耗时(ms)', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true},	
-				        { title:'执行时间', name:'START_TIME' ,width:160, align:'left', sortable:true,
+						
+						{ title:'频率', name:'FREQUENCY' ,width:100, align:'left', sortable:true},	
+						{ title:'SQL', name:'SQL' ,width:600, align:'left'},						
+						{ title:'耗时(ms)', name:'AVG_TIME' ,width:100, align:'left', sortable:true},	
+						{ title:'最大耗时(ms)', name:'MAX_TIME' ,width:100, align:'left', sortable:true},	
+						{ title:'最小耗时(ms)', name:'MIN_TIME' ,width:100, align:'left', sortable:true},	
+				        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left', sortable:true,
 				        	renderer: function(val){
 				        		console.debug( "vv:" + val);
 				        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
@@ -129,7 +131,7 @@ $(document).ready(function() {
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sql',
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlhigh',
 	        method: 'post',
 	        root: 'items'
 	    });
