@@ -1,9 +1,9 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-	<h1>MycatJVM服务监控</h1>
+	<h1>Mysql服务监控</h1>
 	<ol class="breadcrumb">
 		<li><a href="#"><i class="fa fa-dashboard"></i>Mycat-监控</a></li>
-		<li><a href="#"></i>MycatJVM服务监控</a></li>
+		<li><a href="#"></i>Mysql服务监控</a></li>
 	</ol>
 </section>
 <!-- Main content -->
@@ -21,7 +21,7 @@
 					<div class="form-group">
 						<select onchange="host_detail();" name="hosts" id="hosts"
 							class="form-control" style="width: 200px;">
-							<option value="">请选择JVM服务</option>
+							<option value="">请选择mysql服务</option>
 						</select>
 					</div>
 					<div class="form-group" id="hostDetailtable">
@@ -89,7 +89,7 @@
 										jrdsHtml += '<td><button class="btn btn-block btn-primary" onclick="showgraph(\''
 												+ graph[k].url
 												+ '\')">'
-												+ graph[k].name
+												+ graph[k].name.substring(5,graph[k].name.length)
 												+ '</button></td>';
 									}
 								}
@@ -102,7 +102,7 @@
 	}
 
 	var create_host = function() {
-		rainbowAjax.get("./graph/hostMycatList?hostprefix=JMX", "", function callback(data) {
+		rainbowAjax.get("./graph/hostMycatList?hostprefix=MYSQL", "", function callback(data) {
 			var jrds = JSON.parse(data);
 			for (var i in jrds) {
 				$("#hosts").append(

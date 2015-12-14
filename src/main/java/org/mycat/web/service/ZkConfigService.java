@@ -146,27 +146,31 @@ public class ZkConfigService  extends BaseService {
 		Menu mycatMenu= new Menu("1","Mycat-配置","",MENU_TYPE_PROJECT_GROUP);
 		Menu mycatMenuSub1= new Menu("1-1","mycat服务管理","page/manger/mycat.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub2= new Menu("1-2","mycat-VM管理","page/manger/jmx.html",MENU_TYPE_NODE);
-		Menu mycatMenuSub3= new Menu("1-3","mycat系统参数","page/manger/sysparam.html",MENU_TYPE_NODE);
-		Menu mycatMenuSub4= new Menu("1-4","mycat日志管理","page/manger/syslog.html",MENU_TYPE_NODE);
+		Menu mycatMenuSub3= new Menu("1-3","mysql管理","page/manger/mysqlmonitor.html",MENU_TYPE_NODE);
+		Menu mycatMenuSub4= new Menu("1-4","mycat系统参数","page/manger/sysparam.html",MENU_TYPE_NODE);
+		Menu mycatMenuSub5= new Menu("1-5","mycat日志管理","page/manger/syslog.html",MENU_TYPE_NODE);
 		//Menu mycatMenuSub5= new Menu("1-5","Zookeeper信息","page/manger/zkread.html",MENU_TYPE_NODE);		 
 		mycatMenu.getSubMenus().add(mycatMenuSub1);
 		mycatMenu.getSubMenus().add(mycatMenuSub2);
 		mycatMenu.getSubMenus().add(mycatMenuSub3);
 		mycatMenu.getSubMenus().add(mycatMenuSub4);
+		mycatMenu.getSubMenus().add(mycatMenuSub5);
 		//mycatMenu.getSubMenus().add(mycatMenuSub5);
 		menus.add(mycatMenu);
 		
 		Menu monitorMenu= new Menu("2","Mycat-监控","",MENU_TYPE_PROJECT_GROUP);
 		Menu monitorMenuSub1= new Menu("2-1","mycat性能监控","page/monitor/jrds.html",MENU_TYPE_NODE);
 		Menu monitorMenuSub2= new Menu("2-2","mycatJVM性能监控","page/monitor/jrdsjvm.html",MENU_TYPE_NODE);		
-		Menu monitorMenuSub3= new Menu("2-3","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
-		Menu monitorMenuSub4= new Menu("2-4","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub3= new Menu("2-3","mysql性能监控","page/monitor/jrdsmysql.html",MENU_TYPE_NODE);		
+		Menu monitorMenuSub4= new Menu("2-4","mycat物理节点","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
+		Menu monitorMenuSub5= new Menu("2-5","主从同步监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);		
 		//Menu monitorMenuSub4= new Menu("2-4","节点负载监控","page/monitor/datahostinfo.html",MENU_TYPE_NODE);
 		//Menu monitorMenuSub5= new Menu("2-5","数据节点监控","page/monitor/masterslaveinfo.html",MENU_TYPE_NODE);				
 		monitorMenu.getSubMenus().add(monitorMenuSub1);
 		monitorMenu.getSubMenus().add(monitorMenuSub2);
 		monitorMenu.getSubMenus().add(monitorMenuSub3);
 		monitorMenu.getSubMenus().add(monitorMenuSub4);
+		monitorMenu.getSubMenus().add(monitorMenuSub5);
 		menus.add(monitorMenu);		
 		
 		//菜单4

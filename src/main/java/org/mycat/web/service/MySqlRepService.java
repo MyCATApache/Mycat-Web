@@ -1,5 +1,12 @@
 package org.mycat.web.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 @Lazy
 @Service("mySqlRepService")
@@ -202,5 +212,53 @@ public class MySqlRepService extends BaseService {
 		}
 
 		return context;
+	}
+	
+	
+	
+	private boolean createjmxjrds(String jrdsconf, MySqlServer m) {
+			InputStream inputstate = null;
+			Writer out = null;
+		try {
+			String packageName = super.getClass().getPackage().getName();
+			String packagePath = packageName.replace('.', '/');
+			ClassLoader classLoader = this.getClass().getClassLoader();
+			inputstate = classLoader
+					.getResourceAsStream(packagePath + "/templet/jmxjrds.ftl");
+			Template tempState = new Template("", new InputStreamReader(
+					inputstate), new Configuration());
+			tempState.setEncoding("UTF-8");
+			
+			File file = new File(jrdsconf);
+			if (!file.exists()) {
+				file.getParentFile().mkdir();
+				file.createNewFile();
+			}
+			out = new OutputStreamWriter(new FileOutputStream(file),"UTF-8");
+			Map<String, Object> paramData = new HashMap<String, Object>();
+			paramData.put("jrdsName", m.getName());
+			paramData.put("ip", m.getIp());
+			paramData.put("port", m.getPort());
+			paramData.put("username", m.getUser());
+			paramData.put("password", m.getPassword());
+			
+			tempState.process(paramData, out);
+			out.close();
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}finally{
+			try {
+				if(inputstate != null){
+					inputstate.close();
+				}
+				if(out != null){
+					out.close();
+				}
+			} catch (IOException e) {
+			}
+		}
 	}
 }

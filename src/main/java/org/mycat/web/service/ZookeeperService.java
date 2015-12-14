@@ -15,29 +15,28 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.zookeeper.data.Stat;
 import org.apache.zookeeper.CreateMode;
-import org.hx.rainbow.common.context.RainbowContext;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
+import org.apache.zookeeper.data.Stat;
 import org.mycat.web.util.JsonUtils;
 import org.mycat.web.util.MycatPathConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 public class ZookeeperService {
 	 private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperService.class);
 	private  static  ZookeeperService  zookeeperService;
 	private final String zooKey="zookeeper";
 	
-	private final String mycat_eye=MycatPathConstant.MYCAT_EYE;
-	private final String mycats=mycat_eye+"/mycat";
-	private final String mycat_jmx=mycat_eye+"/mycat_jmx";
-	private final String mycat_snmp=mycat_eye+"/mycat_snmp";
-	private final String mycat_processor=mycat_eye+"/mycat_processor";	
+	private final static String mycat_eye = MycatPathConstant.MYCAT_EYE;
+	private final static String mycats = mycat_eye+"/mycat";
+	private final static String mycat_jmx = mycat_eye+"/mycat_jmx";
+	private final static String MYCAT_MYSQL = mycat_eye+"/mysql";
+	private final static String mycat_snmp = mycat_eye+"/mycat_snmp";
+	private final static String mycat_processor =mycat_eye+"/mycat_processor";	
 	
 	private  String zookeeper;
 	private static CuratorFramework framework;
@@ -141,6 +140,7 @@ public class ZookeeperService {
 			createPath(mycat_eye,"mycat eye");
 			createPath(mycats,"mycat node");
 			createPath(mycat_jmx,"jmx");
+			createPath(MYCAT_MYSQL,"mysql");
 			createPath(mycat_snmp,"snmp");
 			createPath(mycat_processor,"processor");
 		}
@@ -318,6 +318,45 @@ public class ZookeeperService {
 		return del(mycat_jmx,guid);
 	}		
 	
+	
+	
+	//MySql增加修改节点
+	public boolean insertMysql(String guid,Object innerMap) {
+		return insert(MYCAT_MYSQL,guid,innerMap);
+	}	
+	//获取节点
+	public Map<String, Object> getMysqlNode(String Key) {
+		return readNode(MYCAT_MYSQL+"/"+Key);
+	}		
+	//获取全部节点
+	public List<Map<String, Object>> getMysql() {
+		return getPath(MYCAT_MYSQL);
+	}	
+	//删除节点
+	public boolean delMysql(String guid){
+		return del(MYCAT_MYSQL,guid);
+	}
+	
+	//获取指定节点
+	public List<Map<String, Object>> getMysql(String field,String dbname) {
+		if(dbname ==  null || dbname.isEmpty()){
+			return getMysql();
+		}		
+		else {
+		  List<Map<String, Object>> mysqllist = getMysql();
+		  for (int i=0; i<mysqllist.size(); i++){	
+			  Map<String, Object> dbinfo = mysqllist.get(i);
+			  String db = (String)dbinfo.get(field);
+			  if (db.equals(dbname)){
+				  mysqllist.clear();
+				  mysqllist.add(dbinfo);
+				  break;
+			  }
+		  }
+		  return mysqllist;
+		}
+	}	
+	
 	//增加修改节点
 	public boolean insertSnmp(String guid,Object innerMap) {
 		return insert(mycat_snmp,guid,innerMap);
@@ -396,7 +435,6 @@ public class ZookeeperService {
 
     //Datanode Child Config
     private  List<Map<String,Object>> getDatanodeConfig(List<Map<String,Object>> listServer,String childPath) throws Exception {
-
         List list = new ArrayList<>();
         list = framework.getChildren().forPath(childPath);
         Iterator<String> iterator = list.iterator();

@@ -1,23 +1,15 @@
 package org.mycat.web.service;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Map;
 
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.util.JrdsUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 @Lazy
 @Service("jmxservice")
@@ -47,7 +39,7 @@ public class JMXService extends BaseService {
 			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());			
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
-			createjmxjrds(jrdsconfg, context.getAttr());
+			JrdsUtils.getInstance().newJrdsFile("/templet/jmxjrds.ftl", jrdsconfg, context.getAttr());
 		}catch (Exception e) {
 			logger.error(e.getCause());
 			context.setSuccess(false);
@@ -85,7 +77,7 @@ public class JMXService extends BaseService {
 			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());		
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
-			createjmxjrds(jrdsconfg, context.getAttr());			
+			JrdsUtils.getInstance().newJrdsFile("/templet/jmxjrds.ftl", jrdsconfg, context.getAttr());
 		} catch (Exception e) {
 			logger.error("execute error, {} /r/n cause:{}", e.getMessage(), e.getCause());
 			context.setSuccess(Boolean.FALSE);
@@ -122,52 +114,13 @@ public class JMXService extends BaseService {
 	 */
 	private String buildJrdsPath(RainbowContext context, Object guid) {
 		String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-		jrdsconfg = jrdsconfg + "JMX_" +  context.getAttr("jmxname")+ "_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
+		jrdsconfg = jrdsconfg + "JMX_" + context.getAttr("ip") + "_" + context.getAttr("port")  + ".xml";
 
 		//JMX SAVE JSR
 		context.addAttr("jrdsfile", jrdsconfg);
 		context.addAttr("fileName", jrdsconfg);
 		context.addAttr("guid", guid);
 		return jrdsconfg;
-	}
-	
-	private boolean createjmxjrds(String jrdsconf, Map<String, Object> paramData) {
-			InputStream inputstate = null;
-			Writer out = null;
-		try {
-			String packageName = super.getClass().getPackage().getName();
-			String packagePath = packageName.replace('.', '/');
-			ClassLoader classLoader = this.getClass().getClassLoader();
-			inputstate = classLoader
-					.getResourceAsStream(packagePath + "/templet/jmxjrds.ftl");
-			Template tempState = new Template("", new InputStreamReader(
-					inputstate), new Configuration());
-			tempState.setEncoding("UTF-8");
-			
-			File file = new File(jrdsconf);
-			if (!file.exists()) {
-				file.getParentFile().mkdir();
-				file.createNewFile();
-			}
-			out = new OutputStreamWriter(new FileOutputStream(file),"UTF-8");
-			tempState.process(paramData, out);
-			out.close();
-			return true;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}finally{
-			try {
-				if(inputstate != null){
-					inputstate.close();
-				}
-				if(out != null){
-					out.close();
-				}
-			} catch (IOException e) {
-			}
-		}
 	}
 
 

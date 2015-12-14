@@ -28,7 +28,10 @@ public class DataSourceUtils {
 			.getLogger(DataSourceUtils.class);
 	private static final String DEFULAT_MYCAT_MANGER = "9066";
 	
+	public static final String DEFAULT_MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+
 	private volatile static DataSourceUtils dataSourceUtils = null;
+	
 	private DataSourceUtils(){};
 	
 	public static DataSourceUtils getInstance(){
@@ -110,8 +113,8 @@ public class DataSourceUtils {
 	private  GenericBeanDefinition getDefinition(Map<String, Object> jdbc) {
 		GenericBeanDefinition messageSourceDefinition = new GenericBeanDefinition();
 		Map<String, Object> original = new HashMap<String, Object>();
-		original.put("driverClassName", "com.mysql.jdbc.Driver");
-		original.put("url", DialectUtils.getMySQLURL((String)jdbc.get("ip"), (String)jdbc.get("port"), (String)jdbc.get("dbName")));
+		original.put("driverClassName", DEFAULT_MYSQL_DRIVER_CLASS);
+		original.put("url", getMySQLURL((String)jdbc.get("ip"), (String)jdbc.get("port"), (String)jdbc.get("dbName")));
 		original.put("username", jdbc.get("username"));
 		original.put("password", jdbc.get("password"));
 		
@@ -124,6 +127,10 @@ public class DataSourceUtils {
 		messageSourceDefinition.setDestroyMethodName("close");
 		messageSourceDefinition.setPropertyValues(new MutablePropertyValues(original));
 		return messageSourceDefinition;
+	}
+	
+	private String getMySQLURL(String ip, String port, String server) {
+		return "jdbc:mysql://" + ip + ":" + port + "/" + server + "?characterEncoding=utf8";
 	}
 
 	private  GenericBeanDefinition getSqlSessionFactoryDef(Object dbSource) {
