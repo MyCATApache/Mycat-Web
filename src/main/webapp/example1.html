@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Spacetree - Tree Animation</title>
+
+<!-- CSS Files -->
+<link type="text/css" href="./resources/jit/css/base.css"
+	rel="stylesheet" />
+<link type="text/css" href="./resources/jit/css/Spacetree.css"
+	rel="stylesheet" />
+<script type="text/javascript"
+	src="static/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!--[if IE]><script language="javascript" type="text/javascript" src="./Extras/excanvas.js"></script><![endif]-->
+
+<!-- JIT Library File -->
+<script language="javascript" type="text/javascript"
+	src="./resources/jit/js/jit.js"></script>
+
+<!-- Example File -->
+<script language="javascript" type="text/javascript">
+	//init data
+	var json = null;
+	checkChildnode() ;
+	function checkChildnode() {
+		$.ajax({url : "./dispatcherAction/query.do?service=jitService&method=query",
+					type : "post",
+					async : false,
+					datatype : 'json',
+					success : function(data) {
+						json=data.attr.jit;
+					}
+				});
+	}
+	var canvas_color = "#F2F2F2"; //画面背景色，
+	var canvas_width = 1200; //宽度
+	var canvas_height = 800; //高度
+	var levels = 7; //默认展开层数
+	var link_color = "#FF00FF"; //选中节点的连线颜色
+	var root_id = "root"; //根节点ID
+	var selected_node_color = "#ff7"; //选中节点背景色
+	var error_node_color = "#baa"; //错误节点背景色
+	var status_error_flag = "error"; //错误状态标识字符
+</script>
+<script language="javascript" type="text/javascript"
+	src="./resources/jit/js/mycat.js"></script>
+</head>
+
+<body onload="init();">
+	<div id="container">
+
+		<div id="infovis"></div>
+
+	</div>
+</body>
+</html>
