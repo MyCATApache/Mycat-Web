@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -46,7 +48,7 @@ public class ZkConfigService  extends BaseService {
 	    String zkpath=(String)context.getAttr("zkpath");
 	    String zkid=(String)context.getAttr("zkid");	
 	    String config=(String)context.getAttr("config");	
-	    List<String> configid=ZookeeperService.getInstance().getChilds(MycatPathConstant.MYCAT_NAME_SPACE+"/"+zkpath+"/"+zkid+"/"+config+"-config");
+	    List<String> configid=ZookeeperService.getInstance().getChilds("/"+zkpath+"/"+zkid+"/"+config);
 	    for(int i = 0; i < configid.size(); i++)  { 
 	        Map<String, Object> attr = new HashMap<String, Object>();
 	        attr.put("id", i);
@@ -72,7 +74,26 @@ public class ZkConfigService  extends BaseService {
 		}
 		return rows;
 	 }
-	
+	public RainbowContext queryDetail(RainbowContext context) throws Exception {
+	    String zkpath=(String)context.getAttr("zkpath");
+	    String zkid=(String)context.getAttr("zkid");
+	    String config=(String)context.getAttr("config");	
+	    String ds=(String)context.getAttr("ds");
+		if (!(ds ==  null || ds.isEmpty())){
+			ds="/"+ds;
+		}
+	    String childPath =ZKPaths.makePath("/"+zkpath+"/"+zkid+"/"+config,ds);
+	    Map<String, Object> readNode = ZookeeperService.getInstance().readNode(childPath);
+	    if(readNode==null)
+	    	return context;
+	    ArrayList<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
+	    list.add(readNode);
+	    context.addRows(getMmgrid(list,ds));
+	    context.setTotal(context.getRows().size());	
+		context.setMsg("OK!");
+		context.setSuccess(true);	
+		return context;
+	}
 	
 	public RainbowContext queryChilds(RainbowContext context) throws Exception {
 	    String zkpath=(String)context.getAttr("zkpath");
@@ -83,8 +104,8 @@ public class ZkConfigService  extends BaseService {
 			ds="/"+ds;
 		}
 		
-	    String childPath =ZKPaths.makePath(MycatPathConstant.MYCAT_NAME_SPACE+"/"+zkpath,"/"+zkid);
-	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,config+"-config",ds),ds));
+	    String childPath =ZKPaths.makePath("/"+zkpath,"/"+zkid);
+	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,config,ds),ds));
 	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
 	    context.setTotal(context.getRows().size());	
 		context.setMsg("OK!");
@@ -187,7 +208,7 @@ public class ZkConfigService  extends BaseService {
 		
 		
         //屏蔽 2015-12-12 sohudo  
-		//Menu mycatzone=getMycatZoneMenu();
+		Menu mycatzone=getMycatZoneMenu();
 		
 		/*先屏蔽 2015-12-3 sohudo
 		Menu firstMenu5 = new Menu("5","MySQL Group1","",MENU_TYPE_PROJECT_GROUP);
@@ -218,8 +239,8 @@ public class ZkConfigService  extends BaseService {
 		mycatzone.getSubMenus().add(firstMenuSub3);			
 		*/
 		
-		//menus.add(mycatzone);		
-		//context.addAttr("menu",menus);  
+		menus.add(mycatzone);		
+//		context.addAttr("menu",menus);  
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
 		context.addRow(attr);
@@ -231,11 +252,20 @@ public class ZkConfigService  extends BaseService {
       if (cluster!=null){
     	  for(int i = 0; i < cluster.size(); i++)  { 
     		if (!cluster.get(i).equals("mycat-eye")){ 
+    		String path="page/zk/zkread.html";
+    		switch (cluster.get(i)) {
+			case "mycat-cluster":
+				path="page/cluster/mycat_cluster_detail.html";
+				break;
+			default:
+				break;
+			}	
+    			
     		  Menu clusterMenu = new Menu("5."+i,cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP);
     		  List<String> mycatid=ZookeeperService.getInstance().getChilds("/"+cluster.get(i));
     		  if (mycatid!=null){
     			  for(int j = 0; j < mycatid.size(); j++)  {  
-   				    Menu mycatMenu = new Menu("5."+i+j,mycatid.get(j),"page/zk/zkread.html?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(j),MENU_TYPE_NODE); 
+   				    Menu mycatMenu = new Menu("5."+i+j,mycatid.get(j),path+"?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(j),MENU_TYPE_NODE); 
       				  /*
     				  List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i)+"/"+mycatid.get(i));
     				  if (configid!=null){
