@@ -58,6 +58,8 @@ public class ZookeeperService {
 				if(zookeeperService == null){
 					zookeeperService = new ZookeeperService();
 				}
+				if(!zookeeperService.isConnected())
+					zookeeperService.reConnected();
 			}
 		}
 		return zookeeperService;	   
