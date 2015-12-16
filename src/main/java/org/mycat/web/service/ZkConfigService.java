@@ -168,7 +168,7 @@ public class ZkConfigService  extends BaseService {
 		Menu mycatMenuSub3= new Menu("1-3","mysql管理","page/manger/mysqlmonitor.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub4= new Menu("1-4","mycat系统参数","page/manger/sysparam.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub5= new Menu("1-5","mycat日志管理","page/manger/syslog.html",MENU_TYPE_NODE);
-		Menu mycatMenuSub6= new Menu("1-6","网络拓扑图","example1.html",MENU_TYPE_NODE);		 
+		Menu mycatMenuSub6= new Menu("1-6","网络拓扑图","page/manger/topol.html",MENU_TYPE_NODE);		 
 		mycatMenu.getSubMenus().add(mycatMenuSub1);
 		mycatMenu.getSubMenus().add(mycatMenuSub2);
 		mycatMenu.getSubMenus().add(mycatMenuSub3);
