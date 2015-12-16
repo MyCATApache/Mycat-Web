@@ -17,6 +17,7 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.hx.rainbow.common.context.RainbowProperties;
 import org.mycat.web.util.JsonUtils;
 import org.mycat.web.util.MycatPathConstant;
 import org.slf4j.Logger;
@@ -42,11 +43,12 @@ public class ZookeeperService {
 	private static CuratorFramework framework;
 	
 	private ZookeeperService(){
-		Properties properties = new Properties();
+		//Properties properties = new Properties();
 		try {
-			properties.load(ZookeeperService.class.getClassLoader().getResourceAsStream("mycat.properties"));
-			zookeeper=properties.getProperty(zooKey);
-		} catch (IOException e) {
+			//properties.load(ZookeeperService.class.getClassLoader().getResourceAsStream("mycat.properties"));
+			//zookeeper=properties.getProperty(zooKey);
+			zookeeper=(String)RainbowProperties.getProperties(zooKey);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
