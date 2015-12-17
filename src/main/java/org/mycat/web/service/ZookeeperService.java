@@ -402,7 +402,7 @@ public class ZookeeperService {
 			return getDataHostNodeConfig(ParentPath,configKey);	
 			}			
 		else {
-			String nodePath = ParentPath + "/" + configKey+childKey;
+			String nodePath = ParentPath + (configKey != null && !"".equals(configKey) ? "/" + configKey : "") + childKey;
 			List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
 			try {
 				List<String> children=null;
