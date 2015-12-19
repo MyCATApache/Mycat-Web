@@ -1,29 +1,17 @@
 package org.mycat.web.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.ZKPaths;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
-import org.hx.rainbow.common.util.ObjectId;
 //import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
-import org.mycat.web.util.DataSourceUtils;
-import org.mycat.web.util.MycatPathConstant;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
 
 @Lazy
 @Service("zkConfigService")
@@ -254,10 +242,12 @@ public class ZkConfigService  extends BaseService {
       if (cluster!=null){
     	  for(int i = 0; i < cluster.size(); i++)  { 
     		if (!cluster.get(i).equals("mycat-eye")){ 
-    			String path="page/zk/zkread.html";
+    			//String path="page/zk/zkread.html";
+    			String path="page/zk/zkread-1.html";
         		switch (cluster.get(i)) {
     			case "mycat-cluster":
     				path="page/cluster/mycat_cluster_detail.html";
+//    			      path="page/zk/zkread-1.html";
     				break;
     			default:
     				break;

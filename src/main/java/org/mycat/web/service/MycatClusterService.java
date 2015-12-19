@@ -3,6 +3,7 @@ package org.mycat.web.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.util.JavaBeanUtil;
 import org.mycat.web.model.MycatCluster;
@@ -17,8 +18,9 @@ public class MycatClusterService  {
 	
 	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
 	
+	@SuppressWarnings("unchecked")
 	public RainbowContext queryByPage(RainbowContext context){
-		String path = Constant.MYCAT_NODES;
+		String path = ZKPaths.makePath("/", Constant.MYCAT_CLUSTER_KEY);
 		int pageNo = context.getPage();
 	    int pageSize = context.getLimit();
 		Map<String,Object> data = zkHander.getChildNodeData(path, MycatCluster.class, pageNo, pageSize,null);
@@ -29,8 +31,9 @@ public class MycatClusterService  {
 	    return context;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public RainbowContext queryAll(RainbowContext context){
-		String path = Constant.MYCAT_NODES;
+		String path = ZKPaths.makePath("/", Constant.MYCAT_CLUSTER_KEY);
 		Map<String,Object> data = zkHander.getChildNodeData(path, MycatCluster.class);
 		if(data != null && data.size() > 0){
 			context.setRows((List<Map<String, Object>>) data.get("rows"));
@@ -40,7 +43,7 @@ public class MycatClusterService  {
 	
 	public RainbowContext insert (RainbowContext context) throws Exception{
 		Map<String, Object> params = context.getAttr();
-		String  parentPath = Constant.MYCAT_NODE;
+		String  parentPath = Constant.MYCAT_CLUSTER_KEY;
 		String path = zkHander.createSeqNode(parentPath, "");
 		String mycatJson_new = (String)params.get("value");
 		MycatCluster mycatCluster = JSON.parseObject(mycatJson_new, MycatCluster.class);

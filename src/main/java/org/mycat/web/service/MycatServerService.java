@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.util.JavaBeanUtil;
 import org.mycat.web.model.MycatServer;
@@ -18,9 +19,9 @@ public class MycatServerService  {
 	
 	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
 	
+	@SuppressWarnings("unchecked")
 	public RainbowContext queryByPage(RainbowContext context) throws Exception{
-		String path = Constant.MYCAT_SERVERS;
-		//Map<String,Object> params = context.getAttr();
+		String path = ZKPaths.makePath("/", Constant.MYCAT_NODES_KEY);
 		int pageNo = context.getPage();
 		int pageSize = context.getLimit();
 		Map<String,Object> data = zkHander.getChildNodeData(path, MycatServer.class, pageNo, pageSize,null);
@@ -53,7 +54,7 @@ public class MycatServerService  {
 	public RainbowContext insert(RainbowContext context) throws Exception {
 		
 		Map<String, Object> params = context.getAttr();
-		String  parentPath =Constant.MYCAT_SERVER;
+		String  parentPath =Constant.MYCAT_NODES_KEY;
 		String path = zkHander.createSeqNode(parentPath, "");
 		String mycatJson_new = (String)params.get("value");
 		MycatServer mycatServer = JSON.parseObject(mycatJson_new, MycatServer.class);
