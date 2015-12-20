@@ -469,9 +469,9 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 				} else {
 					log(Level.INFO, "uptime too low: %f",
 							getUptime() * pd.getUptimefactor());
-					return false;	
+					
 				}
-				
+				return true;	
 			}
 		}
 		return false;
