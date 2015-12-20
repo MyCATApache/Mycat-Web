@@ -31,12 +31,12 @@ As there is no index to discriminate between jvm, label is used and is mandatory
 		<collect>java.lang:type=Threading/ThreadCount</collect>
 	</ds>
 	<ds>
-		<dsName>StartedThreadCount</dsName>
-		<dsType>counter</dsType>
+		<dsName>TotalStartedThreadCount</dsName>
+		<dsType>gauge</dsType>
 		<collect>java.lang:type=Threading/TotalStartedThreadCount</collect>
 	</ds>
 	<graphs>
-		<name>JMXStartedThreads</name>
+		<name>JMXTotalStartedThreadCount</name>
 		<name>JMXThreadsCount</name>
 	</graphs>
 </probedesc>
