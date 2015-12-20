@@ -527,7 +527,6 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 				log(Level.WARN, ex, "Error while storing sample: %s",
 						ex.getMessage());
 			} catch (Exception e) {
-				e.printStackTrace();
 				Throwable rootCause = e;
 				Throwable upCause;
 				StringBuilder message = new StringBuilder();
