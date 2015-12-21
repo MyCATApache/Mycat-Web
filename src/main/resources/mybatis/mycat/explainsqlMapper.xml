@@ -9,7 +9,7 @@
 	</select>
 	
 	<select id="explainMysql" resultType="map" parameterType="map">
-		explain2 datanode = ${dataNode} sql = ${sql}
+		explain2 datanode=${dataNode} sql=${sql}
 	</select>
 	
 </mapper>

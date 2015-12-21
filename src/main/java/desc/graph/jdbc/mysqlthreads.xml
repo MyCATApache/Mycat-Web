@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlThreads</name>
   <graphName>mysqlthreads-{3}</graphName>
-  <graphTitle>Threads created for {3}</graphTitle>
+  <graphTitle>Threads on {3}</graphTitle>
   <verticalLabel>creation/s</verticalLabel>
   <add>
     <name>Threads_created</name>

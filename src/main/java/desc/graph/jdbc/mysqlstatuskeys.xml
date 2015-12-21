@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlStatusKeysActivity</name>
   <graphName>mysqlstatuskeysactivity-{3}</graphName>
-  <graphTitle>keys Activity on {3}</graphTitle>
+  <graphTitle>StatusKeysActivity on {3}</graphTitle>
   <verticalLabel>number/s</verticalLabel>
 	<add>
 		<legend>Keys written</legend>
