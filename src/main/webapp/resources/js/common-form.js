@@ -365,3 +365,118 @@ function ready4AddForm(extra_call){
 		   data = {};
 	   }
 }
+
+
+
+
+function showModal(myModal){
+	
+	$("#"+myModal).modal('show');
+}
+
+function loadFormData(formId,jsonStr){
+    var obj = eval("("+jsonStr+")");
+    var key,value,tagName,type,arr;
+    for(x in obj){
+        key = x;
+        value = obj[x];
+        $("[name='"+key+"'],[name='"+key+"[]']").each(function(){
+            tagName = $(this)[0].tagName;
+            type = $(this).attr('type');
+            if(tagName=='INPUT'){
+                if(type=='radio'){
+                    $(this).attr('checked',$(this).val()==value);
+                }else if(type=='checkbox'){
+                    arr = value.split(',');
+                    for(var i =0;i<arr.length;i++){
+                        if($(this).val()==arr[i]){
+                            $(this).attr('checked',true);
+                            break;
+                        }
+                    }
+                }else{
+                    $(this).val(value);
+                }
+            }else if(tagName=='SELECT' || tagName=='TEXTAREA'){
+                $(this).val(value);
+            }
+             
+        });
+    }
+}
+
+function datagrid(tableId,url,columns){
+	$("#"+tableId).bootstrapTable({
+		url:url,
+		columns : columns,
+		dataType : "json",
+		pageList : [10,20,30,50],
+		sidePagination : "server",
+		showPaginationSwitch : true,
+		pagination:true,
+		paginationHAlign : 'right',
+		showColumns : true,
+		showRefresh : true,
+		showToggle : true,
+		search : true,
+		showPaginationSwitch : true,
+		minimumCountColumns : 2,
+		//height : 500,
+		pageList : [10,20,30,50]
+	
+	});
+}
+
+function deleteRow(serviceName,method,data,callback){
+	var rainbow = new Rainbow();
+	rainbow.setAttr(data);
+	rainbow.addRows(data);
+	rainbow.setService(serviceName);
+	rainbow.setMethod(method);
+	handler(rainbow,callback);
+}
+
+function handler (rainbow,callback) {
+	jQuery.ajax({
+		cache : false,
+		type : 'POST',
+		dataType : "json",
+		url : './dispatcherAction/execute.do',
+		data: $.parseJSON(JSON.stringify(rainbow)),
+		error : function() {//请求失败处理函数
+			//alert('请求失败');
+			showDialog($("#container"),"","请求失败!","danger");
+		},
+		success : function(response) { //请求成功后处理函数。 
+			if(response.success == true ){
+				showDialog($("#container"),"","操作成功!","success");
+			    if(callback instanceof Function ){
+			    	callback();
+			    }
+			}else{
+				showDialog($("#container"),"",response.msg,"danger");
+			}
+			
+		}
+	});
+	return false;
+}
+
+function saveForm (serviceName,method,form,data,callback){
+	   var event = window.event || arguments[0];
+	   var evt = event.srcElement ? event.srcElement : event.target; 
+	   $(evt).button('loading');
+	   var formData =serializeObject($("#"+form),true);
+	   $.extend(formData,data);
+	   var rainbow = new Rainbow();
+	   rainbow.setAttr(formData);
+	   rainbow.addRows(formData);
+	   rainbow.setService(serviceName);
+	   rainbow.setMethod(method);
+	   handler(rainbow,callback);
+}
+
+function destroyValidator(form){
+	 $("#"+form).bootstrapValidator("destroy");
+	 
+}
