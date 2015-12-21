@@ -6,7 +6,6 @@ import javax.servlet.ServletContextListener;
 import org.hx.rainbow.common.context.RainbowProperties;
 import org.hx.rainbow.common.exception.SysException;
 import org.mycat.web.util.Constant;
-import org.mycat.web.util.MycatPathConstant;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
