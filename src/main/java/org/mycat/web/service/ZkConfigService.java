@@ -19,7 +19,6 @@ import org.hx.rainbow.common.util.ObjectId;
 //import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
-import org.mycat.web.util.MycatPathConstant;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 

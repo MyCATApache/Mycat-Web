@@ -21,6 +21,7 @@ public final class Constant {
     public static final String MYCAT_MYSQLS_KEY = "mycat-mysqls";
     public static final String MYCAT_MYSQL_GROUP_KEY = "mycat-mysqlgroup";
     
+    public static final String MYCAT_EYE="/mycat-eye";
     
     public static final String CLUSTER_USER = "user";
     public static final String CLUSTER_DATANODE = "datanode";
