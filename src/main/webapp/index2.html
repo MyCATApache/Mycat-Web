@@ -17,6 +17,16 @@
 	rel="stylesheet" type="text/css" />
 <link href="static/adminlte/bootstrap/css/bootstrap-select.css"
 	rel="stylesheet" type="text/css" />
+<link rel="stylesheet"
+	href="static/adminlte/plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet"
+	href="static/adminlte/plugins/timepicker/bootstrap-timepicker.min.css">
+
+<link href="static/adminlte/bootstrap/css/bootstrap-table.min.css"
+	rel="stylesheet" type="text/css" />
+<link href="static/adminlte/bootstrap/css/bootstrapValidator.min.css"
+	rel="stylesheet" type="text/css" />
+	
 <link href="resources/font-awesome-4.3.0/css/font-awesome.min.css"
 	rel="stylesheet" type="text/css" />
 
@@ -28,15 +38,29 @@
 <link href="static/adminlte/dist/css/skins/_all-skins.css"
 	rel="stylesheet" type="text/css" />
 
+
+
 <link href="static/mmgrid/css/mmGrid.css" rel="stylesheet"
 	type="text/css" />
 <link href="static/mmgrid/css/mmPaginator.css" rel="stylesheet"
 	type="text/css" />
+
+<!-- jit css -->
+<link type="text/css" href="resources/jit/css/Spacetree.css"
+	rel="stylesheet" />
 <!-- ztree css库-->
 <link rel="stylesheet" href="resources/zTree/css/demo.css"
 	type="text/css">
 <link rel="stylesheet"
 	href="resources/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+
+<!-- Select2 -->
+<link rel="stylesheet" href="../../plugins/select2/select2.min.css">
+<!-- Bootstrap time Picker -->
+<link rel="stylesheet"
+	href="../../plugins/timepicker/bootstrap-timepicker.min.css">
+<!-- Select2 -->
+
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -58,10 +82,10 @@
 			<!-- Logo -->
 			<a href="index2.html" class="logo"> <!-- mini logo for sidebar mini 50x50 pixels -->
 				<!--<img alt="" src="static/image/logo.png" width="100%" height="100%">-->
-			    <!-- logo for regular state and mobile devices -->
-				<span class="logo-mini" style="font-weight: 100">Mycat-eye</span> 
-				<span class="logo-lg" style="font-weight: 100; font-size: 30px;">Mycat-eye</span>
-				
+				<!-- logo for regular state and mobile devices --> <span
+				class="logo-mini" style="font-weight: 100">Mycat-eye</span> <span
+				class="logo-lg" style="font-weight: 100; font-size: 30px;">Mycat-eye</span>
+
 			</a>
 
 			<!-- Header Navbar: style can be found in header.less -->
@@ -107,7 +131,7 @@
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul id="menuContainer" class="sidebar-menu">
 					<li class="header">导航菜单</li>
-			<!--		<li class="treeview"><a href="#"> <i
+					<!--		<li class="treeview"><a href="#"> <i
 							class="fa fa-dashboard"></i><span>Mycat-配置</span><i
 							class="fa fa-angle-left pull-right"></i>
 					</a>
@@ -139,7 +163,7 @@
 							<li><a
 								href="javascript:loadContext('page/monitor/jrds.html');"><i
 									class="fa fa-circle-o"></i>mycat性能监控</a></li>-->
-<!-- 							<li class="treeview"><a href="#"> <i class="fa fa-table"></i><span>mycat-VM监控</span><i
+					<!-- 							<li class="treeview"><a href="#"> <i class="fa fa-table"></i><span>mycat-VM监控</span><i
 									class="fa fa-angle-left pull-right"></i></a>
 								<ul class="treeview-menu">
 									<li><a
@@ -153,7 +177,7 @@
 											class="fa fa-circle-o"></i>线程信息</a></li>
 								</ul>
 							</li> -->
-	<!--						<li><a
+					<!--						<li><a
 								href="javascript:loadContext('page/monitor/datahostinfo.html');"><i
 									class="fa fa-circle-o"></i>mycat物理节点</a></li>
 							<li><a
@@ -204,22 +228,42 @@
 	<script type="text/javascript"
 		src="static/adminlte/bootstrap/js/bootstrap-switch.min.js"></script>
 	<script type="text/javascript"
-		src="static/adminlte/bootstrap/js/bootstrap-select.js"></script>		
+		src="static/adminlte/bootstrap/js/bootstrap-select.js"></script>
 	<script type="text/javascript"
 		src='static/adminlte/plugins/fastclick/fastclick.min.js'></script>
 	<script type="text/javascript" src="static/adminlte/dist/js/app.min.js"></script>
 	<script type="text/javascript"
 		src="static/adminlte/plugins/sparkline/jquery.sparkline.min.js"></script>
+		
 	<script type="text/javascript"
-		src="static/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+		src="static/adminlte/bootstrap/js/bootstrap-table.min.js"></script>
+	<script type="text/javascript"
+		src="static/adminlte/bootstrap/js/bootstrapValidator.min.js"></script>	
+		
+	<!-- Select2 -->
+	<script src="static/adminlte/plugins/select2/select2.full.min.js"></script>
+	<!-- bootstrap time picker -->
+	<script
+		src="static/adminlte/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+
+	<script src="static/adminlte/plugins/daterangepicker/moment.js"></script>
+	<script
+		src="static/adminlte/plugins/daterangepicker/daterangepicker.js"></script>
+
 	<script type="text/javascript"
 		src="static/jquery-resize/jquery.ba-resize.js"></script>
 
+	<script src="static/adminlte/plugins/input-mask/jquery.inputmask.js"></script>
+	<script
+		src="static/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+	<script
+		src="static/adminlte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 
-	<script type="text/javascript" src="static/echarts/build/dist/echarts.js"></script>
-	
+	<script type="text/javascript"
+		src="static/echarts/build/dist/echarts.js"></script>
+
 	<script type="text/javascript" src="static/mmgrid/mmGrid.js"></script>
-	
+
 	<script type="text/javascript" src="static/mmgrid/mmPaginator.js"></script>
 
 	<script type="text/javascript" src="resources/js/json2.min.js"></script>
@@ -237,7 +281,10 @@
 	<script type="text/javascript"
 		src="resources//zTree/js/jquery.ztree.excheck-3.5.js"></script>
 	<script type="text/javascript"
-		src="resources//zTree/js/jquery.ztree.exedit-3.5.js"></script>		
+		src="resources//zTree/js/jquery.ztree.exedit-3.5.js"></script>
+	<!--jit topol  -->
+	<script language="javascript" type="text/javascript"
+		src="resources/jit/js/jit.js"></script>
 	<script type="text/javascript"
 		src="resources//zTree/TreeSelectorWeaver.js"></script>
 	<!-- common select @LeoChan -->
@@ -245,39 +292,39 @@
 		src="resources/select/CommonSelectWeaver.js"></script>
 	<script type="text/javascript"
 		src="resources/My97DatePicker/WdatePicker.js"></script>
-<script type="text/javascript">
-	// To make Pace works on Ajax calls    
-	
-    function loadData(){
-    	var rainbow = new Rainbow();
-    	rainbow.setService("zkConfigService");
-    	rainbow.setMethod("allZone");
-    	rainbow.setParam("ds", $('#datasource').val());
-    	rainbowAjax.query(rainbow, new function(){
-    		this.onSuccess = function(data) {
-    			 try {
-    				
-    				if (data.success) {
-    					
-    					var dataRow = data.rows[0].menu;
-    					//initMap(dataRow);
-    					//console.log(dataRow);
-    					//alert(Object.prototype.toString.apply(dataRow).toString());
-    					setMenu($('.sidebar-menu'),dataRow);
-    					//mmgrid.load(data.rows);
-    				}
-    			} catch (e) {
-    				alert(e);
-    			} 
-    		};
-    		this.onFail = function(jqXHR, textStatus, errorThrown) {
-    		};
-    	});
-    	
-    }
-    $(document).ready(function() {
-    	loadData();
-    });
-</script>		
+	<script type="text/javascript">
+		// To make Pace works on Ajax calls    
+
+		function loadData() {
+			var rainbow = new Rainbow();
+			rainbow.setService("zkConfigService");
+			rainbow.setMethod("allZone");
+			rainbow.setParam("ds", $('#datasource').val());
+			rainbowAjax.query(rainbow, new function() {
+				this.onSuccess = function(data) {
+					try {
+
+						if (data.success) {
+
+							var dataRow = data.rows[0].menu;
+							//initMap(dataRow);
+							//console.log(dataRow);
+							//alert(Object.prototype.toString.apply(dataRow).toString());
+							setMenu($('.sidebar-menu'), dataRow);
+							//mmgrid.load(data.rows);
+						}
+					} catch (e) {
+						alert(e);
+					}
+				};
+				this.onFail = function(jqXHR, textStatus, errorThrown) {
+				};
+			});
+
+		}
+		$(document).ready(function() {
+			loadData();
+		});
+	</script>
 </body>
 </html>

@@ -575,7 +575,7 @@ implements Cloneable, WithACL {
     }
 
     private List<DsDesc> allds;
-    private int width = 578;
+    private int width = 928;
     private int height = 206;
     private double upperLimit = Double.NaN;
     private double lowerLimit = 0;

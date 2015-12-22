@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlTableSpace</name>
   <graphName>mysqltablespace-{3}</graphName>
-  <graphTitle>Table space for {3}</graphTitle>
+  <graphTitle>TableSpace on {3}</graphTitle>
   <unit>
     <binary/>
   </unit>

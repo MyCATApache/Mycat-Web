@@ -17,8 +17,9 @@ import org.apache.curator.framework.imps.CuratorFrameworkState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.hx.rainbow.common.context.RainbowProperties;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.JsonUtils;
-import org.mycat.web.util.MycatPathConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class ZookeeperService {
 	private  static  ZookeeperService  zookeeperService;
 	private final String zooKey="zookeeper";
 	
-	private final static String mycat_eye = MycatPathConstant.MYCAT_EYE;
+	private final static String mycat_eye = Constant.MYCAT_EYE;//MycatPathConstant.MYCAT_EYE;
 	private final static String mycats = mycat_eye+"/mycat";
 	private final static String mycat_jmx = mycat_eye+"/mycat_jmx";
 	private final static String MYCAT_MYSQL = mycat_eye+"/mysql";
@@ -42,11 +43,12 @@ public class ZookeeperService {
 	private static CuratorFramework framework;
 	
 	private ZookeeperService(){
-		Properties properties = new Properties();
+		//Properties properties = new Properties();
 		try {
-			properties.load(ZookeeperService.class.getClassLoader().getResourceAsStream("mycat.properties"));
-			zookeeper=properties.getProperty(zooKey);
-		} catch (IOException e) {
+			//properties.load(ZookeeperService.class.getClassLoader().getResourceAsStream("mycat.properties"));
+			//zookeeper=properties.getProperty(zooKey);
+			zookeeper=(String)RainbowProperties.getProperties(zooKey);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -58,6 +60,8 @@ public class ZookeeperService {
 				if(zookeeperService == null){
 					zookeeperService = new ZookeeperService();
 				}
+				if(!zookeeperService.isConnected())
+					zookeeperService.reConnected();
 			}
 		}
 		return zookeeperService;	   
@@ -90,7 +94,7 @@ public class ZookeeperService {
 	
 	public boolean Connected(String value){
 	  try {	
-		framework = createConnection(value).usingNamespace(MycatPathConstant.MYCAT_NAME_SPACE);
+		framework = createConnection(value).usingNamespace(Constant.LOCAL_ZK_URL_NAME);
 		if (framework!=null){
 			zookeeper=value;
 			createMainPath();

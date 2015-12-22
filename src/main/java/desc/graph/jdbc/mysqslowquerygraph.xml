@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlSlowQueyGraph</name>
   <graphName>MysqlSlowQueyGraph</graphName>
-  <graphTitle>Mysql Slow Query</graphTitle>
+  <graphTitle>SlowQueyGraph</graphTitle>
   <verticalLabel>Slow query</verticalLabel>
   <add>
     <name>SLOW_SQL_COUNTS</name>

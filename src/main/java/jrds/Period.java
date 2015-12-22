@@ -73,7 +73,6 @@ public class Period {
             throw new RuntimeException("Period invalid: " + p);
         }
         calPeriod = p;
-        System.out.println("perirod "+PeriodItem.values()[calPeriod].name);
         period = PeriodItem.values()[calPeriod].p;
         end = new DateTime().minusSeconds(1);
         begin = new DateTime().minus(period);

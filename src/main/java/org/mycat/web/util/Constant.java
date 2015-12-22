@@ -13,29 +13,22 @@ public final class Constant {
     /** * 统一的编码 */
     public static final String CHARSET = "UTF-8";
 
-    /** * zk的命名空间 */
-    public static final String LOCAL_ZK_NS_NAME = "";
     public static final String LOCAL_ZK_URL_NAME = "mycat";
-
-    /*****************zookeeper配置节点路径*******************/
+    public static final String MYCAT_CLUSTER_KEY = "mycat-cluster";
+    public static final String MYCAT_ZONE_KEY = "mycat-zones";
+    public static final String MYCAT_NODES_KEY = "mycat-nodes";
+    public static final String MYCAT_HOST_KEY = "mycat-hosts";
+    public static final String MYCAT_MYSQLS_KEY = "mycat-mysqls";
+    public static final String MYCAT_MYSQL_GROUP_KEY = "mycat-mysqlgroup";
     
-    /** 特定中心  */
-    public static final String MYCAT_ZONES = "/zones";
-    public static final String MYCAT_ZONE= MYCAT_ZONES + "/zone-";
-    public static final String MYCAT_NODES = "/clusters";
-    public static final String MYCAT_NODE = MYCAT_NODES + "/cluster-";
-    public static final String MYCAT_SERVERS = "/servers";
-    public static final String MYCAT_SERVER = MYCAT_SERVERS + "/server-";
-    public static final String MYCAT_HOSTS = "/hosts";
-    public static final String MYCAT_HOST = MYCAT_HOSTS + "/host-";
-    /** mycat-server负载  */
-    public static final String MYCAT_LBS ="/lbs-";
-    /** mycat-server负载组  */
-    public static final String MYCAT_LBS_GROUP="/lbs_group-";
-    /** mysql数据库节点  */
-    public static final String MYCAT_MYSQLS="/mysqls-";
-    /** mysql数据库组 */
-    public static final String MYCAT_MYSQLGROUP="/mysqlgroup-";
+    public static final String MYCAT_EYE="/mycat-eye";
+    
+    public static final String CLUSTER_USER = "user";
+    public static final String CLUSTER_DATANODE = "datanode";
+    public static final String CLUSTER_DATAHOST = "datahost";
+    public static final String CLUSTER_SCHEMA = "schema";
+    public static final String CLUSTER_RULE = "rule";
+    public static final String CLUSTER_SEQUENCE = "sequence";
     
     
 }

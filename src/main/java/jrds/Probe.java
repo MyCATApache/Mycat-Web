@@ -469,8 +469,9 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 				} else {
 					log(Level.INFO, "uptime too low: %f",
 							getUptime() * pd.getUptimefactor());
+					
 				}
-				return true;
+				return true;	
 			}
 		}
 		return false;
@@ -504,6 +505,7 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 					}
 					rrdDb = StoreOpener.getRrd(getRrdName());
 					Sample onesample = rrdDb.createSample();
+					onesample.getTime();
 					boolean updated = updateSample(onesample, newSampleVals);
 					// The collect might have been stopped
 					// during the reading of samples
@@ -521,6 +523,7 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 					}
 				}
 			} catch (ArithmeticException ex) {
+//				ex.printStackTrace();
 				log(Level.WARN, ex, "Error while storing sample: %s",
 						ex.getMessage());
 			} catch (Exception e) {

@@ -5,7 +5,7 @@ import javax.servlet.ServletContextListener;
 
 import org.hx.rainbow.common.context.RainbowProperties;
 import org.hx.rainbow.common.exception.SysException;
-import org.mycat.web.util.MycatPathConstant;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,7 @@ public class PublishServiceStartupListener implements ServletContextListener {
     	System.out.println(connStr);
     	//先屏蔽 2015-12-3 sohudo
     	//ZookeeperCuratorHandler.getInstance().connect(connStr, MycatPathConstant.MYSQL_GROUP);
+    	ZookeeperCuratorHandler.getInstance().connect(connStr, Constant.LOCAL_ZK_URL_NAME);
        
     }
 
