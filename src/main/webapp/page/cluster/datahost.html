@@ -5,6 +5,7 @@ window.operateEvents = {
         	 $("#mycatDataHost-form [name='guid']").val(row.name);
         	 loadFormData("mycatDataHost-form",JSON.stringify(row));
         	 $("#myModalLabel").text("编辑datahost");
+        	 $("#mycatDataHost-form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatDataHost-form");
         	 validator();
         	 showModal("dataHostModal");
@@ -215,6 +216,7 @@ function addHost(){
 	 $("#mycatDataHost-form :reset").click();
 	 $("#mycatDataHost-form [name='guid']").val("");//guid 设置空
 	 $("#myModalLabel").text("添加datahost");
+	 $("#mycatDataHost-form [name='name']").attr("disabled",false);
 	 destroyValidator("mycatDataHost-form");
 	 validator();
 	 showModal('dataHostModal');

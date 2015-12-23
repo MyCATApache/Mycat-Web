@@ -1,29 +1,22 @@
 package org.mycat.web.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.curator.utils.ZKPaths;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.data.Stat;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
-import org.hx.rainbow.common.util.ObjectId;
 //import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.Constant;
-import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.JavaBeanToMapUtil;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 
 @Lazy
 @Service("zkConfigService")
@@ -39,15 +32,16 @@ public class ZkConfigService  extends BaseService {
 	private static final String MENU_TYPE_PROJECT_NODE = "7";
 	private static final String MENU_TYPE_NODE = "8";
 	
+	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
 	
+	public RainbowContext query(RainbowContext context) throws Exception{
 	
-	public RainbowContext query(RainbowContext context) {
-		//super.query(context, NAMESPACE);
 	    String zkpath=(String)context.getAttr("zkpath");
 	    String zkid=(String)context.getAttr("zkid");	
 	    String config=(String)context.getAttr("config"); 
-	    String path = "/"+zkpath+"/"+zkid+ (config != null && !"".equals(config) ? "/"+config : "");
-	    List<String> configid=ZookeeperService.getInstance().getChilds(path);
+	    zkid = zkid + (config != null && !"".equals(config) ? "/"+config : "");
+	    String path = ZKPaths.makePath(zkpath, zkid);
+	    List<String> configid = zkHander.getChildrenName(path);
 	    if(configid != null && !configid.isEmpty()){
 		    for(int i = 0; i < configid.size(); i++)  { 
 		        Map<String, Object> attr = new HashMap<String, Object>();
@@ -63,7 +57,6 @@ public class ZkConfigService  extends BaseService {
 	private List<Map<String, Object>> getMmgrid(List<Map<String, Object>> mapList,String child){
 		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
 		for (int i=0;i<mapList.size();i++){			
-			//Iterator it = mapList.get(i).keySet().iterator();  
 			int l=1;			
 			for(Map.Entry<String, Object> entry:mapList.get(i).entrySet()) {
 				Map<String, Object> map=new HashMap<>();
@@ -83,8 +76,10 @@ public class ZkConfigService  extends BaseService {
 		if (!(ds ==  null || ds.isEmpty())){
 			ds="/"+ds;
 		}
-	    String childPath =ZKPaths.makePath("/"+zkpath+"/"+zkid+"/"+config,ds);
-	    Map<String, Object> readNode = ZookeeperService.getInstance().readNode(childPath);
+	    String path = ZKPaths.makePath(zkpath,zkid,config,ds);
+	    String data =  zkHander.getNodeData(path);
+	  	Object obj =  JSON.parseObject(data);
+	  	Map<String, Object> readNode = JavaBeanToMapUtil.beanToMap(obj);
 	    if(readNode==null)
 	    	return context;
 	    ArrayList<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
@@ -163,7 +158,7 @@ public class ZkConfigService  extends BaseService {
 	    return context;
    }
 	  
-    public  RainbowContext allZone(RainbowContext context){
+    public  RainbowContext allZone(RainbowContext context) throws Exception{
     	 if (ZookeeperService.getInstance().Connected()){
     		 return zkConnectOK(context);
     	 }
@@ -183,7 +178,7 @@ public class ZkConfigService  extends BaseService {
 		context.addRow(attr);
     	return context;		
     }
-    private RainbowContext zkConnectOK(RainbowContext context){
+    private RainbowContext zkConnectOK(RainbowContext context) throws Exception{
 		List<Menu> menus =new ArrayList<Menu>();
 		Menu mycatMenu= new Menu("1","Mycat-配置","",MENU_TYPE_PROJECT_GROUP);
 		Menu mycatMenuSub1= new Menu("1-1","mycat服务管理","page/manger/mycat.html",MENU_TYPE_NODE);
@@ -274,14 +269,14 @@ public class ZkConfigService  extends BaseService {
 		context.addRow(attr);
     	return context;
     }
-    private Menu getMycatZoneMenu(){
+    private Menu getMycatZoneMenu() throws Exception{
       Menu mycatZone = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE); 
-      List<String> cluster=ZookeeperService.getInstance().getChilds("/"); 
+      List<String> cluster = zkHander.getChildrenName("/"); 
       if (cluster!=null){
     	  for(int i = 0; i < cluster.size(); i++)  { 
     		if (!cluster.get(i).equals("mycat-eye")){  
     			Menu clusterMenu = new Menu("5."+i,cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP); 
-    		  List<String> mycatid=ZookeeperService.getInstance().getChilds("/"+cluster.get(i));
+    		  List<String> mycatid = zkHander.getChildrenName("/"+cluster.get(i));
     		  if (mycatid!=null){
     			  for(int j = 0; j < mycatid.size(); j++)  {  
     				  String path="page/zk/zknode.html";
