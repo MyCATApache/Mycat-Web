@@ -1,31 +1,47 @@
 package org.mycat.web.service.cluster;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.mycat.web.model.cluster.ChildrenTable;
+import org.mycat.web.service.AbstractConfigSevice;
 import org.mycat.web.util.Constant;
-import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.stereotype.Service;
 
 @Service("childrenTableService")
-public class ChildrenTableService {
-private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
+public class ChildrenTableService extends AbstractConfigSevice {
+
+	private Class<ChildrenTable> clazz = ChildrenTable.class;
+	private String menuPath = Constant.MYCAT_CLUSTER_KEY;
+	private String zkPath = Constant.CLUSTER_SCHEMA;
+
 	
-	@SuppressWarnings("unchecked")
 	public RainbowContext queryByPage(RainbowContext context){
-		String clusterPath=(String)context.getAttr("zkId");
-		String guid=(String)context.getAttr("guid");
-		String parentPath = ZKPaths.makePath(Constant.MYCAT_CLUSTER_KEY, clusterPath, Constant.CLUSTER_SCHEMA,guid);
-		int pageNo = context.getPage() == 0 ?1:context.getPage();
-	    int pageSize = context.getLimit();
-		Map<String,Object> data = zkHander.getChildNodeData(parentPath, ChildrenTable.class, pageNo, pageSize,null);
-		if(data != null && data.size() > 0){
-			context.setRows((List<Map<String, Object>>) data.get("rows"));
-			context.setTotal((int) data.get("total"));
-		}
+		super.queryByPage(context, clazz);
 	    return context;
+	}
+	
+	public RainbowContext queryAll(RainbowContext context){
+		super.queryAll(context, clazz);
+	    return context;
+	}
+
+	public RainbowContext insert (RainbowContext context) throws Exception{
+		super.insert(context, clazz);
+		return context;
+	}
+	
+	public RainbowContext update(RainbowContext context) throws Exception{
+		super.update(context, clazz);
+		return context;
+	}
+
+	public RainbowContext delete(RainbowContext context) throws Exception {
+		super.delete(context);
+		return context;
+	}
+	
+	public String getPath(String zkId,String guid){
+		String Path = ZKPaths.makePath(menuPath, zkId,zkPath,guid);
+		return Path;
 	}
 }

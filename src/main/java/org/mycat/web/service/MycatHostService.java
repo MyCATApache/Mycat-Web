@@ -1,20 +1,19 @@
-package org.mycat.web.service.cluster;
+package org.mycat.web.service;
 
 import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
-import org.mycat.web.model.cluster.User;
-import org.mycat.web.service.AbstractConfigSevice;
+import org.mycat.web.model.MycatHost;
 import org.mycat.web.util.Constant;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Lazy
-@Service("userService")
-public class UserService extends AbstractConfigSevice {
-	
-	private Class<User> clazz = User.class;
-	private String menuPath = Constant.MYCAT_CLUSTER_KEY;
-	private String zkPath = Constant.CLUSTER_USER;
+@Service("mycatHostService")
+public class MycatHostService extends AbstractConfigSevice {
+	private Class<MycatHost> clazz = MycatHost.class;
+	private String menuPath = Constant.MYCAT_HOST_KEY;
+	private String zkPath = "";
+
 	
 	public RainbowContext queryByPage(RainbowContext context){
 		super.queryByPage(context, clazz);
@@ -23,6 +22,11 @@ public class UserService extends AbstractConfigSevice {
 	
 	public RainbowContext queryAll(RainbowContext context){
 		super.queryAll(context, clazz);
+	    return context;
+	}
+
+	public RainbowContext query(RainbowContext context){
+		super.query(context, clazz);
 	    return context;
 	}
 
@@ -45,4 +49,5 @@ public class UserService extends AbstractConfigSevice {
 		String Path = ZKPaths.makePath(menuPath, zkId,zkPath,guid);
 		return Path;
 	}
+
 }

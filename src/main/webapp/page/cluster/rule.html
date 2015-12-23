@@ -62,8 +62,6 @@ function validator(){
 	$('#mycatRule-form').bootstrapValidator({
 	    message: 'This value is not valid',
 	    feedbackIcons: {
-	        valid: 'glyphicon glyphicon-ok',
-	        invalid: 'glyphicon glyphicon-remove',
 	        validating: 'glyphicon glyphicon-refresh'
 	    },
 	    err : {
@@ -208,8 +206,8 @@ $(document).ready(function() {
 		
 <div class="box-body">
   <div id="ruleToolbar">
-       <button id="add" class="btn btn-info" onclick="addRule()" >
-           <i class="glyphicon glyphicon-plus"></i> Add
+       <button id="add" class="btn btn-default" onclick="addRule()" >
+           <i class="glyphicon glyphicon-plus"></i> 新增
        </button>
   </div>
   <table id="myclusterRulebody"  data-toolbar="#ruleToolbar" data-toggle="table" class="table table-striped table-bordered table-hover"

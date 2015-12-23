@@ -410,11 +410,12 @@ function datagrid(tableId,url,columns){
 		url:url,
 		columns : columns,
 		dataType : "json",
+		locale: 'zh-CN',
 		pageList : [10,20,30,50],
 		sidePagination : "server",
 		showPaginationSwitch : true,
 		pagination:true,
-		paginationHAlign : 'right',
+		paginationHAlign : "right",
 		showColumns : true,
 		showRefresh : true,
 		showToggle : true,
@@ -422,7 +423,17 @@ function datagrid(tableId,url,columns){
 		showPaginationSwitch : true,
 		minimumCountColumns : 2,
 		//height : 500,
-		pageList : [10,20,30,50]
+		pageList : [10,20,30,50],
+		queryParamsType :"limit",
+		pageSize:10,
+		pageNumber:1,
+		queryParams : function(params){
+			return {
+				offset : params.offset,
+				limit : params.limit,
+				search : params.search
+			}
+		},
 	
 	});
 }
@@ -443,11 +454,10 @@ function handler (rainbow,callback) {
 		dataType : "json",
 		url : './dispatcherAction/execute.do',
 		data: $.parseJSON(JSON.stringify(rainbow)),
-		error : function() {//请求失败处理函数
-			//alert('请求失败');
+		error : function() {
 			showDialog($("#container"),"","请求失败!","danger");
 		},
-		success : function(response) { //请求成功后处理函数。 
+		success : function (response) {  
 			if(response.success == true ){
 				showDialog($("#container"),"","操作成功!","success");
 			    if(callback instanceof Function ){
