@@ -390,9 +390,10 @@ public class ZookeeperService {
 		}   
 		return children;
 	} 
+	
 	//获取节点的子节点数据，如果没子节点直接获取节点的数据
 	public List<Map<String, Object>> getNodeOrChildNodes(String ParentPath,String configKey,String childKey) throws Exception{
-	
+	    /*
 		if (configKey.equals("datanode-config")){
 			return getDatanodeConfig(ParentPath,configKey);
 		}
@@ -405,7 +406,7 @@ public class ZookeeperService {
 		else if (configKey.equals("datahost-config")){
 			return getDataHostNodeConfig(ParentPath,configKey);	
 			}			
-		else {
+		else { */
 			String nodePath = ParentPath + (configKey != null && !"".equals(configKey) ? "/" + configKey : "") + childKey;
 			List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
 			try {
@@ -425,9 +426,10 @@ public class ZookeeperService {
 			}     		
 			return rows;	
 	
-		}
+		//}
 		
 	}
+	/*
     //Datanode Config
     public  List<Map<String,Object>> getDatanodeConfig(String PARENT_PATH ,String configKey)throws Exception {
         String nodePath = PARENT_PATH + "/" + configKey;
@@ -571,5 +573,5 @@ public class ZookeeperService {
         }
         return null;
     }    
-    
+    */
 }
