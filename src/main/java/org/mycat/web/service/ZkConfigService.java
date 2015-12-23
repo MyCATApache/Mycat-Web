@@ -287,7 +287,7 @@ public class ZkConfigService  extends BaseService {
     				  String path="page/zk/zknode.html";
     	        		switch (cluster.get(i)) {
     	    			case Constant.MYCAT_CLUSTER_KEY:
-    	    				path="page/mycat/cluster_detail.html";
+    	    				path="page/cluster/mycat_cluster_detail.html";
     	    				break;
     	    			case Constant.MYCAT_ZONE_KEY:
     	    				path="page/mycat/zone_detail.html";
