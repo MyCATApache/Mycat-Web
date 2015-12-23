@@ -15,7 +15,6 @@
 				<div class="box-header">
 				 <form action="" id="query_Form">
 					<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
-		                  	<option value="">请选择数据源</option>
 		            </select>
 		         </form>
 				</div>
@@ -54,6 +53,9 @@ var Selected_Callback = function(target_select){
 					for(var i=0;i<length;i++){
 						var mycatName = j_obj.rows[i].mycatName;
 						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+						if(i == 0){
+							datasouce_change();
+						}
 					}
 				}
 			} catch (e) {

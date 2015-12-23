@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlStatusBytes</name>
   <graphName>mysqlstatusbytes-{3}</graphName>
-  <graphTitle>Bytes exchanged on {3}</graphTitle>
+  <graphTitle>StatusBytes on {3}</graphTitle>
   <unit>
     <binary/>
   </unit>

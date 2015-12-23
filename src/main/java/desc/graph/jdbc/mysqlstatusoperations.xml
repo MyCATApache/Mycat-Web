@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlStatusOperations</name>
   <graphName>mysqlstatusoperations-{3}</graphName>
-  <graphTitle>Operations on {3}</graphTitle>
+  <graphTitle>StatusOperations on {3}</graphTitle>
   <verticalLabel>number</verticalLabel>
   <add>
     <name>Questions</name>
