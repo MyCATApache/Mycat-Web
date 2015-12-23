@@ -3,7 +3,7 @@
 <graphdesc>
   <name>MysqlStatusCacheHits</name>
   <graphName>mysqlcachehits-{3}</graphName>
-  <graphTitle>Cache Hits on {3}</graphTitle>
+  <graphTitle>StatusCacheHits on {3}</graphTitle>
   <verticalLabel>number/s</verticalLabel>
   <add>
     <name>Qcache_hits</name>

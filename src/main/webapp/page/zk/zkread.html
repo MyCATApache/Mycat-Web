@@ -17,12 +17,13 @@
 				<table class="table table-bordered text-center">
 				<tbody>
 				  <tr>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('server')">server</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('schema')">schema</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('datahost')">datahost</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('datanode')">datanode</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('blockSQLs')">blockSQLs</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('user')">user</button></td>
 				  <td><button class="btn btn-block btn-primary" onclick="showTable('rule')">rule</button></td>
-				  <td><button class="btn btn-block btn-primary" onclick="showTable('sequence')">sequence</button></td>     
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('sequence')">sequence</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('schema/TESTDB')">schema</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('datanode')">datanode</button></td>
+				  <td><button class="btn btn-block btn-primary" onclick="showTable('datahost')">datahost</button></td>     
 				  </tr></tbody></table></div>
 					<div class="box-header">
 				 <form action="" id="query_Form">
@@ -53,7 +54,7 @@
 
 <script type="text/javascript">
 var zkconfig="";
-function queryForm2(form_id,extra_call){
+function queryForm2(form_id,extra_call){ 
 	var datas =serializeObject($('#'+form_id));
 	if(extra_call){
 		  var extra_func = getFunc(extra_call);
@@ -114,7 +115,7 @@ var initDataSouce = function(url){
 	var rainbow = new Rainbow();
 	rainbow.setService("zkConfigService");
 	rainbow.setMethod("query");
-	rainbow.setParam("zkpath", zkPath);
+	rainbow.setParam("zkpath", zkPath); 
 	rainbow.setParam("zkid", zkId);
 	rainbow.setParam("config", url);
 	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));

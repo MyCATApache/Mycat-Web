@@ -16,7 +16,6 @@
 					<form action="" id="query_Form">
 						<select onchange="datasouce_change()" name="ds" id="datasource"
 							class="form-control" style="width: 200px;">
-							<option value="">请选择数据源</option>
 						</select>
 					</form>
 				</div>
@@ -152,6 +151,9 @@
 						$("#" + target_select).append(
 								"<option value=\""+ mycatName+"\">" + mycatName
 										+ "</option>");
+						if(i == 0){
+							datasouce_change();
+						}
 					}
 				}
 			} catch (e) {

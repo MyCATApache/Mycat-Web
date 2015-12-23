@@ -3,7 +3,7 @@
 <graphdesc>
 	<name>MysqlStatusBadJoin</name>
 	<graphName>mysqlstatusbadjoin-{3}</graphName>
-	<graphTitle>Joins performed without indexes {3}</graphTitle>
+	<graphTitle>StatusBadJoin on {3}</graphTitle>
 	<verticalLabel>number/s</verticalLabel>
 	<add>
 		<name>Select_range_check</name>

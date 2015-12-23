@@ -13,7 +13,7 @@ import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.sun.tools.internal.xjc.reader.gbind.Sequence;
+import org.mycat.web.model.cluster.Sequence;
 
 @Service("sequenceService")
 public class SequenceService {

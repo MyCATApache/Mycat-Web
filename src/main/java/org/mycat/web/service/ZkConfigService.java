@@ -19,7 +19,6 @@ import org.hx.rainbow.common.util.ObjectId;
 //import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
 import org.mycat.web.util.DataSourceUtils;
-import org.mycat.web.util.MycatPathConstant;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +44,16 @@ public class ZkConfigService  extends BaseService {
 		//super.query(context, NAMESPACE);
 	    String zkpath=(String)context.getAttr("zkpath");
 	    String zkid=(String)context.getAttr("zkid");	
-	    String config=(String)context.getAttr("config");	
-	    List<String> configid=ZookeeperService.getInstance().getChilds("/"+zkpath+"/"+zkid+"/"+config);
-	    for(int i = 0; i < configid.size(); i++)  { 
-	        Map<String, Object> attr = new HashMap<String, Object>();
-	        attr.put("id", i);
-	        attr.put("child", configid.get(i));
-	    	context.getRows().add(attr);
+	    String config=(String)context.getAttr("config"); 
+	    String path = "/"+zkpath+"/"+zkid+ (config != null && !"".equals(config) ? "/"+config : "");
+	    List<String> configid=ZookeeperService.getInstance().getChilds(path);
+	    if(configid != null && !configid.isEmpty()){
+		    for(int i = 0; i < configid.size(); i++)  { 
+		        Map<String, Object> attr = new HashMap<String, Object>();
+		        attr.put("id", i);
+		        attr.put("child", configid.get(i));
+		    	context.getRows().add(attr);
+		    } 
 	    }
 		context.setMsg("OK!");
 		context.setSuccess(true);	
@@ -102,8 +104,28 @@ public class ZkConfigService  extends BaseService {
 			ds="/"+ds;
 		}
 		
-	    String childPath =ZKPaths.makePath("/"+zkpath,"/"+zkid);
-	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,config,ds),ds));
+	    String childPath =ZKPaths.makePath("/"+zkpath,"/"+zkid); 
+	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,(config != null && !"".equals(config) ? config : ""),ds),ds));
+ 
+	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
+	    context.setTotal(context.getRows().size());	
+		context.setMsg("OK!");
+		context.setSuccess(true);	
+		return context;
+	}
+	
+	public RainbowContext queryNodes(RainbowContext context) throws Exception {
+	    String zkpath=(String)context.getAttr("zkpath");
+	    String zkid=(String)context.getAttr("zkid");
+	    String config=(String)context.getAttr("config");	
+	    String ds=(String)context.getAttr("ds");
+		if (!(ds ==  null || ds.isEmpty())){
+			ds="/"+ds;
+		}
+		
+	    String childPath =ZKPaths.makePath("/"+zkpath,""); 
+	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,(config != null && !"".equals(config) ? config : ""),ds),ds));
+ 
 	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
 	    context.setTotal(context.getRows().size());	
 		context.setMsg("OK!");
@@ -243,30 +265,34 @@ public class ZkConfigService  extends BaseService {
 		
 		menus.add(mycatzone);		
 		//context.addAttr("menu",menus);  
+		
+	//	Menu mycatzone = getMycatZoneMenu();
+	//	menus.add(mycatzone);	
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
 		context.addRow(attr);
     	return context;
     }
     private Menu getMycatZoneMenu(){
-      Menu mycatZone = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE);
-      List<String> cluster=ZookeeperService.getInstance().getChilds("/");
+      Menu mycatZone = new Menu("5","Mycat Zone","",MENU_TYPE_ZONE); 
+      List<String> cluster=ZookeeperService.getInstance().getChilds("/"); 
       if (cluster!=null){
     	  for(int i = 0; i < cluster.size(); i++)  { 
-    		if (!cluster.get(i).equals("mycat-eye")){ 
-    			String path="page/zk/zkread.html";
-        		switch (cluster.get(i)) {
-    			case "mycat-cluster":
-    				path="page/cluster/mycat_cluster_detail.html";
-    				break;
-    			default:
-    				break;
-    			}
-    		  Menu clusterMenu = new Menu("5."+i,cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP);
+    		if (!cluster.get(i).equals("mycat-eye")){  
+    			Menu clusterMenu = new Menu("5."+i,cluster.get(i),"",MENU_TYPE_CLUSTER_GROUP); 
     		  List<String> mycatid=ZookeeperService.getInstance().getChilds("/"+cluster.get(i));
     		  if (mycatid!=null){
     			  for(int j = 0; j < mycatid.size(); j++)  {  
-   				    Menu mycatMenu = new Menu("5."+i+j,mycatid.get(j),path+"?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(j),MENU_TYPE_NODE); 
+    				  String path="page/zk/zknode.html";
+    	        		switch (cluster.get(i)) {
+    	    			case "mycat-cluster":
+    	    				path="page/cluster/mycat_cluster_detail.html";
+    	    				break;
+    	    			default:
+    	    				break;
+    	    		  }
+    	        	 Menu mycatMenu = new Menu("5."+i+j,mycatid.get(j),path+"?zkpath="+cluster.get(i)+"&zkid="+mycatid.get(j),MENU_TYPE_NODE); 
+    	        	 clusterMenu.getSubMenus().add(mycatMenu);
       				  /*
     				  List<String> configid=ZookeeperService.getInstance().getChilds(CONFIG_MYCAT_ZONE+"/"+cluster.get(i)+"/"+mycatid.get(i));
     				  if (configid!=null){
@@ -277,7 +303,7 @@ public class ZkConfigService  extends BaseService {
     					  
     				  }
     				  */
-    				  clusterMenu.getSubMenus().add(mycatMenu);    				 
+    				     				 
     			  }
     		  }
     		  mycatZone.getSubMenus().add(clusterMenu);    	
@@ -286,6 +312,7 @@ public class ZkConfigService  extends BaseService {
       }
       return mycatZone;	
     }
+     
 	public RainbowContext getZkconfig(RainbowContext context) throws Exception {	
      	String cluster = (String)context.getAttr("ds");
 		try {

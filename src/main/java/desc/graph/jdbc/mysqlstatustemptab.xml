@@ -3,7 +3,7 @@
 <graphdesc>
 	<name>MysqlStatusTempTables</name>
 	<graphName>mysqlstatustemptables-${url}</graphName>
-	<graphTitle>Temporary tables created on disk on ${url}</graphTitle>
+	<graphTitle>StatusTempTables on ${url}</graphTitle>
 	<verticalLabel>%</verticalLabel>
 	<add>
 		<name>Created_tmp_disk_tab</name>
