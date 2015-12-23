@@ -33,8 +33,8 @@ public abstract class AbstractConfigSevice {
 				context.setTotal(1);
 			}
 		}else{
-			int offset =Integer.parseInt((String)context.getAttr("offset") == null ? "0" :(String)context.getAttr("offset"));
-			int limit = Integer.parseInt((String) context.getAttr("limit") == null ? "10" :(String) context.getAttr("limit") );
+			int offset =Integer.parseInt((String)context.getAttr("offset"));
+			int limit = Integer.parseInt((String) context.getAttr("limit"));
 			Map<String, Object> data = new HashMap<String, Object>();
 			try {
 				data = zkHander.getChildNodeDataByPage(parentPath, entity, limit, offset,beanMap);
@@ -100,7 +100,7 @@ public abstract class AbstractConfigSevice {
 				return context;
 			}
 		}
-		String creatPath = ZKPaths.makePath(parentPath, fieldValue);
+		String creatPath = getPath(parentPath, fieldValue);
 		String data = JSON.toJSONString(t);
 		zkHander.createNode(creatPath, data);
 		return context;
@@ -110,7 +110,7 @@ public abstract class AbstractConfigSevice {
 		Map<String,Object> params = context.getAttr();
 		String zkId = (String)context.getAttr("zkId");
 		String guid = (String)context.getAttr("guid");
-		String path = getPath(zkId,guid);
+		String path = getPath(guid,zkId);
 		boolean exists = zkHander.existsNode(path);
 		if(exists){
 			String json_newStr =  JSON.toJSONString(params);
