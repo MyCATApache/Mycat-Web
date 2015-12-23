@@ -21,6 +21,7 @@ import org.mycat.web.task.common.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Preconditions;
 
@@ -387,4 +388,61 @@ public final class ZookeeperCuratorHandler {
 		reMap.put("total", forPath.size());
 		return reMap;
 	}
+	
+	public <T> T getBeanData(String path,Class<T> claz) {
+		Preconditions.checkNotNull(client, errorWithNullClient);
+		String rep=null;
+		try {
+			byte[] byteData = client.getData().forPath(path);
+			rep=new String(byteData, Constant.CHARSET);
+			
+		    T t = JSON.parseObject(rep, claz);
+		    return t;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public <T> Map<String, Object> getChildNodeDataByPage(String path,Class<T> entity,Integer limit,Integer offset,Map<String, Object> attr) throws Exception{
+		Preconditions.checkNotNull(client, errorWithNullClient);
+		Map<String, Object> reMap=new HashMap<String, Object>();
+		Stat stat = client.checkExists().forPath(path);
+		if(stat==null)
+			return null;
+		List<String> forPath=new ArrayList<String>();
+		forPath = client.getChildren().forPath(path);
+		List<String> remove=new ArrayList<String>();
+		if (attr!=null&&attr.size()>=1&&attr.get("name")!=null) {
+			String name=String.valueOf(attr.get("name"));
+			if(StringUtils.isNotEmpty(name)){
+				for (String s : forPath) {
+					if(s.indexOf(name)<0)
+						remove.add(s);
+				}
+			}
+		}
+		forPath.removeAll(remove);
+		if(offset == null){
+			offset = 0;
+		}
+		int endset = offset+limit;
+		if(endset > forPath.size()) {
+			endset = forPath.size();
+		}
+		List<Map<String, Object>> rows=new ArrayList<Map<String, Object>>();
+		for (int i = offset; i <= endset-1; i++) {
+			String s=forPath.get(i);
+			String nodeData = getNodeData(path+"/"+s);
+			if(StringUtils.isEmpty(nodeData))
+				continue;
+			T t = JSONArray.parseObject(nodeData, entity);
+			rows.add(JavaBeanToMapUtil.beanToMap(t));
+		}
+		reMap.put("rows", rows);
+		reMap.put("total", forPath.size());
+		return reMap;
+	}
+	
 }

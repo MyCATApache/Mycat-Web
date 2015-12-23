@@ -18,6 +18,7 @@ import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.util.ObjectId;
 //import org.mycat.web.ZkTestReadConfig;
 import org.mycat.web.model.Menu;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.MycatPathConstant;
 import org.springframework.context.annotation.Lazy;
@@ -255,9 +256,25 @@ public class ZkConfigService  extends BaseService {
     	  for(int i = 0; i < cluster.size(); i++)  { 
     		if (!cluster.get(i).equals("mycat-eye")){ 
     			String path="page/zk/zkread.html";
+    			
         		switch (cluster.get(i)) {
-    			case "mycat-cluster":
+        		case Constant.MYCAT_ZONE_KEY:
+    				path="page/mycat/zone_detail.html";
+    				break;
+    			case Constant.MYCAT_CLUSTER_KEY:
     				path="page/cluster/mycat_cluster_detail.html";
+    				break;
+    			case Constant.MYCAT_HOST_KEY:
+    				path="page/mycat/host_detail.html";
+    				break;
+    			case Constant.MYCAT_NODES_KEY:
+    				path="page/mycat/node_detail.html";
+    				break;
+    			case Constant.MYCAT_MYSQL_GROUP_KEY:
+    				path="page/mycat/mysqlgroup_detail.html";
+    				break;
+    			case Constant.MYCAT_MYSQLS_KEY:
+    				path="page/mycat/mysql_detail.html";
     				break;
     			default:
     				break;

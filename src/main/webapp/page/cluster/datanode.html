@@ -29,14 +29,17 @@ window.operateEvents = {
 var columns = [{
 				title : '名称',
 				field:'name',
+				align : 'center'
 			},
 			{
 				title : '物理实例名',
-				field : 'dataHost'
+				field : 'dataHost',
+				align : 'center'
 			},
 			{
 				title : '数据库实例名',
-				field : 'database'
+				field : 'database',
+				align : 'center'
 			},{
                 title: '操作',
                 align: 'center',
@@ -49,8 +52,8 @@ function validator(){
 	$('#mycatDataNode-form').bootstrapValidator({
 	    message: 'This value is not valid',
 	    feedbackIcons: {
-	        valid: 'glyphicon glyphicon-ok',
-	        invalid: 'glyphicon glyphicon-remove',
+	        //valid: 'glyphicon glyphicon-ok',
+	        //invalid: 'glyphicon glyphicon-remove',
 	        validating: 'glyphicon glyphicon-refresh'
 	    },
 	    err : {
@@ -140,8 +143,8 @@ $(document).ready(function() {
 </script>		
 	<div class="box-body">
 	    <div id="dataNodeToolbar">
-	        <button id="add" class="btn btn-info" onclick="addDataNode()" >
-	            <i class="glyphicon glyphicon-plus"></i> Add
+	        <button id="add" class="btn btn-default" onclick="addDataNode()" >
+	            <i class="glyphicon glyphicon-plus"></i> 新增
 	        </button>
 	    </div>
 		<table  id="mycatDatanodebody" data-toggle="table"  data-toolbar="#dataNodeToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >

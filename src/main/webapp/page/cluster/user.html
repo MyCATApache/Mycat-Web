@@ -33,7 +33,10 @@ window.operateEvents = {
         	 $("#myModalLabel").text("编辑mycat用户信息");
         	 destroyValidator("mycatUser-form");
         	 validator();
+        	 $("#mycatUser-form label[for='name']").css("display","none");
+        	 $("#mycatUserModal form [name='name']").css("display","none");
         	 showModal("mycatUserModal");
+        	 
         },
         'click .remove': function (e, value, row, index) {
         	var data = {
@@ -48,19 +51,23 @@ window.operateEvents = {
 
 var columns = [{
    				title : '用户名',
-   				field :'name'
+   				field :'name',
+   				align : 'center'
    			},
    			{
    				title : '密码',
-   				field : 'password'
+   				field : 'password',
+   				align : 'center'
    			},
    			{
    				title : '是否只读',
-   				field : 'readyOnly'
+   				field : 'readyOnly',
+   				align : 'center'
    			},
    			{
    				title : '可访问对象',
-   				field : 'schemas'
+   				field : 'schemas',
+   				align : 'center'
    			},{
                 title: '操作',
                 align: 'center',
@@ -90,8 +97,8 @@ function validator() {
 				// The invisible fields set by Bootstrap Multiselect must be validated
 				//excluded : ':disabled',
 				feedbackIcons : {
-					valid : 'glyphicon glyphicon-ok',
-					invalid : 'glyphicon glyphicon-remove',
+					//valid : 'glyphicon glyphicon-ok',
+					//invalid : 'glyphicon glyphicon-remove',
 					validating : 'glyphicon glyphicon-refresh'
 				},
 				fields : {
@@ -130,7 +137,7 @@ function validator() {
 					}
 				},
 			 onSuccess : function(e,validator, form, submitButton) {
-			    	var guid =  $("#mycatUser-form [name='zkId']").val();
+			    	var guid =  $("#mycatUser-form [name='guid']").val();
 			    	var data = {
 			    			 "guid" : guid,
 			    			 "zkId" : zkId
@@ -158,6 +165,8 @@ function validator() {
 		$("#userModal").text("添加dataNode");
 		destroyValidator("mycatUser-form");
 		validator();
+		$("#mycatUser-form label[for='name']").css("display","block");
+   	 	$("#mycatUserModal form [name='name']").css("display","block");
 		showModal("mycatUserModal");
 		
 
@@ -222,8 +231,8 @@ function validator() {
 
 <div class="box-body">
 	 <div id="userToolbar">
-        <button id="add" class="btn btn-info" onclick="addUser()" >
-            <i class="glyphicon glyphicon-plus"></i> Add
+        <button id="add" class="btn btn-default" onclick="addUser()" >
+            <i class="glyphicon glyphicon-plus"></i> 新增
         </button>
 	 </div>
 	<table  id="mycatUserbody"    data-toolbar="#userToolbar" data-toggle="table" class="table table-striped table-bordered table-hover"

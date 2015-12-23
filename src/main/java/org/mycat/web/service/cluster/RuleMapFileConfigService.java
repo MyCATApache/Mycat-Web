@@ -21,9 +21,9 @@ public class RuleMapFileConfigService {
 	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
 	
 	public RainbowContext query(RainbowContext context) throws Exception{
-		String clusterPath = (String)context.getAttr("zkPath");
-		String zkId = (String)context.getAttr("zkId");
-		String path = ZKPaths.makePath(Constant.MYCAT_CLUSTER_KEY, clusterPath ,Constant.CLUSTER_RULE , zkId ,MapFilePath);
+		String clusterPath = (String)context.getAttr("zkId");
+		String guid = (String)context.getAttr("guid");
+		String path = ZKPaths.makePath(Constant.MYCAT_CLUSTER_KEY, clusterPath ,Constant.CLUSTER_RULE , guid ,MapFilePath);
 		if(zkHander.existsNode(path)){
 			String data = zkHander.getNodeData(path);
 			if(data !=null ){
