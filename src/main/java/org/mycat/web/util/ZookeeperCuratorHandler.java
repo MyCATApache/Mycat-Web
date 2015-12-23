@@ -17,7 +17,7 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
-import org.hamcrest.core.IsEqual;
+import org.mycat.web.task.common.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +76,6 @@ public final class ZookeeperCuratorHandler {
 					LOG.info(
 							"connect zookeeper[{}] with namespace[{}] successful",
 							host, nameSpace);
-					createMainPath();
 				} else {
 					disconnect();
 					throw new Exception("fail to connect zookeeper server["
@@ -445,20 +444,5 @@ public final class ZookeeperCuratorHandler {
 		reMap.put("total", forPath.size());
 		return reMap;
 	}
-	
-	
-	
-	public boolean createMainPath() throws Exception {
-		if (!existsNode(Constant.MYCAT_EYE)) {
-			createNode(Constant.MYCAT_EYE,"mycat eye");
-			createNode(Constant.mycats,"mycat node");
-			createNode(Constant.mycat_jmx,"jmx");
-			createNode(Constant.MYCAT_MYSQL,"mysql");
-			createNode(Constant.mycat_snmp,"snmp");
-			createNode(Constant.mycat_processor,"processor");
-		}
-		return true;
-	}
-	
 	
 }

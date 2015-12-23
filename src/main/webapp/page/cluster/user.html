@@ -30,10 +30,11 @@ window.operateEvents = {
         'click .like': function (e, value, row, index) {
         	 $("#mycatUser-form [name='guid']").val(row.name);
         	 loadFormData("mycatUser-form",JSON.stringify(row));
-        	 $("#userModalLabel").text("编辑用户信息");
+        	 $("#myModalLabel").text("编辑mycat用户信息");
         	 destroyValidator("mycatUser-form");
         	 validator();
-        	 $("#mycatUserModal form [name='name']").attr("disabled",true);
+        	 $("#mycatUser-form label[for='name']").css("display","none");
+        	 $("#mycatUserModal form [name='name']").css("display","none");
         	 showModal("mycatUserModal");
         	 
         },
@@ -161,10 +162,11 @@ function validator() {
 	function addUser() {
 		$("#mycatUser-form :reset").click();
 		$("#mycatUser-form :input [name='guid']").val("");
-		$("#userModalLabel").text("添加用户信息");
+		$("#userModal").text("添加dataNode");
 		destroyValidator("mycatUser-form");
 		validator();
-   	 	$("#mycatUserModal form [name='name']").attr("disabled",false);
+		$("#mycatUser-form label[for='name']").css("display","block");
+   	 	$("#mycatUserModal form [name='name']").css("display","block");
 		showModal("mycatUserModal");
 		
 
@@ -248,7 +250,7 @@ function validator() {
 	            <button type="button" class="close" data-dismiss="modal" 
 	               aria-hidden="true">×
 	            </button>
-	            <h4 class="modal-title" id="userModalLabel">
+	            <h4 class="modal-title" id="myModalLabel">
 	        	      新增mycat用户
 	            </h4>
 	         </div>
