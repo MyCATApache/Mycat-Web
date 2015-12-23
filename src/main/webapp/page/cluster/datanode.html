@@ -12,6 +12,7 @@ window.operateEvents = {
         	 $("#mycatDataNode-form [name='guid']").val(row.name);
         	 loadFormData("mycatDataNode-form",JSON.stringify(row));
         	 $("#myModalLabel").text("编辑datanode");
+        	 $("#dataNodeModal form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatDataNode-form");
         	 validator();
         	 showModal("dataNodeModal");
@@ -119,6 +120,7 @@ function addDataNode(){
 	 $("#mycatDataNode-form :reset").click();
 	 $("#mycatDataNode-form [name='guid']").val("");
 	 $("#myModalLabel").text("添加dataNode");
+	 $("#dataNodeModal form [name='name']").attr("disabled",false);
 	 destroyValidator("mycatDataNode-form");
 	 validator();
 	 showModal('dataNodeModal');
