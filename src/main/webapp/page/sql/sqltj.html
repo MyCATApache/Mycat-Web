@@ -70,6 +70,10 @@ Date.prototype.format = function(fmt) {
 var datasouce_change = function(){
 	loadData();
 }
+
+//10秒钟刷新一次
+setInterval("loadData()",10 * 1000);
+//loadData();
  
 var requestData = new Array();
 var timeData = new Array();
@@ -157,7 +161,7 @@ $(function(){
 	
 });
 
-function loadData(){
+function loadData(){ 
 	var rainbow = new Rainbow();
 	rainbow.setService("showService");
 	rainbow.setMethod("sqlsum");

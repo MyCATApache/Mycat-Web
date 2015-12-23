@@ -12,7 +12,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * JSON工具类
- * @author 丁威 2015年9月25日 下午5:56:25
+ * @author mycat
  * @version 1.0
  */
 public abstract class JsonUtils {
