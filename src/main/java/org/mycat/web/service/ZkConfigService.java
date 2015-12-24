@@ -39,8 +39,7 @@ public class ZkConfigService  extends BaseService {
 	    String zkpath=(String)context.getAttr("zkpath");
 	    String zkid=(String)context.getAttr("zkid");	
 	    String config=(String)context.getAttr("config"); 
-	    zkid = zkid + (config != null && !"".equals(config) ? "/"+config : "");
-	    String path = ZKPaths.makePath(zkpath, zkid);
+	    String path = ZKPaths.makePath(zkpath, zkid,config);
 	    List<String> configid = zkHander.getChildrenName(path);
 	    if(configid != null && !configid.isEmpty()){
 		    for(int i = 0; i < configid.size(); i++)  { 
@@ -99,11 +98,8 @@ public class ZkConfigService  extends BaseService {
 		if (!(ds ==  null || ds.isEmpty())){
 			ds="/"+ds;
 		}
-		
-	    String childPath =ZKPaths.makePath("/"+zkpath,"/"+zkid); 
-	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,(config != null && !"".equals(config) ? config : ""),ds),ds));
- 
-	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
+	    String path =ZKPaths.makePath(zkpath,zkid,config,ds); 
+	    context.addRows(getMmgrid(zkHander.getChildNodeData(path),ds));
 	    context.setTotal(context.getRows().size());	
 		context.setMsg("OK!");
 		context.setSuccess(true);	
@@ -119,20 +115,20 @@ public class ZkConfigService  extends BaseService {
 			ds="/"+ds;
 		}
 		
-	    String childPath =ZKPaths.makePath("/"+zkpath,""); 
-	    context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,(config != null && !"".equals(config) ? config : ""),ds),ds));
- 
-	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath+ds),ds));
+	    String path =ZKPaths.makePath(zkpath,config,ds); 
+	    //context.addRows(getMmgrid(ZookeeperService.getInstance().getNodeOrChildNodes(childPath,(config != null && !"".equals(config) ? config : ""),ds),ds));
+	    context.addRows(getMmgrid(zkHander.getChildNodeData(path),ds));
 	    context.setTotal(context.getRows().size());	
 		context.setMsg("OK!");
 		context.setSuccess(true);	
 		return context;
 	}
 
+	
 	public synchronized RainbowContext insert(RainbowContext context) throws Exception {
        String ip=(String)context.getAttr("ip");
        String port=(String)context.getAttr("port");
-       if (ZookeeperService.getInstance().Connected(ip+":"+port)){
+     /*  if (ZookeeperService.getInstance().Connected(ip+":"+port)){
     	   ZookeeperService.getInstance().UpdateZkConfig();
 		  context.setMsg("注册中心配置成功!");
 		  context.setSuccess(true);
@@ -142,7 +138,17 @@ public class ZkConfigService  extends BaseService {
  		  context.setMsg("连接注册中心失败，请检查!");
  		  context.setSuccess(true);
            return context;    	   
-       }
+       }*/
+		if (zkHander.connect(ip + ":" + port, Constant.LOCAL_ZK_URL_NAME)) {
+			zkHander.UpdateZkConfig();
+			context.setMsg("注册中心配置成功!");
+			context.setSuccess(true);
+			return context;
+		} else {
+			context.setMsg("连接注册中心失败，请检查!");
+			context.setSuccess(true);
+			return context;
+		}
 	}	
 
 	

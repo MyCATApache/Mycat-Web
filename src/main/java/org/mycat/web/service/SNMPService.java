@@ -9,12 +9,17 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.util.Constant;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -22,12 +27,15 @@ import freemarker.template.Template;
 @Lazy
 @Service("snmpservice")
 public class SNMPService extends BaseService {
-	private static final String NAMESPACE = "SYSSNMP";
+	//private static final String NAMESPACE = "SYSSNMP";
+	
+	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
 
-	public RainbowContext query(RainbowContext context) {
+	public RainbowContext query(RainbowContext context) throws Exception {
 	//	super.query(context, NAMESPACE);
 	//	return context;
-		context.addRows(ZookeeperService.getInstance().getSnmp());
+		//context.addRows(ZookeeperService.getInstance().getSnmp());
+		context.addRows(zkHander.getChildNodeData(Constant.MYCAT_SNMP));
 		context.setTotal(context.getRows().size());		
 		return context;
 	}
@@ -45,7 +53,8 @@ public class SNMPService extends BaseService {
 			context.addAttr("guid", new ObjectId().toString());
 			//super.insert(context, NAMESPACE);
 			String guid=new ObjectId().toString();
-			ZookeeperService.getInstance().insertSnmp(guid,context.getAttr());
+			//ZookeeperService.getInstance().insertSnmp(guid,context.getAttr());
+			zkHander.createNode(ZKPaths.makePath(Constant.MYCAT_SNMP, guid), JSON.toJSONString(context.getAttr()));
 			context.setMsg("新增成功!");
 			context.setSuccess(true);			
 			createsnmpjrds(jrdsconfg, context.getAttr());
@@ -99,8 +108,11 @@ public class SNMPService extends BaseService {
 		String jrdsfile ="";
 		try{
 			String guid=(String)context.getAttr("guid");
-			Map<String, Object> data =ZookeeperService.getInstance().getSnmpNode(guid);
-			ZookeeperService.getInstance().delSnmp(guid);
+			/*Map<String, Object> data =ZookeeperService.getInstance().getSnmpNode(guid);
+			ZookeeperService.getInstance().delSnmp(guid);*/
+			String path = ZKPaths.makePath(Constant.MYCAT_SNMP, guid);
+			Map<String, Object> data = zkHander.getNodeDataForMap(path);
+			zkHander.deleteNode(path);
 			context.setMsg("删除成功!");
 			context.setSuccess(true);
 			jrdsfile = (String)data.get("fileName");

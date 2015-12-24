@@ -1,12 +1,15 @@
 package org.mycat.web.util;
 
-import java.io.UnsupportedEncodingException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -16,9 +19,9 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
+import org.mycat.web.service.ZookeeperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Preconditions;
@@ -32,7 +35,9 @@ public final class ZookeeperCuratorHandler {
 	private CuratorFramework client = null;
 	private StateListener listener = new StateListener();
 	private String errorWithNullClient = "zookeeper CuratorFramework is null, please invoke connect method first";
-
+	private  String zookeeper;
+	private final String zooKey="zookeeper";
+	
 	private static class SingletonHolder {
 		private static ZookeeperCuratorHandler instance = new ZookeeperCuratorHandler();
 	}
@@ -49,7 +54,8 @@ public final class ZookeeperCuratorHandler {
 		return client.getChildren().forPath(parentNodePath);
 	}
 
-	public synchronized void connect(String host, String nameSpace) {
+	public synchronized boolean connect(String host, String nameSpace) {
+		boolean blockUntilConnected = false;
 		if (client == null
 				|| client.getState() != CuratorFrameworkState.STARTED) {
 			Preconditions.checkArgument(StringUtils.isNotBlank(host),
@@ -68,7 +74,7 @@ public final class ZookeeperCuratorHandler {
 				listener = new StateListener();
 				client.getConnectionStateListenable().addListener(listener);
 				client.start();
-				boolean blockUntilConnected = client.blockUntilConnected(5000,
+				blockUntilConnected = client.blockUntilConnected(5000,
 						TimeUnit.MILLISECONDS);
 				if (blockUntilConnected) {
 					LOG.info(
@@ -85,6 +91,7 @@ public final class ZookeeperCuratorHandler {
 						+ "] with namespace[" + nameSpace + "]", e);
 			}
 		}
+		return blockUntilConnected;
 	}
 
 	public boolean isConnected() {
@@ -131,6 +138,18 @@ public final class ZookeeperCuratorHandler {
 		}
 	}
 
+	public void UpdateZkConfig() throws Exception {
+		Properties properties = new Properties();
+		properties.load(ZookeeperService.class.getClassLoader()
+				.getResourceAsStream("mycat.properties"));
+		properties.setProperty(zooKey, zookeeper);
+		String realPath = ZookeeperService.class.getClassLoader()
+				.getResource("mycat.properties").getPath();
+		OutputStream out = new FileOutputStream(realPath);
+		System.out.println("realPath : " + realPath);
+		properties.store(out, "###ZK CONFIG");
+
+	}
 	public void createEphemeralNode(String path, String data) throws Exception {
 		Preconditions.checkNotNull(client, errorWithNullClient);
 		data = data == null ? "" : data;
@@ -139,20 +158,11 @@ public final class ZookeeperCuratorHandler {
 				.forPath(path, data.getBytes(Constant.CHARSET));
 	}
 
-	public String createSeqNode(String path, String data)  {
+	public String createSeqNode(String path, String data) throws Exception {
 		Preconditions.checkNotNull(client, errorWithNullClient);
-		String rePath=null;
-		try {
-			rePath = client.create().creatingParentsIfNeeded()
+		String	rePath = client.create().creatingParentsIfNeeded()
 					.withMode(CreateMode.PERSISTENT_SEQUENTIAL)
 					.forPath(path, data.getBytes(Constant.CHARSET));
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return rePath;
 	}
 
@@ -193,17 +203,19 @@ public final class ZookeeperCuratorHandler {
 		}
 	}
 
-	public String getNodeData(String path) {
+	public String getNodeData (String path) throws Exception {
 		Preconditions.checkNotNull(client, errorWithNullClient);
-		String rep=null;
-		try {
-			byte[] byteData = client.getData().forPath(path);
-			rep=new String(byteData, Constant.CHARSET);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		byte[] byteData = client.getData().forPath(path);
+		String rep = new String(byteData, Constant.CHARSET);
 		return rep;
+	}
+	
+	public Map<String,Object> getNodeDataForMap(String path) throws Exception{
+		Preconditions.checkNotNull(client, errorWithNullClient);
+		Stat stat = new Stat();
+		byte[] nodeData = client.getData().storingStatIn(stat).forPath(path);
+		String dataNode = new String(nodeData);
+		return JsonUtils.json2Map(dataNode);
 	}
 
 	public String getNodeData(String path, Stat stat) throws Exception {
@@ -313,29 +325,32 @@ public final class ZookeeperCuratorHandler {
 		}
 		return null;
 	}
-	public List<String> getChildNode(String path){
+
+	
+	public List<Map<String,Object>> getChildNodeData(String path) throws Exception{
 		Preconditions.checkNotNull(client, errorWithNullClient);
-		Map<String, Object> reMap=new HashMap<String, Object>();
-		Stat stat=null;
-		try {
-			stat = client.checkExists().forPath(path);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+		List<String> children = null;
+		children = client.getChildren().forPath(path);
+		if ((children != null) && children.size() > 0) {
+			for (int i = 0; i < children.size(); i++) {
+				rows.add(getChildNodeData(path + "/" + children.get(i), Object.class));
+			}
+		} else {
+			rows.add(getChildNodeData(path, Object.class));
 		}
-		if(stat==null)
-			return null;
-		List<String> forPath=new ArrayList<String>();
-		try {
-			forPath = client.getChildren().forPath(path);
-			return forPath;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return rows;
 	}
-	public <T> Map<String, Object> getChildNodeData(String path,Class<T> entity,Integer begin,Integer size,Map<String, Object> attr){
+	public List<String> getChildNode(String path) throws Exception{
+		Preconditions.checkNotNull(client, errorWithNullClient);
+		Stat stat = client.checkExists().forPath(path);
+		if (stat == null) {
+			return null;
+		}
+		List<String> forPath = new ArrayList<String>();
+		return forPath;
+	}
+	public <T> Map<String, Object> getChildNodeData(String path,Class<T> entity,Integer begin,Integer size,Map<String, Object> attr) throws Exception{
 		Preconditions.checkNotNull(client, errorWithNullClient);
 		Map<String, Object> reMap=new HashMap<String, Object>();
 		Stat stat=null;
@@ -348,8 +363,6 @@ public final class ZookeeperCuratorHandler {
 		if(stat==null)
 			return null;
 		List<String> forPath=new ArrayList<String>();
-		
-		
 		try {
 			forPath = client.getChildren().forPath(path);
 			List<String> remove=new ArrayList<String>();
@@ -388,41 +401,40 @@ public final class ZookeeperCuratorHandler {
 		return reMap;
 	}
 	
-	public <T> T getBeanData(String path,Class<T> claz) {
+	public <T> T getBeanData(String path,Class<T> claz) throws Exception {
 		Preconditions.checkNotNull(client, errorWithNullClient);
-		String rep=null;
-		try {
-			byte[] byteData = client.getData().forPath(path);
-			rep=new String(byteData, Constant.CHARSET);
-			
-		    T t = JSON.parseObject(rep, claz);
-		    return t;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		String rep = null;
+		byte[] byteData = client.getData().forPath(path);
+		rep = new String(byteData, Constant.CHARSET);
+		T t = JSON.parseObject(rep, claz);
+		return t;
 	}
 	
-	public <T> Map<String, Object> getChildNodeDataByPage(String path,Class<T> entity,Integer limit,Integer offset,Map<String, Object> attr) throws Exception{
+	public <T> Map<String, Object> getChildNodeDataByPage(String path,Class<T> entity,String searchPath,Integer limit,Integer offset) throws Exception{
 		Preconditions.checkNotNull(client, errorWithNullClient);
 		Map<String, Object> reMap=new HashMap<String, Object>();
 		Stat stat = client.checkExists().forPath(path);
 		if(stat==null)
 			return null;
-		List<String> forPath=new ArrayList<String>();
+		List<String> forPath = new ArrayList<String>();
 		forPath = client.getChildren().forPath(path);
-		List<String> remove=new ArrayList<String>();
-		if (attr!=null&&attr.size()>=1&&attr.get("name")!=null) {
-			String name=String.valueOf(attr.get("name"));
-			if(StringUtils.isNotEmpty(name)){
-				for (String s : forPath) {
-					if(s.indexOf(name)<0)
-						remove.add(s);
+		List<String>mathPath = new ArrayList<String>();
+		//根据zk路径 字符串匹配
+		if(searchPath != null && !searchPath.equals("")){
+			for (String p : forPath) {
+				if(p.indexOf(searchPath) != -1){
+					mathPath.add(p);
 				}
 			}
+			forPath = mathPath;
 		}
-		forPath.removeAll(remove);
+		//根据路径名称排序
+		Collections.sort(forPath, new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				return compareSort(o1, o2);
+			}
+		});
+		
 		if(offset == null){
 			offset = 0;
 		}
@@ -444,17 +456,38 @@ public final class ZookeeperCuratorHandler {
 		return reMap;
 	}
 	
-	
-	
+	public int compareSort(String o1, String o2) {
+
+		String s1 = (String) o1;
+		String s2 = (String) o2;
+		int len1 = s1.length();
+		int len2 = s2.length();
+		int n = Math.min(len1, len2);
+		char v1[] = s1.toCharArray();
+		char v2[] = s2.toCharArray();
+		int pos = 0;
+
+		while (n-- != 0) {
+			char c1 = v1[pos];
+			char c2 = v2[pos];
+			if (c1 != c2) {
+				return c1 - c2;
+			}
+			pos++;
+		}
+		return len1 - len2;
+	}
+
 	public boolean createMainPath() throws Exception {
 		if (!existsNode(Constant.MYCAT_EYE)) {
 			createNode(Constant.MYCAT_EYE,"mycat eye");
-			createNode(Constant.mycats,"mycat node");
-			createNode(Constant.mycat_jmx,"jmx");
+			createNode(Constant.MYCATS,"mycat node");
+			createNode(Constant.MYCAT_JMX,"jmx");
 			createNode(Constant.MYCAT_MYSQL,"mysql");
-			createNode(Constant.mycat_snmp,"snmp");
-			createNode(Constant.mycat_processor,"processor");
+			createNode(Constant.MYCAT_SNMP,"snmp");
+			createNode(Constant.MYCAT_PROCESSOR,"processor");
 		}
 		return true;
 	}
+	
 }

@@ -23,53 +23,53 @@ public abstract class AbstractConfigSevice {
 		String zkId = (String)context.getAttr("zkId");
 		String guid = (String)context.getAttr("guid");
 		String parentPath = getPath(zkId,guid);
-		Map<String, Object> beanMap = new HashMap<String, Object>();
-		if(searchPath != null && !searchPath.equals("")){
-			String path = ZKPaths.makePath(parentPath, searchPath);                    
-			T t = zkHander.getBeanData(path, entity);
-		    beanMap = JavaBeanToMapUtil.beanToMap(t);
-			if (beanMap != null && beanMap.size() > 0) {
-				context.addRow(beanMap);
-				context.setTotal(1);
-			}
-		}else{
-			int offset =Integer.parseInt((String)context.getAttr("offset") == null ? "0" :(String)context.getAttr("offset"));
-			int limit = Integer.parseInt((String) context.getAttr("limit") == null ? "10" :(String) context.getAttr("limit") );
-			Map<String, Object> data = new HashMap<String, Object>();
-			try {
-				data = zkHander.getChildNodeDataByPage(parentPath, entity, limit, offset,beanMap);
-			} catch (Exception e) {
-				
-			}
-			if(data != null && data.size() > 0){
-				context.setRows((List<Map<String, Object>>) data.get("rows"));
-				context.setTotal((int) data.get("total"));
-			}
+		int offset =Integer.parseInt((String)context.getAttr("offset") == null ? "0" :(String)context.getAttr("offset"));
+		int limit = Integer.parseInt((String) context.getAttr("limit") == null ? "10" :(String) context.getAttr("limit") );
+		Map<String, Object> data = new HashMap<String, Object>();
+		try {
+			data = zkHander.getChildNodeDataByPage(parentPath, entity, searchPath, limit, offset);
+		} catch (Exception e) {
+			context.setSuccess(false);
+			context.setMsg("查询失败！");
+		}
+		if(data != null && data.size() > 0){
+			context.setRows((List<Map<String, Object>>) data.get("rows"));
+			context.setTotal((int) data.get("total"));
 		}
 	    return context;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public <T> RainbowContext queryAll(RainbowContext context,Class<T> entity){
-		String zkId = (String)context.getAttr("zkId");
-		String guid = (String)context.getAttr("guid");
-		String parentPath = getPath(zkId,guid);
-		Map<String,Object> data = zkHander.getChildNodeData(parentPath,entity);
-		if(data != null && data.size() > 0){
-			context.setRows((List<Map<String, Object>>) data.get("rows"));
+	public <T> RainbowContext queryAll(RainbowContext context,Class<T> entity) {
+		try {
+			String zkId = (String)context.getAttr("zkId");
+			String guid = (String)context.getAttr("guid");
+			String parentPath = getPath(zkId,guid);
+			Map<String,Object> data = zkHander.getChildNodeData(parentPath,entity);
+			if(data != null && data.size() > 0){
+				context.setRows((List<Map<String, Object>>) data.get("rows"));
+			}
+		} catch (Exception e) {
+			context.setSuccess(false);
+			context.setMsg("查询失败！");
 		}
 	    return context;
 	}
 
-	public <T> RainbowContext query(RainbowContext context,Class<T> entity){
+	public <T> RainbowContext query(RainbowContext context,Class<T> entity) {
 		String searchPath = (String)context.getAttr("search");
 		String zkId = (String)context.getAttr("zkId");
-		String path = getPath(zkId, searchPath);
-		T t = zkHander.getBeanData(path, entity);
-		Map<String, Object> beanMap = JavaBeanToMapUtil.beanToMap(t);
-		if (beanMap != null && beanMap.size() > 0) {
-			context.addRow(beanMap);
-			context.setTotal(1);
+		try {
+			String path = getPath(zkId, searchPath);
+			T t = zkHander.getBeanData(path, entity);
+			Map<String, Object> beanMap = JavaBeanToMapUtil.beanToMap(t);
+			if (beanMap != null && beanMap.size() > 0) {
+				context.addRow(beanMap);
+				context.setTotal(1);
+			}
+		} catch (Exception e) {
+			context.setSuccess(false);
+			context.setMsg("查询失败！");
 		}
 	    return context;
 	}
@@ -78,31 +78,36 @@ public abstract class AbstractConfigSevice {
 		Map<String,Object> params = context.getAttr();
 		String zkId = (String)context.getAttr("zkId");
 		String json_new =  JSON.toJSONString(params);
-		T t = JSON.parseObject(json_new, entity);
-		Field fields[] = entity.getDeclaredFields();
-		Field.setAccessible(fields,   true);
-		String fieldValue="";
-		for (int i = 0; i < fields.length; i++) {
-			Field field = fields[i];
-			String fieldName = field.getName();
-			
-			if(fieldName.equals("name")){
-				fieldValue = (String)field.get(t);
-				break;
+		try {
+			T t = JSON.parseObject(json_new, entity);
+			Field fields[] = entity.getDeclaredFields();
+			Field.setAccessible(fields,   true);
+			String fieldValue="";
+			for (int i = 0; i < fields.length; i++) {
+				Field field = fields[i];
+				String fieldName = field.getName();
+				
+				if(fieldName.equals("name")){
+					fieldValue = (String)field.get(t);
+					break;
+				}
 			}
-		}
-		String parentPath = getPath(zkId,"");
-		List<String> childrenPath =  zkHander.getChildNode(parentPath);
-		for (String cpath : childrenPath) {
-			if(fieldValue !="" && fieldValue.equals(cpath)){
-				context.setSuccess(false);
-				context.setMsg("名称已存在");
-				return context;
+			String parentPath = getPath(zkId,"");
+			List<String> childrenPath =  zkHander.getChildNode(parentPath);
+			for (String cpath : childrenPath) {
+				if(fieldValue !="" && fieldValue.equals(cpath)){
+					context.setSuccess(false);
+					context.setMsg("名称已存在");
+					return context;
+				}
 			}
+			String creatPath = ZKPaths.makePath(parentPath, fieldValue);
+			String data = JSON.toJSONString(t);
+			zkHander.createNode(creatPath, data);
+		} catch (Exception e) {
+			context.setSuccess(false);
+			context.setMsg("操作失败！");
 		}
-		String creatPath = ZKPaths.makePath(parentPath, fieldValue);
-		String data = JSON.toJSONString(t);
-		zkHander.createNode(creatPath, data);
 		return context;
 	}
 	
@@ -111,18 +116,23 @@ public abstract class AbstractConfigSevice {
 		String zkId = (String)context.getAttr("zkId");
 		String guid = (String)context.getAttr("guid");
 		String path = getPath(zkId,guid);
-		boolean exists = zkHander.existsNode(path);
-		if(exists){
-			String json_newStr =  JSON.toJSONString(params);
-			T _newObj = JSON.parseObject(json_newStr, entity);
-			String  json_oldStr = zkHander.getNodeData(path);
-			T _oldObj = JSON.parseObject(json_oldStr, entity);
-			JavaBeanUtil.copyProperties(_newObj, _oldObj);
-			String data = JSON.toJSONString(_oldObj);
-			zkHander.setNodeData(path, data);
-		}else{
-			context.setMsg("zk 路径不存在");
+		try {
+			boolean exists = zkHander.existsNode(path);
+			if(exists){
+				String json_newStr =  JSON.toJSONString(params);
+				T _newObj = JSON.parseObject(json_newStr, entity);
+				String  json_oldStr = zkHander.getNodeData(path);
+				T _oldObj = JSON.parseObject(json_oldStr, entity);
+				JavaBeanUtil.copyProperties(_newObj, _oldObj);
+				String data = JSON.toJSONString(_oldObj);
+				zkHander.setNodeData(path, data);
+			}else{
+				context.setMsg("zk 路径不存在");
+				context.setSuccess(false);
+			}
+		} catch (Exception e) {
 			context.setSuccess(false);
+			context.setMsg("操作失败！");
 		}
 			
 		return context;
@@ -132,12 +142,17 @@ public abstract class AbstractConfigSevice {
 		String zkId = (String)context.getAttr("zkId");
 		String guid = (String)context.getAttr("guid");
 		String path = getPath(zkId,guid);
-		boolean exists = zkHander.existsNode(path);
-		if(exists){
-			zkHander.deleteNode(path);
-		}else{
-			context.setMsg("zk路径不存在");
+		try {
+			boolean exists = zkHander.existsNode(path);
+			if(exists){
+				zkHander.deleteNode(path);
+			}else{
+				context.setMsg("zk路径不存在");
+				context.setSuccess(false);
+			}
+		} catch (Exception e) {
 			context.setSuccess(false);
+			context.setMsg("操作失败！");
 		}
 		return context;
 	}
