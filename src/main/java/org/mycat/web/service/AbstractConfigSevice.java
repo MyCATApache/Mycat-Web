@@ -23,28 +23,17 @@ public abstract class AbstractConfigSevice {
 		String zkId = (String)context.getAttr("zkId");
 		String guid = (String)context.getAttr("guid");
 		String parentPath = getPath(zkId,guid);
-		Map<String, Object> beanMap = new HashMap<String, Object>();
-		if(searchPath != null && !searchPath.equals("")){
-			String path = ZKPaths.makePath(parentPath, searchPath);                    
-			T t = zkHander.getBeanData(path, entity);
-		    beanMap = JavaBeanToMapUtil.beanToMap(t);
-			if (beanMap != null && beanMap.size() > 0) {
-				context.addRow(beanMap);
-				context.setTotal(1);
-			}
-		}else{
-			int offset =Integer.parseInt((String)context.getAttr("offset") == null ? "0" :(String)context.getAttr("offset"));
-			int limit = Integer.parseInt((String) context.getAttr("limit") == null ? "10" :(String) context.getAttr("limit") );
-			Map<String, Object> data = new HashMap<String, Object>();
-			try {
-				data = zkHander.getChildNodeDataByPage(parentPath, entity, limit, offset,beanMap);
-			} catch (Exception e) {
-				
-			}
-			if(data != null && data.size() > 0){
-				context.setRows((List<Map<String, Object>>) data.get("rows"));
-				context.setTotal((int) data.get("total"));
-			}
+		int offset =Integer.parseInt((String)context.getAttr("offset") == null ? "0" :(String)context.getAttr("offset"));
+		int limit = Integer.parseInt((String) context.getAttr("limit") == null ? "10" :(String) context.getAttr("limit") );
+		Map<String, Object> data = new HashMap<String, Object>();
+		try {
+			data = zkHander.getChildNodeDataByPage(parentPath, entity, searchPath, limit, offset);
+		} catch (Exception e) {
+			
+		}
+		if(data != null && data.size() > 0){
+			context.setRows((List<Map<String, Object>>) data.get("rows"));
+			context.setTotal((int) data.get("total"));
 		}
 	    return context;
 	}
