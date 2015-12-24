@@ -3,29 +3,36 @@ package org.mycat.web.service;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.JrdsUtils;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 @Lazy
 @Service("jmxservice")
 public class JMXService extends BaseService {
-	private static final String NAMESPACE = "SYSJMX";
-
-	public RainbowContext query(RainbowContext context) {
+	//private static final String NAMESPACE = "SYSJMX";
+    private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
+	public RainbowContext query(RainbowContext context) throws Exception {
 		//super.query(context, NAMESPACE);
-		context.addRows(ZookeeperService.getInstance().getJmx());
+		//context.addRows(ZookeeperService.getInstance().getJmx());
+		context.addRows(zkHander.getChildNodeData(Constant.MYCAT_JMX));
 		context.setTotal(context.getRows().size());		
 		return context;
 	}
 	
-	public RainbowContext queryByPage(RainbowContext context) {
+	public RainbowContext queryByPage(RainbowContext context)  throws Exception {
 		//super.queryByPage(context, NAMESPACE);
-		context.addRows(ZookeeperService.getInstance().getJmx());
+		//context.addRows(ZookeeperService.getInstance().getJmx());
+		context.addRows(zkHander.getChildNodeData(Constant.MYCAT_JMX));
 		context.setTotal(context.getRows().size());
 		return context;
 	}
@@ -36,7 +43,9 @@ public class JMXService extends BaseService {
 		try{
 			String jrdsconfg = buildJrdsPath(context, guid);
 			
-			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());			
+			//ZookeeperService.getInstance().insertJmx(guid,context.getAttr());
+			String path = ZKPaths.makePath(Constant.MYCAT_JMX, guid);
+			zkHander.createNode(path, JSON.toJSONString(context.getAttr()));
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/jmxjrds.ftl", jrdsconfg, context.getAttr());
@@ -68,13 +77,16 @@ public class JMXService extends BaseService {
 	public RainbowContext update(RainbowContext context) {
 		try{		
 		   String guid=(String)context.getAttr("guid");
-		   Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
+		   //Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
+		   String path =  ZKPaths.makePath(Constant.MYCAT_JMX, guid);
+		   Map<String, Object> data = zkHander.getNodeDataForMap(path);
 			String jrdsfile = (String)data.get("fileName");
 			if(jrdsfile != null && !jrdsfile.isEmpty()){
 				new File(jrdsfile).delete();
 			}
 			String jrdsconfg = buildJrdsPath(context,guid);
-			ZookeeperService.getInstance().insertJmx(guid,context.getAttr());		
+			//ZookeeperService.getInstance().insertJmx(guid,context.getAttr());	
+			zkHander.createNode(path, JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/jmxjrds.ftl", jrdsconfg, context.getAttr());
@@ -138,8 +150,11 @@ public class JMXService extends BaseService {
 		String jrdsfile ="";
 		try{
 			String guid=(String)context.getAttr("guid");
-			Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
-			ZookeeperService.getInstance().delJmx(guid);
+			//Map<String, Object> data =ZookeeperService.getInstance().getJmxNode(guid);
+			//ZookeeperService.getInstance().delJmx(guid);
+			String path = ZKPaths.makePath(Constant.MYCAT_JMX, guid);
+			Map<String, Object> data = zkHander.getNodeDataForMap(path);
+			zkHander.deleteNode(path);
 			context.setMsg("删除成功!");
 			context.setSuccess(true);
 			jrdsfile = (String)data.get("fileName");
