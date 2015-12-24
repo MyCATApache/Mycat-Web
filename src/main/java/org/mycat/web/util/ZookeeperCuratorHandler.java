@@ -2,6 +2,8 @@ package org.mycat.web.util;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -404,25 +406,31 @@ public final class ZookeeperCuratorHandler {
 		return null;
 	}
 	
-	public <T> Map<String, Object> getChildNodeDataByPage(String path,Class<T> entity,Integer limit,Integer offset,Map<String, Object> attr) throws Exception{
+	public <T> Map<String, Object> getChildNodeDataByPage(String path,Class<T> entity,String searchPath,Integer limit,Integer offset) throws Exception{
 		Preconditions.checkNotNull(client, errorWithNullClient);
 		Map<String, Object> reMap=new HashMap<String, Object>();
 		Stat stat = client.checkExists().forPath(path);
 		if(stat==null)
 			return null;
-		List<String> forPath=new ArrayList<String>();
+		List<String> forPath = new ArrayList<String>();
 		forPath = client.getChildren().forPath(path);
-		List<String> remove=new ArrayList<String>();
-		if (attr!=null&&attr.size()>=1&&attr.get("name")!=null) {
-			String name=String.valueOf(attr.get("name"));
-			if(StringUtils.isNotEmpty(name)){
-				for (String s : forPath) {
-					if(s.indexOf(name)<0)
-						remove.add(s);
+		List<String>mathPath = new ArrayList<String>();
+		//根据zk路径 字符串匹配
+		if(searchPath != null && !searchPath.equals("")){
+			for (String p : forPath) {
+				if(p.indexOf(searchPath) != -1){
+					mathPath.add(p);
 				}
 			}
+			forPath = mathPath;
 		}
-		forPath.removeAll(remove);
+		//根据路径名称排序
+		Collections.sort(forPath, new Comparator<String>() {
+			public int compare(String o1, String o2) {
+				return compareSort(o1, o2);
+			}
+		});
+		
 		if(offset == null){
 			offset = 0;
 		}
@@ -444,8 +452,28 @@ public final class ZookeeperCuratorHandler {
 		return reMap;
 	}
 	
-	
-	
+	public int compareSort(String o1, String o2) {
+
+		String s1 = (String) o1;
+		String s2 = (String) o2;
+		int len1 = s1.length();
+		int len2 = s2.length();
+		int n = Math.min(len1, len2);
+		char v1[] = s1.toCharArray();
+		char v2[] = s2.toCharArray();
+		int pos = 0;
+
+		while (n-- != 0) {
+			char c1 = v1[pos];
+			char c2 = v2[pos];
+			if (c1 != c2) {
+				return c1 - c2;
+			}
+			pos++;
+		}
+		return len1 - len2;
+	}
+
 	public boolean createMainPath() throws Exception {
 		if (!existsNode(Constant.MYCAT_EYE)) {
 			createNode(Constant.MYCAT_EYE,"mycat eye");
