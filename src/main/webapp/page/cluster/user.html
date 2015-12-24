@@ -31,6 +31,7 @@ window.operateEvents = {
         	 $("#mycatUser-form [name='guid']").val(row.name);
         	 loadFormData("mycatUser-form",JSON.stringify(row));
         	 $("#myModalLabel").text("编辑mycat用户信息");
+         	 $("#mycatUserModal form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatUser-form");
         	 validator();
         	 $("#mycatUser-form label[for='name']").css("display","none");
@@ -163,6 +164,7 @@ function validator() {
 		$("#mycatUser-form :reset").click();
 		$("#mycatUser-form :input [name='guid']").val("");
 		$("#userModal").text("添加dataNode");
+	 	$("#mycatUserModal form [name='name']").attr("disabled",false);
 		destroyValidator("mycatUser-form");
 		validator();
 		$("#mycatUser-form label[for='name']").css("display","block");

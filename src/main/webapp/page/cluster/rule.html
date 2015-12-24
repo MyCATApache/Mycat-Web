@@ -10,6 +10,7 @@ window.operateEvents = {
         	 $("#mycatRule-form [name='guid']").val(row.name);
         	 loadFormData("mycatRule-form",JSON.stringify(row));
         	 $("#myModalLabel").text("编辑rule");
+           	 $("#ruleModal form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatRule-form");
         	 validator();
         	 showModal("ruleModal");
@@ -178,6 +179,7 @@ function addRule(){
 	 $("#mycatRule-form :reset").click();
 	 $("#mycatRule-form [name='guid']").val("");
 	 $("#myModalLabel").text("添加rule");
+   	 $("#ruleModal form [name='name']").attr("disabled",false);
 	 destroyValidator("mycatRule-form");
 	 validator();
 	 showModal('ruleModal');
