@@ -52,7 +52,7 @@ public class MySqlRepService extends BaseService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RainbowContext queryByPage(RainbowContext context) {
+	public RainbowContext queryByPage(RainbowContext context) throws Exception{
 		Map<String, Object> attr = context.getAttr();
 		Map<String, Object> childNodeData = handler.getChildNodeData(
 				MyCAT_MYSQLS, MySqlServer.class, context.getPage(),
@@ -63,7 +63,7 @@ public class MySqlRepService extends BaseService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RainbowContext queryAll(RainbowContext context) {
+	public RainbowContext queryAll(RainbowContext context) throws Exception{
 
 		List<String> node = handler.getChildNode(MyCAT_MYSQLS);
 		Map<String, Object> attr = new HashMap<String, Object>();
@@ -74,7 +74,7 @@ public class MySqlRepService extends BaseService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RainbowContext queryByRepPage(RainbowContext context) {
+	public RainbowContext queryByRepPage(RainbowContext context) throws Exception{
 		Map<String, Object> attr = context.getAttr();
 		Map<String, Object> childNodeData = handler.getChildNodeData(
 				MyCAT_MYSQLGROUP, MySqlRep.class, context.getPage(),

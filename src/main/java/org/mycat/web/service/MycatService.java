@@ -2,30 +2,48 @@ package org.mycat.web.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.util.Constant;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 @Lazy
 @Service("mycatService")
 public class MycatService extends BaseService {
-	private static final String NAMESPACE = "SYSMYCAT";
-
-	public RainbowContext query(RainbowContext context) {
+	//private static final String NAMESPACE = "SYSMYCAT";
+	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
+	
+	public RainbowContext query(RainbowContext context) throws Exception{
 		//super.query(context, NAMESPACE);
 		return queryByPage(context);
 	}
 
 
-	public RainbowContext queryByPage(RainbowContext context) {
+	public RainbowContext queryByPage(RainbowContext context) throws Exception {
 		//super.queryByPage(context, NAMESPACE);
 		String mycatName=(String)context.getAttr("mycatName");	
-		context.addRows(ZookeeperService.getInstance().getMycat("mycatName",mycatName));
+		
+		List<Map<String, Object>> mycatlist = zkHander.getChildNodeData(Constant.MYCATS);
+		for (int i = 0; i < mycatlist.size(); i++) {
+			Map<String, Object> dbinfo = mycatlist.get(i);
+			String db = (String) dbinfo.get("mycatName");
+			if (db !=null && db.equals(mycatName)) {
+				mycatlist.clear();
+				mycatlist.add(dbinfo);
+				break;
+			}
+		}
+		context.addRows(mycatlist);
 		context.setTotal(context.getRows().size());
 		return context;
 	}
@@ -46,7 +64,8 @@ public class MycatService extends BaseService {
 		context.addAttr("guid", guid);
 		context.addAttr("createTime", new Date());
 		try{
-			ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
+			//ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
+			zkHander.createNode(Constant.MYCATS, JSON.toJSONString(context.getAttr()));
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
 		}catch (Exception e) {
@@ -65,8 +84,8 @@ public class MycatService extends BaseService {
 			if(jrdsfile != null && !jrdsfile.isEmpty()){
 				new File(jrdsfile).delete();
 			}
-			ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
-			
+			//ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
+			zkHander.createNode(Constant.MYCATS, JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 		}catch (Exception e) {
@@ -84,8 +103,11 @@ public class MycatService extends BaseService {
 		String jrdsfile ="";
 		try{
 			String guid=(String)context.getAttr("guid");
-			Map<String, Object> data =ZookeeperService.getInstance().getMycatNode(guid);
-			ZookeeperService.getInstance().delMycat(guid);
+			//Map<String, Object> data =ZookeeperService.getInstance().getMycatNode(guid);
+			//ZookeeperService.getInstance().delMycat(guid);
+			String path = ZKPaths.makePath(Constant.MYCATS, guid);
+			Map<String, Object> data = zkHander.getNodeDataForMap(path);
+			zkHander.deleteNode(path);
 			context.setMsg("删除成功!");
 			context.setSuccess(true);
 			jrdsfile = (String)data.get("jrdsfile");
