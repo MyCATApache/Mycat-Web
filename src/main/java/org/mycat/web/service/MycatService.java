@@ -65,7 +65,8 @@ public class MycatService extends BaseService {
 		context.addAttr("createTime", new Date());
 		try{
 			//ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
-			zkHander.createNode(Constant.MYCATS, JSON.toJSONString(context.getAttr()));
+			String path = ZKPaths.makePath(Constant.MYCATS, guid);
+			zkHander.createNode(path, JSON.toJSONString(context.getAttr()));
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
 		}catch (Exception e) {
@@ -85,7 +86,8 @@ public class MycatService extends BaseService {
 				new File(jrdsfile).delete();
 			}
 			//ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
-			zkHander.createNode(Constant.MYCATS, JSON.toJSONString(context.getAttr()));
+			String path = ZKPaths.makePath(Constant.MYCATS, guid);
+			zkHander.updateNodeData(path, JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 		}catch (Exception e) {
