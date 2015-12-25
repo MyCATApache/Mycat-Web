@@ -140,7 +140,7 @@ public class ZkConfigService  extends BaseService {
            return context;    	   
        }*/
 		if (zkHander.connect(ip + ":" + port, Constant.LOCAL_ZK_URL_NAME)) {
-			zkHander.UpdateZkConfig();
+			zkHander.UpdateZkConfig(ip + ":" + port);
 			context.setMsg("注册中心配置成功!");
 			context.setSuccess(true);
 			return context;
@@ -164,14 +164,15 @@ public class ZkConfigService  extends BaseService {
 	    return context;
    }
 	  
-    public  RainbowContext allZone(RainbowContext context) throws Exception{
-    	 if (ZookeeperService.getInstance().Connected()){
+    public  RainbowContext allZone(RainbowContext context) throws Exception{    	
+    	 if (ZookeeperCuratorHandler.getInstance().isConnected()){
     		 return zkConnectOK(context);
     	 }
     	 else {
     		 return zkConnectFail(context);
     	 }
     }
+    
     private RainbowContext zkConnectFail(RainbowContext context){
 		List<Menu> menus =new ArrayList<Menu>();
 		//菜单1

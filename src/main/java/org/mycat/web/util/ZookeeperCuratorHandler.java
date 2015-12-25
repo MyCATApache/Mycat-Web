@@ -20,7 +20,6 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
-import org.mycat.web.service.ZookeeperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ public final class ZookeeperCuratorHandler {
 	private CuratorFramework client = null;
 	private StateListener listener = new StateListener();
 	private String errorWithNullClient = "zookeeper CuratorFramework is null, please invoke connect method first";
-	private  String zookeeper;
+//	private  String zookeeper;
 	private final String zooKey="zookeeper";
 	
 	private static class SingletonHolder {
@@ -140,12 +139,12 @@ public final class ZookeeperCuratorHandler {
 		}
 	}
 
-	public void UpdateZkConfig() throws Exception {
+	public void UpdateZkConfig(String zkinfo) throws Exception {
 		Properties properties = new Properties();
-		properties.load(ZookeeperService.class.getClassLoader()
+		properties.load(ZookeeperCuratorHandler.class.getClassLoader()
 				.getResourceAsStream("mycat.properties"));
-		properties.setProperty(zooKey, zookeeper);
-		String realPath = ZookeeperService.class.getClassLoader()
+		properties.setProperty(zooKey, zkinfo);
+		String realPath = ZookeeperCuratorHandler.class.getClassLoader()
 				.getResource("mycat.properties").getPath();
 		OutputStream out = new FileOutputStream(realPath);
 		System.out.println("realPath : " + realPath);
