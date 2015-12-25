@@ -88,7 +88,7 @@ public class MysqlService extends BaseService {
 				new File(jrdsfile).delete();
 			}
 			//ZookeeperService.getInstance().insertMysql(guid,context.getAttr());
-			zkHander.createNode(ZKPaths.makePath(Constant.MYCAT_MYSQL, guid), JSON.toJSONString(context.getAttr()));
+			zkHander.updateNodeData(ZKPaths.makePath(Constant.MYCAT_MYSQL, guid), JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/mysqljrds.ftl", jrdsfile, context.getAttr());
