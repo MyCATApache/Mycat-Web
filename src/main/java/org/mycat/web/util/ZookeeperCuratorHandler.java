@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -22,6 +23,7 @@ import org.apache.zookeeper.data.Stat;
 import org.mycat.web.service.ZookeeperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Preconditions;
@@ -318,7 +320,7 @@ public final class ZookeeperCuratorHandler {
 	}
 	public <T> Map<String, Object> getChildNodeData(String path,Class<T> entity){
 		try {
-			return getChildNodeData(path, entity, 0,null,null);
+			return getChildNodeData(path, entity, 0,0,null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -334,13 +336,30 @@ public final class ZookeeperCuratorHandler {
 		children = client.getChildren().forPath(path);
 		if ((children != null) && children.size() > 0) {
 			for (int i = 0; i < children.size(); i++) {
-				rows.add(getChildNodeData(path + "/" + children.get(i), Object.class));
+				rows.add(readNode(path + "/" + children.get(i)));
+				//rows.add(getChildNodeData(path + "/" + children.get(i), Object.class));
 			}
 		} else {
-			rows.add(getChildNodeData(path, Object.class));
+			//rows.add(getChildNodeData(path, Object.class));
+			rows.add(readNode(path));
 		}
 		return rows;
 	}
+    public Map<String, Object> readNode(String aPath) {
+        //读取节点
+        Stat stat = new Stat();
+        byte[] nodeData;
+		try {
+			nodeData = client.getData().storingStatIn(stat).forPath(aPath);
+			String dataNode = new String(nodeData);
+			return JsonUtils.json2Map(dataNode);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}        
+    } 	
+	
 	public List<String> getChildNode(String path) throws Exception{
 		Preconditions.checkNotNull(client, errorWithNullClient);
 		Stat stat = client.checkExists().forPath(path);
