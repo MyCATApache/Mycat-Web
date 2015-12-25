@@ -86,7 +86,7 @@ public class JMXService extends BaseService {
 			}
 			String jrdsconfg = buildJrdsPath(context,guid);
 			//ZookeeperService.getInstance().insertJmx(guid,context.getAttr());	
-			zkHander.createNode(path, JSON.toJSONString(context.getAttr()));
+			zkHander.updateNodeData(path, JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/jmxjrds.ftl", jrdsconfg, context.getAttr());
