@@ -41,6 +41,13 @@ mycat all in one 是 mycat-server,mycat-web,mysql，zookeeper 于一身的测试
 ```
       select * from t_user;
 ```
+ > <b>  mycat eye启动 </b>
+    
+```
+    cd /opt/mycat-web
+	./start.sh 
+    访问地址：http://localhost:8082/mycat
+```   
 <b>请留意 '体验 Mycat'该步骤中的 IP 地址的设定，虚拟机中 IP 地址若与主机地址不匹配会引发连接失败的情况，
 此时可以将 虚拟机IP 地址修改静态IP地址来解决，修改位于路径
 ````
