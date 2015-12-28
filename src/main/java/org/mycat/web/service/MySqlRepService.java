@@ -12,11 +12,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.model.MySqlRep;
 import org.mycat.web.model.MySqlServer;
 import org.mycat.web.model.ZtreeModel;
+import org.mycat.web.model.cluster.ChildrenTable;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,7 @@ import freemarker.template.Template;
 
 @Lazy
 @Service("mySqlRepService")
-public class MySqlRepService extends BaseService {
+public class MySqlRepService extends AbstractConfigSevice {
 
 	private ZookeeperCuratorHandler handler = ZookeeperCuratorHandler
 			.getInstance();
@@ -38,6 +41,11 @@ public class MySqlRepService extends BaseService {
 	private final static String MyCAT_MYSQLREP = "/mysql-rep-";
 	private static final String MySqlServer = null;
 
+	private Class<MySqlRep> clazz = MySqlRep.class;
+	private String menuPath = Constant.MYCAT_MYSQL_GROUP_KEY;
+	private String zkPath = "";
+
+	
 	public RainbowContext query(RainbowContext context) throws Exception {
 		// handler.getChildNodeData("/mycat-mysqlgroup");
 		//
@@ -48,17 +56,19 @@ public class MySqlRepService extends BaseService {
 		// MySqlRep parseObject = JSONArray.parseObject(nodeData,
 		// MySqlRep.class);
 		// context.addAttr("rep", parseObject);
+		this.query(context, clazz);
 		return context;
 	}
 
 	@SuppressWarnings("unchecked")
 	public RainbowContext queryByPage(RainbowContext context) throws Exception{
-		Map<String, Object> attr = context.getAttr();
+		/*Map<String, Object> attr = context.getAttr();
 		Map<String, Object> childNodeData = handler.getChildNodeData(
 				MyCAT_MYSQLS, MySqlServer.class, context.getPage(),
 				context.getLimit(),attr);
 		context.setRows((List<Map<String, Object>>) childNodeData.get("rows"));
-		context.setTotal((Integer) childNodeData.get("total"));
+		context.setTotal((Integer) childNodeData.get("total"));*/
+		this.queryByPage(context, clazz);
 		return context;
 	}
 
@@ -260,5 +270,11 @@ public class MySqlRepService extends BaseService {
 			} catch (IOException e) {
 			}
 		}
+	}
+
+	@Override
+	public String getPath(String zkId, String guid) {
+		String Path = ZKPaths.makePath(menuPath, zkId,zkPath,guid);
+		return Path;
 	}
 }

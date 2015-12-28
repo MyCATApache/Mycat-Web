@@ -29,6 +29,7 @@ public final class Constant {
     public static final String CLUSTER_SCHEMA = "schema";
     public static final String CLUSTER_RULE = "rule";
     public static final String CLUSTER_SEQUENCE = "sequence";
+    public static final String CLUSTER_BLOCKSQLS = "blockSQLs";
     
     
     public  static final String MYCATS = MYCAT_EYE+"/mycat";

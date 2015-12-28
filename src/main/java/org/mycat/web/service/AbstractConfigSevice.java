@@ -92,13 +92,20 @@ public abstract class AbstractConfigSevice {
 					break;
 				}
 			}
+			if(fieldValue.equals("")){
+				context.setSuccess(false);
+				context.setMsg("名称不能空");
+				return context;
+			}
 			String parentPath = getPath(zkId,"");
 			List<String> childrenPath =  zkHander.getChildNode(parentPath);
-			for (String cpath : childrenPath) {
-				if(fieldValue !="" && fieldValue.equals(cpath)){
-					context.setSuccess(false);
-					context.setMsg("名称已存在");
-					return context;
+			if (childrenPath != null && childrenPath.size() > 0) {
+				for (String cpath : childrenPath) {
+					if (fieldValue != "" && fieldValue.equals(cpath)) {
+						context.setSuccess(false);
+						context.setMsg("名称已存在");
+						return context;
+					}
 				}
 			}
 			String creatPath = ZKPaths.makePath(parentPath, fieldValue);
@@ -143,12 +150,17 @@ public abstract class AbstractConfigSevice {
 		String guid = (String)context.getAttr("guid");
 		String path = getPath(zkId,guid);
 		try {
-			boolean exists = zkHander.existsNode(path);
-			if(exists){
-				zkHander.deleteNode(path);
-			}else{
-				context.setMsg("zk路径不存在");
+			if (guid != null && !guid.equals("")) {
+				boolean exists = zkHander.existsNode(path);
+				if (exists) {
+					zkHander.deleteNode(path);
+				} else {
+					context.setMsg("zk路径不存在");
+					context.setSuccess(false);
+				}
+			} else {
 				context.setSuccess(false);
+				context.setMsg("路径不存在！");
 			}
 		} catch (Exception e) {
 			context.setSuccess(false);

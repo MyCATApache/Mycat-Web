@@ -380,27 +380,37 @@ function loadFormData(formId,jsonStr){
     for(x in obj){
         key = x;
         value = obj[x];
-        $("[name='"+key+"'],[name='"+key+"[]']").each(function(){
+        $("[name='"+key+"']").each(function(){
             tagName = $(this)[0].tagName;
             type = $(this).attr('type');
             if(tagName=='INPUT'){
                 if(type=='radio'){
-                    $(this).attr('checked',$(this).val()==value);
+                    $(this).prop('checked',$(this).val()==value);
                 }else if(type=='checkbox'){
-                    arr = value.split(',');
+                    arr = String(value).split(',');
                     for(var i =0;i<arr.length;i++){
-                        if($(this).val()==arr[i]){
-                            $(this).attr('checked',true);
+                    	$(this).prop('checked',false);
+                        if($(this).val()== arr[i]){
+                            $(this).prop('checked',true);
                             break;
                         }
                     }
                 }else{
                     $(this).val(value);
                 }
-            }else if(tagName=='SELECT' || tagName=='TEXTAREA'){
-                $(this).val(value);
+            }else if(tagName=='SELECT'){
+            	var dataArray = String(value).split(',');
+            	if(typeof $(tagName).attr("multiple")=="undefined"){
+            		  $(this).multiselect('select', dataArray[0]);
+            		  $(this).multiselect("refresh");
+            	}else{
+            		  $(this).multiselect('deselectAll',false);
+            		  $(this).multiselect('select', dataArray);
+            		  $(this).multiselect("refresh");
+            	}
+            }else if(tagName=='TEXTAREA'){
+            	$(this).val(value);
             }
-             
         });
     }
 }
@@ -434,6 +444,7 @@ function datagrid(tableId,url,columns){
 				search : params.search
 			}
 		},
+		cache :false   
 	
 	});
 }
@@ -447,28 +458,35 @@ function deleteRow(serviceName,method,data,callback){
 	handler(rainbow,callback);
 }
 
-function handler (rainbow,callback) {
-	jQuery.ajax({
-		cache : false,
-		type : 'POST',
-		dataType : "json",
-		url : './dispatcherAction/execute.do',
-		data: $.parseJSON(JSON.stringify(rainbow)),
-		error : function() {
-			showDialog($("#container"),"","请求失败!","danger");
-		},
-		success : function (response) {  
-			if(response.success == true ){
-				showDialog($("#container"),"","操作成功!","success");
-			    if(callback instanceof Function ){
-			    	callback();
-			    }
-			}else{
-				showDialog($("#container"),"",response.msg,"danger");
+function handler(rainbow, callback) {
+	try {
+		jQuery.ajax({
+			cache : false,
+			type : 'POST',
+			dataType : "json",
+			url : './dispatcherAction/execute.do',
+			data : $.parseJSON(JSON.stringify(rainbow)),
+			error : function() {
+				showDialog($("#container"), "", "请求失败!", "danger");
+			},
+			success : function(response) {
+				if (response.success == true) {
+					showDialog($("#container"), "", "操作成功!", "success");
+					if (callback instanceof Function) {
+						callback();
+					}
+				} else {
+					showDialog($("#container"), "", response.msg, "danger");
+				}
 			}
-			
-		}
-	});
+		});
+	} catch (e) {
+		alert("异常!");
+	} finally {
+		if ($("button[data-loading-text]"))
+			$("button[data-loading-text]").button('reset');
+			$("button").button('reset');
+	}
 	return false;
 }
 
