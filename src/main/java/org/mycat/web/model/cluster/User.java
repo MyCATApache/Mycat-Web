@@ -6,7 +6,7 @@ public class User {
 	
 	private String password;
 	
-	private boolean readyOnly;
+	private boolean readOnly;
 	
 	private String  schemas;
 
@@ -26,12 +26,12 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean isReadyOnly() {
-		return readyOnly;
+	public boolean isReadOnly() {
+		return readOnly;
 	}
 
-	public void setReadyOnly(boolean readyOnly) {
-		this.readyOnly = readyOnly;
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 	public String getSchemas() {

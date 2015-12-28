@@ -87,7 +87,7 @@ function validator(){
 	        column: {
 	            validators: {
 	            	notEmpty: {
-	                    message: '请输入分布字段'
+	                    message: '请输入分片字段'
 	                }
 	            }
 	        },
@@ -209,7 +209,7 @@ $(document).ready(function() {
 <div class="box-body">
   <div id="ruleToolbar">
        <button id="add" class="btn btn-default" onclick="addRule()" >
-           <i class="glyphicon glyphicon-plus"></i> 新增
+           <i class="glyphicon glyphicon-plus"></i> 新增规则
        </button>
   </div>
   <table id="myclusterRulebody"  data-toolbar="#ruleToolbar" data-toggle="table" class="table table-striped table-bordered table-hover"
@@ -240,26 +240,26 @@ $(document).ready(function() {
 			   <div class="form-group">
 			   		<label for="name"  class=" col-md-2  control-label" title="规则名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="name"  name="name" placeholder="datanode名称">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="请输入规则名称">
 			        </div>
 			   </div>
 			   <div class="form-group">
 			   		<label for="functionName"  class=" col-md-2  control-label" title="分片规则类名"  data-toggle="tooltip"  data-placement="right"  > functionName </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="functionName"  name="functionName" placeholder="请输入functionName">
+			         <input type="text" class="form-control" id="functionName"  name="functionName" placeholder="请输入分片规则对应类">
 			        </div>
 			   </div>
 			   <div class="form-group">
 			   		<label for="column"  class=" col-md-2  control-label" title="分片键"  data-toggle="tooltip"  data-placement="right"  > column </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="column"  name="column" placeholder="请输入column">
+			         <input type="text" class="form-control" id="column"  name="column" placeholder="请输入分片键">
 			        </div>
 			   </div>
 			   
 			    <div class="form-group">
 			   		<label for="defaultNode"  class=" col-md-2  control-label" title="默认分片规则"  data-toggle="tooltip"  data-placement="right"  > defaultNode </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="defaultNode"  name="defaultNode" placeholder="请输入defaultNode">
+			         <input type="text" class="form-control" id="defaultNode"  name="defaultNode" placeholder="请输入默认分片">
 			        </div>
 			   </div>
 			  

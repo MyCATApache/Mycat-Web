@@ -22,7 +22,10 @@
 			<a href="#rule" data-toggle="tab" onclick="loadTab('rule','page/cluster/rule.html')" >rule</a>
 		</li>
 		<li>
-			<a href="#sequence" data-toggle="tab"  >sequence</a>
+			<a href="#blockSQLs" data-toggle="tab" onclick="loadTab('blockSQLs','page/cluster/blockSql.html')" >blockSQLs</a>
+		</li>
+		<li>
+			<a href="#sequence" data-toggle="tab" onclick="loadTab('sequence','page/cluster/sequence.html')" >sequence</a>
 		</li>
 		<li>
 			<a href="#user" data-toggle="tab" onclick="loadTab('user','page/cluster/user.html')">user</a>
@@ -42,8 +45,11 @@
 		<div class="tab-pane fade" id="rule">
 			
 		</div>
+		<div class="tab-pane fade" id="blockSQLs">
+			
+		</div>
 		<div class="tab-pane fade" id="sequence">
-			sequence page
+		
 		</div>
 		<div class="tab-pane fade" id="user">
 			
@@ -59,6 +65,7 @@ $(function(){
 });
 
  function loadTab(id,url){
+	 url = url+"?timestamp="+new Date().getTime();
 	$("#"+id).load(url);
  }
 	

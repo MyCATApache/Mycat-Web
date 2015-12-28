@@ -1,57 +1,49 @@
-
 <style>
-#dataNodeModal .modal-body {
-	max-height: 250px;
+#sequenceModal .modal-body {
+	max-height: 200px;
 }
-
 </style>
-<script type="text/javascript">
 
+<script type="text/javascript">
 window.operateEvents = {
         'click .like': function (e, value, row, index) {
-        	 $("#mycatDataNode-form [name='zkId']").val(row.name);
+        	 $("#sequence-form [name='guid']").val(row.name);
         	 loadFormData("mycatDataNode-form",JSON.stringify(row));
-        	 $("#myModalLabel").text("编辑datanode");
-        	 destroyValidator("mycatDataNode-form");
+        	 $("#sequenceModalLabel").text("编辑序列");
+        	 $("#sequenceModal form [name='name']").attr("disabled",true);
+        	 destroyValidator("sequence-form");
         	 validator();
-        	 showModal("dataNodeModal");
+        	 showModal("sequenceModal");
         },
         'click .remove': function (e, value, row, index) {
         	var data = {
-        			 "zkPath" :zkPath,
-        			 "zkId" : row.name
+        			 "zkId" :zkId,
+        			 "guid" : row.name
         	};
         	if(confirm("确定要删除数据吗")){
-        		deleteRow ('dataNodeService','delete',data,callback);
+        		deleteRow ('sequenceService','delete',data,callback);
         	}
         }
 };
-var columns = [{
-				title : '名称',
-				field:'name',
-			},
-			{
-				title : '主机',
-				field : 'dataHost'
-			},
-			{
-				title : '数据库',
-				field : 'database'
-			},{
-                field: 'operate',
-                title: 'Item Operate',
-                align: 'center',
-                events: operateEvents,
-                formatter: operateFormatter
-            }];
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
 
 
 function validator(){
-	$('#mycatDataNode-form').bootstrapValidator({
+	$('#sequence-form').bootstrapValidator({
 	    message: 'This value is not valid',
 	    feedbackIcons: {
-	        valid: 'glyphicon glyphicon-ok',
-	        invalid: 'glyphicon glyphicon-remove',
+	        //valid: 'glyphicon glyphicon-ok',
+	        //invalid: 'glyphicon glyphicon-remove',
 	        validating: 'glyphicon glyphicon-refresh'
 	    },
 	    err : {
@@ -66,129 +58,124 @@ function validator(){
 	
 	            }
 	        },
-	        dataHost: {
+	        increament: {
 	            validators: {
 	                notEmpty: {
-	                    message: '请输入dataHost'
-	                }
-	            }
-	        },
-	        database: {
-	            validators: {
-	            	notEmpty: {
-	                    message: '请输入database'
-	                }
+	                    message: '请输入步长'
+	                },
+	                integer: {
+                        message: '请输入数字'
+                    }
 	            }
 	        }
 	    },
 	    onSuccess : function(e,validator, form, submitButton) {
-	    	var zkId = $("#zkId").val();
+	    	var guid =  $("#sequence-form [name='guid']").val();
 	    	var data = {
-	    			 "zkPath" :zkPath,
-	    			 "zkId" : zkId
+	    			 "zkId" :zkId,
+	    			 "guid" : guid
 	    	}
-	    	if(zkId){
-	    		saveForm('dataNodeService','update','mycatDataNode-form',data,callback);
+	    	if(guid){
+	    		saveForm('sequenceService','update','sequence-form',data,callback);
 	    	}else{
-	    		saveForm('dataNodeService','insert','mycatDataNode-form',data,callback);
+	    		saveForm('sequenceService','insert','sequence-form',data,callback);
 	    	}
 			
 		}
 	});
 }
- 
-function getdatagrid(){
-	var url = './dispatcherAction/query.do?service=dataNodeService&method=queryByPage&zkPath='+zkPath;
-	datagrid('mycatDatanodebody',url,columns);
-}
+var columns = [{
+				title : '序列名称',
+				field:'name',
+				align :'center'
+			},
+			{
+				title : '当前序列值',
+				field:'currentValue',
+				align :'center'
+			},
+			{
+				title : '步长',
+				field:'increament',
+				align :'center'
+			},{
+                title: '操作',
+                align: 'center',
+	            events: operateEvents,
+	            formatter: operateFormatter
+            }];
 
-function operateFormatter(value, row, index) {
-    return [
-        '<a class="like" href="javascript:void(0)" title="Edit">',
-        '<i class="glyphicon glyphicon-pencil"></i>',
-        '</a>  ',
-        '<a class="remove" href="javascript:void(0)" title="Remove">',
-        '<i class="glyphicon glyphicon-remove"></i>',
-        '</a>'
-    ].join('');
-};
-
-function addDataNode(){
-	 $("#mycatDataNode-form :reset").click();
-	 $("#mycatDataNode-form [name='zkId']").val("");
-	 $("#myModalLabel").text("添加dataNode");
-	 destroyValidator("mycatDataNode-form");
+function addSequence(){
+	 $("#sequence-form :reset").click();
+	 $("#sequence-form [name='guid']").val("");
+	 $("#sequenceModalLabel").text("添加序列");
+	 $("#sequence-form [name='name']").attr("disabled",false);
+	 destroyValidator("sequence-form");
 	 validator();
-	 showModal('dataNodeModal');
+	 showModal('sequenceModal');
 	
 }
 
-function submit(){
-	$("#mycatDataNode-form" ).submit();
-}
-
 function callback(){
-	$('#dataNodeModal').modal('hide');
-	$('#mycatDatanodebody').bootstrapTable('refresh');
+	$('#sequenceModal').modal('hide');
+	$('#mycatSequence').bootstrapTable('refresh');
 	 
+}
+function submit(){
+	$("#sequence-form" ).submit();
+}
+function getdatagrid(){
+	var url = './dispatcherAction/query.do?service=sequenceService&method=queryByPage&zkId='+zkId;
+	datagrid('mycatSequence',url,columns);
 }
 
 $(document).ready(function() {
 	getdatagrid();
-	validator();
 });
 
 </script>		
 	<div class="box-body">
-	    <div id="dataNodeToolbar">
-	        <button id="add" class="btn btn-info" onclick="addDataNode()" >
-	            <i class="glyphicon glyphicon-plus"></i> Add
-	        </button>
-	    </div>
-		<table  id="mycatDatanodebody" data-toggle="table"  data-toolbar="#dataNodeToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >
+	<div id="sequenceToolbar">
+		<button id="add" class="btn btn-default" onclick="addSequence()">
+			<i class="glyphicon glyphicon-plus"></i> 新增序列
+		</button>
+	</div>
+	<table  id="mycatSequence" data-toggle="table"  data-toolbar="#sequenceToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >
 		</table>
    </div>
- 
- 
- 	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="dataNodeModal" tabindex="-1" role="dialog" 
-	   aria-labelledby="myModalLabel" aria-hidden="true">
+   
+   	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="sequenceModal" tabindex="-1" role="dialog" 
+	   aria-labelledby="sequenceModalLabel" aria-hidden="true">
 	   <div class="modal-dialog modal-md "style="withd:auto">
 	      <div class="modal-content"  >
 	         <div class="modal-header">
 	            <button type="button" class="close" data-dismiss="modal" 
 	               aria-hidden="true">×
 	            </button>
-	            <h4 class="modal-title" id="myModalLabel">
-	        	      编辑datanode
+	            <h4 class="modal-title" id="sequenceModalLabel">
+	        	      编辑序列信息
 	            </h4>
 	         </div>
 	         <div class="modal-body">
-	         <form class="form-horizontal" role="form" id="mycatDataNode-form" method="post" >
-	          	<input type="hidden" id="zkId" name="zkId">
+	         <form class="form-horizontal" role="form" id="sequence-form" method="post" >
+	          	<input type="hidden" id="guid" name="guid">
+		        <button type="reset" id="reset" style="display:none"></button>
+		       
 			   <div class="form-group">
-			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
+			   		<label for="name"  class=" col-md-2  control-label" title="序列名称"  data-toggle="tooltip"  data-placement="right"  > 序列名称 </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="name"  name="name" placeholder="datanode名称">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="请输入序列名称">
 			        </div>
 			   </div>
 			   <div class="form-group">
-			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > dataHost </label>
+			   		<label for="increament"  class=" col-md-2  control-label" title="序列步长"  data-toggle="tooltip"  data-placement="right"  > 序列步长 </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="dataHost"  name="dataHost" placeholder="请输入dataHost">
+			         <input type="text" class="form-control" id="increament"  name="increament" placeholder="请输入步长值">
 			        </div>
 			   </div>
-			   <div class="form-group">
-			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > database </label>
-			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="database"  name="database" placeholder="请输入database">
-			        </div>
-			   </div>
-			  
-		       <button type="reset" id="reset" style="display:none"></button>
-		      
 			</form>
-	         </div>
+	        </div>
 	         <div class="modal-footer">
 	            <button type="button" class="btn btn-default" 
 	               data-dismiss="modal">关闭
@@ -200,4 +187,3 @@ $(document).ready(function() {
 	      </div><!-- /.modal-content -->
 	   </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
- 
