@@ -296,7 +296,7 @@
 		src="resources/My97DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript">
 		// To make Pace works on Ajax calls    
-
+		var intervalId;
 		function loadData() {
 			var rainbow = new Rainbow();
 			rainbow.setService("zkConfigService");
@@ -316,7 +316,7 @@
 							//mmgrid.load(data.rows);
 						}
 					} catch (e) {
-						alert(e);
+					//	alert(e);
 					}
 				};
 				this.onFail = function(jqXHR, textStatus, errorThrown) {

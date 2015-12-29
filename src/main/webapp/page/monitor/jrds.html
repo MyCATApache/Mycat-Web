@@ -252,8 +252,9 @@
 
 	}
 
-	setInterval(function() {
+	clearInterval(intervalId); 
+	intervalId = setInterval(function() {
 		var url = $('#contentGraph').attr('src');
-		$('#contentGraph').attr('src', url);
-	}, 10000)
+		$('#contentGraph').attr('src', url+"&timestamp="+(new Date()).getTime());
+	}, 20000)
 </script>

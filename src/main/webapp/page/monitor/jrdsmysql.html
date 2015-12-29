@@ -100,10 +100,9 @@
 </script>
 
 <script type="text/javascript">
-	
-	
-var historyquery = function(){
-	$('#contentGraph').attr('src', getGraphUrl() + "&autoperiod=" + $("#autoperiod").val());
+ 
+var historyquery = function(){ 
+	$('#contentGraph').attr('src', getGraphUrl() + "&autoperiod=" + $("#autoperiod").val()); 
 }
 
 $(document).ready(
@@ -230,8 +229,10 @@ var create_host = function() {
 	
 }
 
-setInterval(function() {
-	var url = $('#contentGraph').attr('src');
-	$('#contentGraph').attr('src', url);
-}, 10000)
+clearInterval(intervalId); 
+intervalId = setInterval(function(){
+	var url = $('#contentGraph').attr('src');   
+	showgraph(url+"&timestamp="+(new Date()).getTime());
+},20 * 1000); 
+ 
 </script>
