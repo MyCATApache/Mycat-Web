@@ -183,7 +183,7 @@ function loadData(){
 					mmgrid.load(data.rows);
 				}
 			} catch (e) {
-				alert(e);
+				//alert(e);
 			} 
 		};
 		this.onFail = function(jqXHR, textStatus, errorThrown) {
@@ -192,9 +192,10 @@ function loadData(){
 	
 }
 
-
-//10秒钟刷新一次
-//setInterval("loadData()",10 * 1000);
+ 
+//20秒钟刷新一次
+clearInterval(intervalId); 
+intervalId = setInterval("loadData()",20 * 1000); 
 
 function initMap(json,i){
 	
@@ -269,7 +270,7 @@ function initMap(json,i){
      	};
 	 return option;
  }
-
  
+
 
 </script>

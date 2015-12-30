@@ -327,6 +327,9 @@ function addForm(serviceName,method,_formid,extra_call){
 var zkPath = "";
 var zkId = "";
 function loadContext(url,copy){
+	
+	if(intervalId)
+		clearInterval(intervalId); 
 	if(copy && mmgrid){
 		var rows =  mmgrid.selectedRows();
 		var length = rows.length;
