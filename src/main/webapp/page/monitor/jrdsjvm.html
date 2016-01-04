@@ -105,7 +105,6 @@
 var historyquery = function(){
 	$('#contentGraph').attr('src', getGraphUrl() + "&autoperiod=" + $("#autoperiod").val());
 }
-
 $(document).ready(
 		function() {
 			rainbowAjax.get("./reload", "", function callback(data) {
@@ -113,10 +112,8 @@ $(document).ready(
 			});
 			//Initialize Select2 Elements
 			$(".select2").select2();
-
 			//Money Euro
 			$("[data-mask]").inputmask();
-
 			//Date range picker with time picker
 			$('#reservationtime').daterangepicker(
 					{
@@ -156,18 +153,15 @@ $(document).ready(
 							firstDay : 1
 						}
 					});
-
 			$("#reservationtime").on('apply.daterangepicker', function() {
 				var daterange = $('#reservationtime').val().split('~');
 				url =  getGraphUrl() + "&begin=" + daterange[0].trim() + "&end=" + daterange[1].trim();
 				$('#contentGraph').attr('src', url);
 			});
 		});
-
 var showgraph = function(url) {
 	$('#contentGraph').attr('src', url);
 };
-
 var getGraphUrl = function(){
 	var url = $('#contentGraph').attr('src');
 	var index = url.indexOf('&');
@@ -176,7 +170,6 @@ var getGraphUrl = function(){
 	}
 	return url;
 };
-
 var host_detail = function() {
 	$('#hostDetailtable').html('');
 	$('#contentGraph').attr('src', '');
@@ -191,7 +184,6 @@ var host_detail = function() {
 							jrdsHtml += '<table class="table">';
 							jrdsHtml += '<tbody>';
 							jrdsHtml += '<tr>';
-
 							var probe = jrds[i].probe;
 							for ( var j in probe) {
 								var graph = probe[j].graph;
@@ -215,7 +207,6 @@ var host_detail = function() {
 						$('#hostDetailtable').html(jrdsHtml);
 					});
 }
-
 var create_host = function() {
 	rainbowAjax.get("./graph/hostMycatList?hostprefix=JMX", "",
 			function callback(data) {
@@ -230,8 +221,9 @@ var create_host = function() {
 	
 }
 
-setInterval(function() {
+clearInterval(intervalId); 
+intervalId = setInterval(function() {
 	var url = $('#contentGraph').attr('src');
-	$('#contentGraph').attr('src', url);
-}, 10000)
+	$('#contentGraph').attr('src', url+"&timestamp="+(new Date()).getTime());
+}, 20 * 1000)
 </script>

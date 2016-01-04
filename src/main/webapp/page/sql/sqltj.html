@@ -1,4 +1,4 @@
-<!-- Content Header (Page header) -->
+<!-- Content Header (Page header) --> 
 <section class="content-header">
 	<h1>SQL统计</h1>
 	<ol class="breadcrumb">
@@ -71,10 +71,11 @@ var datasouce_change = function(){
 	loadData();
 }
 
-//10秒钟刷新一次
-//setInterval("loadData()",10 * 1000);
-//loadData();
- 
+//20秒钟刷新一次
+clearInterval(intervalId); 
+intervalId = setInterval("loadData()",20 * 1000); 
+
+
 var requestData = new Array();
 var timeData = new Array();
  
