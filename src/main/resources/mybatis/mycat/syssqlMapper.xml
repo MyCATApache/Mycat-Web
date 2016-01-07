@@ -6,6 +6,7 @@
 	
 	<select id="insert" parameterType="map">
 		INSERT INTO t_mycat_syssql (
+		    START_TM,
 			START_TIME,
 			EXECUTE_TIME,
 			ID,
@@ -13,7 +14,8 @@
 			CONTENT
 		) 
 		values(
-			#{START_TIME, jdbcType=TIMESTAMP, javaType=java.util.Date },  
+			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{START_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },			
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
@@ -27,6 +29,9 @@
 			<if test="ID >= 0">
 				and ID = #{ID}
 			</if> 
+			<if test="START_TIME != null">
+				and START_TM = #{START_TIME}
+			</if>			
 		</where>
 	</select>
 	
