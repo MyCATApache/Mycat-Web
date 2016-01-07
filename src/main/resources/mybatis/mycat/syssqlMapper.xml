@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQL"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssql (
+			START_TIME,
+			EXECUTE_TIME,
+			ID,
+			USER,
+			CONTENT
+		) 
+		values(
+			#{START_TIME, jdbcType=TIMESTAMP, javaType=java.util.Date },  
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{USER, jdbcType=VARCHAR},
+			#{SQL, jdbcType=NVARCHAR}
+		)
+	</select>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
+		<where> 
+			<if test="ID >= 0">
+				and ID = #{ID}
+			</if> 
+		</where>
+	</select>
+	
+	<select id="sql" parameterType="map" resultType="map">
+		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
+		<where> 
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and START_TIME between #{begin} and #{end}
+			</if>
+			 
+		</where>
+	</select>
+	
+	<select id="sqlCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssql 
+		<where> 
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and START_TIME between #{begin} and #{end}
+			</if>
+			 
+		</where> 
+	</select>
+</mapper>

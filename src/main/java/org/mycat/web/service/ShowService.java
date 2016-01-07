@@ -6,13 +6,14 @@ import org.mycat.web.util.DataSourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service; 
 
 @Lazy
 @Service
-public class ShowService extends BaseService {
+public class ShowService extends BaseService { 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
-	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";
+	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";  
+	private static final String SYSSQL_NAMESPACE = "SYSSQL";  
 
 	public RainbowContext base(RainbowContext context,String cmd) {
 		String datasource = (String)context.getAttr("ds");
@@ -35,17 +36,24 @@ public class ShowService extends BaseService {
 			if (!(threshold ==  null || threshold.isEmpty())){
 				super.query(context, SYSPARAM_NAMESPACE, "setsqlslow");
 			}			
-		}
-		super.query(context, SYSPARAM_NAMESPACE, cmd);
+		} 
+		super.query(context, SYSPARAM_NAMESPACE, cmd); 
 		return context;
 	}
+	
+	
+	public RainbowContext baseQuery(RainbowContext context,String cmd) {    
+		super.queryByPage(context, SYSSQL_NAMESPACE, cmd, cmd+"Count"); 
+		return context;
+	}
+	
 	
 	public RainbowContext sysparam(RainbowContext context) {
 		return base(context,"sysparam");
 	}
 	
 	public RainbowContext sql(RainbowContext context) {
-		return base(context,"sql");
+		return baseQuery(context,"sql");
 	}
 	
 	public RainbowContext sqlslow(RainbowContext context) {
