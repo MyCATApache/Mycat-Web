@@ -14,7 +14,7 @@ import org.mycat.web.task.common.ITask;
 
 public class SyncSysSql implements ITask {
 	
-	private static final String NAMESPACE = "SYSPARAM";
+	private static final String NAMESPACE = "SYSSQL";
 
 	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";
 	
