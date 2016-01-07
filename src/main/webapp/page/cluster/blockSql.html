@@ -1,0 +1,188 @@
+
+<style type="text/css">
+#blockSqlModal .modal-body {
+	max-height: 200px;
+}
+</style>
+<script type="text/javascript">
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#blockSql-form [name='guid']").val(row.name);
+        	 loadFormData("blockSql-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑慢sql语句");
+         	 $("#blockSqlModal form [name='name']").attr("disabled",true);
+        	 destroyValidator("blockSql-form");
+        	 validator();
+        	 showModal("blockSqlModal");
+        	 
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('blockSqlService','delete',data,callback);
+        	}
+        }
+};
+
+var columns = [{
+   				title : 'name',
+   				field :'name',
+   				align : 'center'
+   			},
+   			{
+   				title : 'SQL语句',
+   				field : 'sql',
+   				align : 'center'
+   			},{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+              }];
+
+function validator() {
+	$('#blockSql-form').bootstrapValidator(
+			{
+				feedbackIcons : {
+					validating : 'glyphicon glyphicon-refresh'
+				},
+				fields : {
+				  name : {
+						validators : {
+							notEmpty : {
+								message : '请输入名称'
+							},
+							stringLength: {
+		                    	min: 2,
+		                        max: 50,
+		                        message: '长度介于2~50之间'
+		                    }
+
+						}
+				   },
+				sql : {
+						validators : {
+							notEmpty : {
+								message : '请输入dataHost'
+							}
+						}
+					}
+				},
+			 onSuccess : function(e,validator, form, submitButton) {
+			    	var guid =  $("#blockSql-form [name='guid']").val();
+			    	var data = {
+			    			 "guid" : guid,
+			    			 "zkId" : zkId
+			    	}
+			    	if(guid){
+			    		saveForm('blockSqlService','update','blockSql-form',data,callback);
+			    	}else{
+			    		saveForm('blockSqlService','insert','blockSql-form',data,callback);
+			    	}
+					
+				}
+			});
+	}
+
+	function operateFormatter(value, row, index) {
+		return [ '<a class="like" href="javascript:void(0)" title="Edit">',
+				'<i class="glyphicon glyphicon-pencil"></i>', '</a>  ',
+				'<a class="remove" href="javascript:void(0)" title="Remove">',
+				'<i class="glyphicon glyphicon-remove"></i>', '</a>' ].join('');
+	};
+
+	function add() {
+		$("#blockSql-form :reset").click();
+		$("#blockSql-form :input [name='guid']").val("");
+		$("#myModalLabel").text("添加慢sql语句");
+	 	$("#blockSqlrModal form [name='name']").attr("disabled",false);
+		destroyValidator("blockSql-form");
+		validator();
+		showModal("blockSqlModal");
+		
+
+	}
+
+	function submit() {
+		$("#blockSql-form").submit();
+	}
+
+	function callback() {
+		$('#blockSqlModal').modal('hide');
+		$('#blockSqlsTable').bootstrapTable('refresh');
+
+	}
+	
+
+	function getdatagrid() {
+		var url = './dispatcherAction/query.do?service=blockSqlService&method=queryByPage&zkId='+ zkId;
+		datagrid('blockSqlsTable', url, columns);
+	}
+	
+
+	$(document).ready(function() {
+		getdatagrid();
+	    validator();
+	});
+
+</script>
+
+
+<div class="box-body">
+	 <div id="blockSqlToolbar">
+        <button id="add" class="btn btn-default" onclick="add()" >
+            <i class="glyphicon glyphicon-plus"></i> 新增慢sql语句
+        </button>
+	 </div>
+	<table  id="blockSqlsTable"    data-toolbar="#blockSqlToolbar" data-toggle="table" class="table table-striped table-bordered table-hover"
+	 	data-id-field="name"  
+	 > 
+	</table>
+</div>
+
+<!-- 模态框（Modal） -->
+	<div class="modal fade" id="blockSqlModal" tabindex="-1" role="dialog" 
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog modal-md "style="withd:auto">
+	      <div class="modal-content"  >
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" 
+	               aria-hidden="true">×
+	            </button>
+	            <h4 class="modal-title" id="myModalLabel">
+	        	      添加慢sql语句
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	         <form class="form-horizontal" role="form" id="blockSql-form" method="post" >
+	          	<input type="hidden" id="guid" name="guid">
+	          	<button type="reset" id="reset" style="display:none"></button>
+			   <div class="form-group">
+			   		<label for="name"  class=" col-md-2  control-label" title="慢sql语句名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="请输入慢sql名称">
+			        </div>
+			   </div>
+			   <div class="form-group">
+			   		<label for="sql"  class=" col-md-2  control-label" title="sql语句"  data-toggle="tooltip"  data-placement="right"  > sql </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="sql"  name="sql" placeholder="请输入sql语句">
+			        </div>
+			   </div>
+			</form>
+	         </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-default" 
+	               data-dismiss="modal">关闭
+	            </button>
+	            <button type="button" class="btn btn-primary" onclick="submit()">
+	             	  保存
+	            </button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	   </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+ 

@@ -4,7 +4,8 @@ window.operateEvents = {
         'click .like': function (e, value, row, index) {
         	 $("#mycatDataHost-form [name='guid']").val(row.name);
         	 loadFormData("mycatDataHost-form",JSON.stringify(row));
-        	 $("#myModalLabel").text("编辑datahost");
+        	 $("#myModalLabel").text("编辑主机信息");
+        	 $("#mycatDataHost-form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatDataHost-form");
         	 validator();
         	 showModal("dataHostModal");
@@ -108,8 +109,12 @@ function validator(){
 	                validators: {
 	                    notEmpty: {
 	                        message: '请输入名称'
+	                    },
+	                    stringLength: {
+	                    	min: 2,
+	                        max: 50,
+	                        message: '长度介于2~50之间'
 	                    }
-
 	                }
 	            },
 	            mincon: {
@@ -171,6 +176,9 @@ function validator(){
 	                validators: {
 	                	notEmpty: {
 	                        message: '不能为空'
+	                    },
+	                    integer: {
+	                        message: '请输入数字'
 	                    }
 	                }
 	            },
@@ -214,7 +222,8 @@ function getdatagrid(){
 function addHost(){
 	 $("#mycatDataHost-form :reset").click();
 	 $("#mycatDataHost-form [name='guid']").val("");//guid 设置空
-	 $("#myModalLabel").text("添加datahost");
+	 $("#myModalLabel").text("添加主机信息");
+	 $("#mycatDataHost-form [name='name']").attr("disabled",false);
 	 destroyValidator("mycatDataHost-form");
 	 validator();
 	 showModal('dataHostModal');
@@ -242,7 +251,7 @@ $(document).ready(function() {
 		<div id="hostToolbar" >
 		   <div class="pull-right">
 	        <button id="add" class="btn btn-default btn-group" onclick="addHost()">
-	            <i class="glyphicon glyphicon-plus"></i> 新增
+	            <i class="glyphicon glyphicon-plus"></i> 新增主机
 	        </button>
 	        </div>
 	    </div>
@@ -262,7 +271,7 @@ $(document).ready(function() {
 	               aria-hidden="true">×
 	            </button>
 	            <h4 class="modal-title" id="myModalLabel">
-	        	      编辑dataHost
+	        	      编辑主机信息
 	            </h4>
 	         </div>
 	         <div class="modal-body"  >
@@ -274,9 +283,9 @@ $(document).ready(function() {
 					<tr>
 						<td width="15%">
 							<div class="form-group">
-						         <label for="name" class="col-md-3 control-label"  title="hostData名称"  data-toggle="tooltip"  data-placement="right" >name</label>
+						         <label for="name" class="col-md-3 control-label"  title="主机名称"  data-toggle="tooltip"  data-placement="right" >name</label>
 						         <div class="col-md-4">
-						            <input type="text" class="form-control" id="name" name="name" placeholder="请输入名称" >
+						            <input type="text" class="form-control" id="name" name="name" placeholder="请输入主机名称" >
 						         </div>
 					  		 </div>
 						</td>
@@ -284,7 +293,7 @@ $(document).ready(function() {
 							<div class="form-group">
 					          <label for="mincon" class="col-md-3 control-label" title="实例连接池的最小连接"  data-toggle="tooltip"  data-placement="right" >mincon</label>
 					         <div class="col-md-4">
-					            <input type="text" class="form-control" id="mincon" name="mincon"  placeholder="实例连接池的最小连接">
+					            <input type="text" class="form-control" id="mincon" name="mincon"  placeholder="请输入实例连接池的最小连接">
 					          </div>
 					 		 </div>
 						</td>
@@ -354,9 +363,9 @@ $(document).ready(function() {
 						</td>
 						<td>
 							<div class="form-group">
-								<label for="switchType"  class="col-md-3 control-label" title="主从切换"  data-toggle="tooltip"  data-placement="right"  > switchType  </label>
+								<label for="switchType"  class="col-md-3 control-label" title="主从切换类型"  data-toggle="tooltip"  data-placement="right"  > switchType  </label>
 				   				<div class="col-md-4">
-					         		<input type="text" class="form-control" id="switchType"  name="switchType"  placeholder="请输入切换">
+					         		<input type="text" class="form-control" id="switchType"  name="switchType"  placeholder="请输入切换类型">
 				       			</div>
 							</div>
 						</td>
@@ -364,9 +373,9 @@ $(document).ready(function() {
 					<tr>
 						<td>
 							<div class="form-group">
-								<label for="slaveThreshold"  class="col-md-3 control-label" title="主从关系"  data-toggle="tooltip"  data-placement="right"  > slaveThreshold  </label>
+								<label for="slaveThreshold"  class="col-md-3 control-label" title="主从复制时延"  data-toggle="tooltip"  data-placement="right"  > slaveThreshold  </label>
 				   				<div class="col-md-4">
-					        	 <input type="text" class="form-control" id="slaveThreshold"  name="slaveThreshold"  placeholder="请输入主从关系">
+					        	 <input type="text" class="form-control" id="slaveThreshold"  name="slaveThreshold"  placeholder="请输入主从复制时延">
 				        		</div>
 							</div>
 						</td>

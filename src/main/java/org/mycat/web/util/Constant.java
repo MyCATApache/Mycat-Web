@@ -29,6 +29,14 @@ public final class Constant {
     public static final String CLUSTER_SCHEMA = "schema";
     public static final String CLUSTER_RULE = "rule";
     public static final String CLUSTER_SEQUENCE = "sequence";
+    public static final String CLUSTER_BLOCKSQLS = "blockSQLs";
+    
+    
+    public  static final String MYCATS = MYCAT_EYE+"/mycat";
+    public  static final String MYCAT_JMX = MYCAT_EYE+"/mycat_jmx";
+    public  static final String MYCAT_MYSQL = MYCAT_EYE+"/mysql";
+    public  static final String MYCAT_SNMP = MYCAT_EYE+"/mycat_snmp";
+    public  static final String MYCAT_PROCESSOR = MYCAT_EYE+"/mycat_processor";	
     
     
 }

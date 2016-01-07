@@ -11,7 +11,8 @@ window.operateEvents = {
         'click .like': function (e, value, row, index) {
         	 $("#mycatDataNode-form [name='guid']").val(row.name);
         	 loadFormData("mycatDataNode-form",JSON.stringify(row));
-        	 $("#myModalLabel").text("编辑datanode");
+        	 $("#myModalLabel").text("编辑节点信息");
+        	 $("#dataNodeModal form [name='name']").attr("disabled",true);
         	 destroyValidator("mycatDataNode-form");
         	 validator();
         	 showModal("dataNodeModal");
@@ -63,7 +64,7 @@ function validator(){
 	        name: {
 	            validators: {
 	                notEmpty: {
-	                    message: '请输入名称'
+	                    message: '请输入节点名称'
 	                }
 	
 	            }
@@ -71,14 +72,14 @@ function validator(){
 	        dataHost: {
 	            validators: {
 	                notEmpty: {
-	                    message: '请输入dataHost'
+	                    message: '请输入物理实例名'
 	                }
 	            }
 	        },
 	        database: {
 	            validators: {
 	            	notEmpty: {
-	                    message: '请输入database'
+	                    message: '请输入数据库实例名'
 	                }
 	            }
 	        }
@@ -118,7 +119,8 @@ function operateFormatter(value, row, index) {
 function addDataNode(){
 	 $("#mycatDataNode-form :reset").click();
 	 $("#mycatDataNode-form [name='guid']").val("");
-	 $("#myModalLabel").text("添加dataNode");
+	 $("#myModalLabel").text("添加节点信息");
+	 $("#dataNodeModal form [name='name']").attr("disabled",false);
 	 destroyValidator("mycatDataNode-form");
 	 validator();
 	 showModal('dataNodeModal');
@@ -144,7 +146,7 @@ $(document).ready(function() {
 	<div class="box-body">
 	    <div id="dataNodeToolbar">
 	        <button id="add" class="btn btn-default" onclick="addDataNode()" >
-	            <i class="glyphicon glyphicon-plus"></i> 新增
+	            <i class="glyphicon glyphicon-plus"></i> 新增节点
 	        </button>
 	    </div>
 		<table  id="mycatDatanodebody" data-toggle="table"  data-toolbar="#dataNodeToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >
@@ -173,19 +175,19 @@ $(document).ready(function() {
 			   <div class="form-group">
 			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="name"  name="name" placeholder="datanode名称">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="输入节点名称">
 			        </div>
 			   </div>
 			   <div class="form-group">
-			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > dataHost </label>
+			   		<label for="dataHost"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > dataHost </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="dataHost"  name="dataHost" placeholder="请输入dataHost">
+			         <input type="text" class="form-control" id="dataHost"  name="dataHost" placeholder="请输入物理实例名">
 			        </div>
 			   </div>
 			   <div class="form-group">
-			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > database </label>
+			   		<label for="database"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > database </label>
 			   		<div class="col-md-4 ">
-			         <input type="text" class="form-control" id="database"  name="database" placeholder="请输入database">
+			         <input type="text" class="form-control" id="database"  name="database" placeholder="请输入数据库实例名">
 			        </div>
 			   </div>
 		      

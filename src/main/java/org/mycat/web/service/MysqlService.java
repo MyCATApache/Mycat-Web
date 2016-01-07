@@ -2,30 +2,47 @@ package org.mycat.web.service;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.curator.utils.ZKPaths;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.JrdsUtils;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
 
 @Lazy
 @Service("mysqlService")
 public class MysqlService extends BaseService {
-
-	public RainbowContext query(RainbowContext context) {
+	private ZookeeperCuratorHandler zkHander=  ZookeeperCuratorHandler.getInstance();
+	public RainbowContext query(RainbowContext context) throws Exception  {
 		//super.query(context, NAMESPACE);
 		return queryByPage(context);
 	}
 
 
-	public RainbowContext queryByPage(RainbowContext context) {
+	public RainbowContext queryByPage(RainbowContext context) throws Exception {
 		//super.queryByPage(context, NAMESPACE);
 		String mysqlName = (String)context.getAttr("mysqlName");	
-		context.addRows(ZookeeperService.getInstance().getMysql("mysqlName",mysqlName));
+		//context.addRows(ZookeeperService.getInstance().getMysql("mysqlName",mysqlName));
+		List<Map<String, Object>> mycatlist = zkHander.getChildNodeData(Constant.MYCAT_MYSQL);
+		for (int i = 0; i < mycatlist.size(); i++) {
+			Map<String, Object> dbinfo = mycatlist.get(i);
+			String db = (String) dbinfo.get("mysqlName");
+			if (db !=null && db.equals(mysqlName)) {
+				mycatlist.clear();
+				mycatlist.add(dbinfo);
+				break;
+			}
+		}
+		context.addRows(mycatlist);
 		context.setTotal(context.getRows().size());
 		return context;
 	}
@@ -49,7 +66,8 @@ public class MysqlService extends BaseService {
 			String jrdsconfg = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
 			jrdsconfg = jrdsconfg + "MYSQL_" + context.getAttr("ip") + "_" + context.getAttr("port") + context.getAttr("dbname") + ".xml";
 			context.addAttr("jrdsfile", jrdsconfg);
-			ZookeeperService.getInstance().insertMysql(guid,context.getAttr());
+			//ZookeeperService.getInstance().insertMysql(guid,context.getAttr());
+			zkHander.createNode(ZKPaths.makePath(Constant.MYCAT_MYSQL, guid), JSON.toJSONString(context.getAttr()));
 			context.setMsg("新增成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/mysqljrds.ftl", jrdsconfg, context.getAttr());
@@ -69,7 +87,8 @@ public class MysqlService extends BaseService {
 			if(jrdsfile != null && !jrdsfile.isEmpty()){
 				new File(jrdsfile).delete();
 			}
-			ZookeeperService.getInstance().insertMysql(guid,context.getAttr());
+			//ZookeeperService.getInstance().insertMysql(guid,context.getAttr());
+			zkHander.updateNodeData(ZKPaths.makePath(Constant.MYCAT_MYSQL, guid), JSON.toJSONString(context.getAttr()));
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 			JrdsUtils.getInstance().newJrdsFile("/templet/mysqljrds.ftl", jrdsfile, context.getAttr());
@@ -88,8 +107,11 @@ public class MysqlService extends BaseService {
 		String jrdsfile ="";
 		try{
 			String guid=(String)context.getAttr("guid");
-			Map<String, Object> data =ZookeeperService.getInstance().getMysqlNode(guid);
-			ZookeeperService.getInstance().delMysql(guid);
+		    //Map<String, Object> data =ZookeeperService.getInstance().getMysqlNode(guid);
+			//ZookeeperService.getInstance().delMysql(guid);
+			String path = ZKPaths.makePath(Constant.MYCAT_MYSQL, guid);
+			Map<String, Object> data = zkHander.getNodeDataForMap(path);
+			zkHander.deleteNode(path);
 			context.setMsg("删除成功!");
 			context.setSuccess(true);
 			jrdsfile = (String)data.get("jrdsfile");
