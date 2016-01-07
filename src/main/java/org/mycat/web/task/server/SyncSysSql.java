@@ -23,7 +23,7 @@ public class SyncSysSql implements ITask {
 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sql"); 
 		for(Map<String,Object> entry : list){
-			entry.put("START_TIME", new Date((long) entry.get("START_TIME")));
+			entry.put("START_TM", new Date((long) entry.get("START_TIME")));
 			Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
 			if(entity == null){ 
 				showService.getDao().insert(NAMESPACE, "insert", entry);
