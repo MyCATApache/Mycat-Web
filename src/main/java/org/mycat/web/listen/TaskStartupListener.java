@@ -5,11 +5,12 @@ import java.util.Map;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import org.mycat.web.service.ZookeeperService;
+ 
 import org.mycat.web.task.common.TaskManger;
 import org.mycat.web.task.server.SyncSysSql;
+import org.mycat.web.util.Constant;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,17 +28,23 @@ public class TaskStartupListener implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) { 
-		List<Map<String,Object>> mycatList = ZookeeperService.getInstance().getMycat("mycatName",null);
-		for(Map<String,Object> mycat : mycatList){
-			String mycatName = (String)mycat.get("mycatName"); 
-			try {
-				DataSourceUtils.getInstance().register(mycatName); 
-				LOGGER.info("数据源["+mycatName+"]");
-			} catch (Exception e) { 
-				LOGGER.error(e.toString());
+		List<Map<String, Object>> mycatList;
+		try {
+			mycatList = ZookeeperCuratorHandler.getInstance().getChildNodeData(Constant.MYCATS);
+			for(Map<String,Object> mycat : mycatList){
+				String mycatName = (String)mycat.get("mycatName"); 
+				try {
+					DataSourceUtils.getInstance().register(mycatName); 
+					LOGGER.info("数据源["+mycatName+"]");
+				} catch (Exception e) { 
+					LOGGER.error(e.toString());
+				}
 			}
+			TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000);
 	}
 
 }
