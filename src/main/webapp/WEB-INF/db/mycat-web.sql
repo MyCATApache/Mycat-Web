@@ -14,10 +14,7 @@ Date: 2016-01-07 11:13:46
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for t_mycat_sysparam
--- ----------------------------
+ 
 DROP TABLE IF EXISTS `t_mycat_syssql`;
 CREATE TABLE `t_mycat_syssql` (
   `ID` int(11) NOT NULL DEFAULT '0',
@@ -26,7 +23,4 @@ CREATE TABLE `t_mycat_syssql` (
   `USER` varchar(25) NOT NULL,
   `CONTENT` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
-
--- ----------------------------
--- Records of t_mycat_sysparam
--- ----------------------------
+ 
