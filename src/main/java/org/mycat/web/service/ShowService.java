@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class ShowService extends BaseService { 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";  
+	private static final String SYSSQL_NAMESPACE = "SYSSQL";  
 
 	public RainbowContext base(RainbowContext context,String cmd) {
 		String datasource = (String)context.getAttr("ds");
@@ -42,7 +43,7 @@ public class ShowService extends BaseService {
 	
 	
 	public RainbowContext baseQuery(RainbowContext context,String cmd) {    
-		super.queryByPage(context, "SYSPARAM", cmd, cmd+"Count"); 
+		super.queryByPage(context, SYSSQL_NAMESPACE, cmd, cmd+"Count"); 
 		return context;
 	}
 	

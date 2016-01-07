@@ -18,8 +18,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for t_mycat_sysparam
 -- ----------------------------
-DROP TABLE IF EXISTS `t_mycat_sysparam`;
-CREATE TABLE `t_mycat_sysparam` (
+DROP TABLE IF EXISTS `t_mycat_syssql`;
+CREATE TABLE `t_mycat_syssql` (
   `ID` int(11) NOT NULL DEFAULT '0',
   `START_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `EXECUTE_TIME` int(11) NOT NULL,

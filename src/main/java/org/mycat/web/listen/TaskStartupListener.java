@@ -8,7 +8,7 @@ import javax.servlet.ServletContextListener;
 
 import org.mycat.web.service.ZookeeperService;
 import org.mycat.web.task.common.TaskManger;
-import org.mycat.web.task.server.SyncSysparamProcessor;
+import org.mycat.web.task.server.SyncSysSql;
 import org.mycat.web.util.DataSourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class TaskStartupListener implements ServletContextListener{
 				LOGGER.error(e.toString());
 			}
 		}
-		TaskManger.getInstance().addTask(new SyncSysparamProcessor(), 60 * 1000);
+		TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000);
 	}
 
 }

@@ -12,7 +12,7 @@ import org.mycat.web.task.common.ITask;
  * 异步持久化mycat中数据
  */
 
-public class SyncSysparamProcessor implements ITask {
+public class SyncSysSql implements ITask {
 	
 	private static final String NAMESPACE = "SYSPARAM";
 
