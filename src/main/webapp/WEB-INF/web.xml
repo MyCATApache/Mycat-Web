@@ -27,6 +27,11 @@
 		<listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
 	</listener>
 	
+	<!-- 异步查询mycat数据监听 -->
+	<listener>
+		<listener-class>org.mycat.web.listen.TaskStartupListener</listener-class>
+	</listener>
+	
 	<filter>
 		<filter-name>characterEncodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
