@@ -5,7 +5,7 @@
 <mapper namespace="SYSSQL"> 
 	
 	<select id="insert" parameterType="map">
-		INSERT INTO t_mycat_sysparam (
+		INSERT INTO t_mycat_syssql (
 			START_TIME,
 			EXECUTE_TIME,
 			ID,
@@ -22,7 +22,7 @@
 	</select>
 	
 	<select id="query" parameterType="map" resultType="map">
-		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_sysparam 
+		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
 		<where> 
 			<if test="ID >= 0">
 				and ID = #{ID}
@@ -31,7 +31,7 @@
 	</select>
 	
 	<select id="sql" parameterType="map" resultType="map">
-		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_sysparam 
+		select START_TIME,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
 		<where> 
 			<if test="ID != null">
 				and ID = #{ID}
@@ -44,7 +44,7 @@
 	</select>
 	
 	<select id="sqlCount" parameterType="map" resultType="int">
-		select count(1) from t_mycat_sysparam 
+		select count(1) from t_mycat_syssql 
 		<where> 
 			<if test="ID != null">
 				and ID = #{ID}
