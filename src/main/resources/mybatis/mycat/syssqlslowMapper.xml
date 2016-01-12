@@ -2,33 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="SYSSQL"> 
+<mapper namespace="SYSSQLSLOW"> 
 	
 	<select id="insert" parameterType="map">
-		INSERT INTO t_mycat_syssql (
+		INSERT INTO t_mycat_syssqlslow (
 			START_TIME,
 		    START_TM,
-			EXECUTE_TIME,
-			ID,
+			EXECUTE_TIME, 
 			USER,
 			CONTENT
 		) 
 		values(
 			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{START_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },			
-			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
-			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
 			#{SQL, jdbcType=NVARCHAR}
 		)
 	</select>
 	
 	<select id="query" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
-		<where> 
-			<if test="ID >= 0">
-				and ID = #{ID}
-			</if> 
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
+		<where>  
 			<if test="START_TIME != null">
 				and START_TIME = #{START_TIME}
 			</if>			
@@ -36,29 +31,29 @@
 		 limit 1;
 	</select>
 	
-	<select id="sql" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
+	<select id="sqlslow" parameterType="map" resultType="map">
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
 		<where> 
-			<if test="ID != null">
-				and ID = #{ID}
-			</if>
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
+			</if>
+			<if test="threshold != null">
+				and EXECUTE_TIME >= #{threshold,javaType=[Ljava.lang.Integer;,jdbcType=NUMERIC,typeHandler=NumberHandler }
 			</if>
 			 
 		</where>
 	</select>
 	
-	<select id="sqlCount" parameterType="map" resultType="int">
-		select count(1) from t_mycat_syssql 
+	<select id="sqlslowCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssqlslow 
 		<where> 
-			<if test="ID != null">
-				and ID = #{ID}
-			</if>
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
 			</if>
 			 
+			<if test="threshold != null">
+				and EXECUTE_TIME >= #{threshold ,javaType=[Ljava.lang.Integer;,jdbcType=NUMERIC,typeHandler=NumberHandler}
+			</if>
 		</where> 
 	</select>
 </mapper>

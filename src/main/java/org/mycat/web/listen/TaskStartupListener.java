@@ -8,6 +8,9 @@ import javax.servlet.ServletContextListener;
  
 import org.mycat.web.task.common.TaskManger;
 import org.mycat.web.task.server.SyncSysSql;
+import org.mycat.web.task.server.SyncSysSqlhigh;
+import org.mycat.web.task.server.SyncSysSqlslow;
+import org.mycat.web.task.server.SyncSysSqtable;
 import org.mycat.web.util.Constant;
 import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.ZookeeperCuratorHandler;
@@ -41,6 +44,9 @@ public class TaskStartupListener implements ServletContextListener{
 				}
 			}
 			TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000);
+			TaskManger.getInstance().addTask(new SyncSysSqlhigh(), 60 * 1000);
+			TaskManger.getInstance().addTask(new SyncSysSqlslow(), 60 * 1000);
+			TaskManger.getInstance().addTask(new SyncSysSqtable(), 60 * 1000);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
