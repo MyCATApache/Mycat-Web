@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQLHIGH"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssqlhig (
+			AVG_TIME,
+			MAX_TIME,
+			EXECUTE_TIME,
+			FREQUENCY,
+			MIN_TIME,
+			ID,
+			LAST_TIME,
+			LAST_TM,
+			CONTENT
+		) 
+		values(  
+			#{AVG_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{MAX_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{FREQUENCY, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{MIN_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
+			#{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },  
+			#{SQL, jdbcType=NVARCHAR}
+		)
+	</select>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM , CONTENT as "SQL" from t_mycat_syssqlhig 
+		<where> 
+			<if test="ID >= 0">
+				and ID = #{ID}
+			</if> 
+			<if test="LAST_TIME != null">
+				and LAST_TIME = #{LAST_TIME}
+			</if>	
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sqlhigh" parameterType="map" resultType="map">
+		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL" from t_mycat_syssqlhig
+		<where> 
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			 
+		</where>
+	</select>
+	
+	<select id="sqlhighCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssqlhig 
+		<where> 
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			 
+		</where> 
+	</select>
+</mapper>

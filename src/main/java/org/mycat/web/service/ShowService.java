@@ -14,6 +14,9 @@ public class ShowService extends BaseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 	private static final String SYSPARAM_NAMESPACE = "SYSSHOW";  
 	private static final String SYSSQL_NAMESPACE = "SYSSQL";  
+	private static final String SYSSQLHIGH_NAMESPACE = "SYSSQLHIGH";
+	private static final String SYSSQLSLOW_NAMESPACE = "SYSSQLSLOW";   
+	private static final String SYSSQLTABLE_NAMESPACE = "SYSSQLTABLE";   
 
 	public RainbowContext base(RainbowContext context,String cmd) {
 		String datasource = (String)context.getAttr("ds");
@@ -42,8 +45,8 @@ public class ShowService extends BaseService {
 	}
 	
 	
-	public RainbowContext baseQuery(RainbowContext context,String cmd) {    
-		super.queryByPage(context, SYSSQL_NAMESPACE, cmd, cmd+"Count"); 
+	public RainbowContext baseQuery(RainbowContext context,String namespace ,String cmd) {    
+		super.queryByPage(context, namespace, cmd, cmd+"Count"); 
 		return context;
 	}
 	
@@ -53,20 +56,20 @@ public class ShowService extends BaseService {
 	}
 	
 	public RainbowContext sql(RainbowContext context) {
-		return baseQuery(context,"sql");
+		return baseQuery(context, SYSSQL_NAMESPACE, "sql");
 	}
 	
-	public RainbowContext sqlslow(RainbowContext context) {
-		return base(context,"sqlslow");
+	public RainbowContext sqlslow(RainbowContext context) { 
+		return baseQuery(context, SYSSQLSLOW_NAMESPACE, "sqlslow"); 
 	}
 	public RainbowContext sqlhigh(RainbowContext context) {
-		return base(context,"sqlhigh");
+		return baseQuery(context, SYSSQLHIGH_NAMESPACE, "sqlhigh"); 
 	}	
 	public RainbowContext sqlsum(RainbowContext context) {
 		return base(context,"sqlsum");
 	}
 	public RainbowContext sqlsumtable(RainbowContext context) {
-		return base(context,"sqlsumtable");
+		return baseQuery(context, SYSSQLTABLE_NAMESPACE, "sqlsumtable");  
 	}	
 	public RainbowContext syslog(RainbowContext context) {
 		return base(context,"syslog");
