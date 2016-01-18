@@ -15,7 +15,7 @@ Mycat-web sqlwatch 能够方便sql上线，当前包括SQL语法检查和备份�
 
 1、因为后台SQL解析依赖于sqlwatch项目，需要下载sqlwatch源码并编译为mysqld可执行文件，重命名为sqlwatch放入/usr/bin/目录
 
-具体请参考https://github.com/zjjxxlgb/sqlwatch。
+具体代码请参考https://github.com/zjjxxlgb/sqlwatch。
 
 测试命令如下，/tmp/sqlcheck1.sql为测试SQL样本。
 

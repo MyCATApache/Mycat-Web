@@ -63,7 +63,7 @@ service network restart
 
 mycat web SQL上线配置参考（可选）
 ````
-修改mycat.properties文件的sqlwatch相关访问参数配置，具体参考sqlwatch.md
+修改mycat.properties文件的访问sqlwatch参数配置，具体参考sqlwatch.md
 ````
 </b>
 
