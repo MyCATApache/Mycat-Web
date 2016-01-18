@@ -234,6 +234,17 @@ public class ZkConfigService  extends BaseService {
 		menus.add(firstMenu4);
 		
 		
+		//菜单5
+		Menu firstMenu5 = new Menu("5","SQL-上线","",MENU_TYPE_PROJECT_GROUP);
+		Menu firstMenu5Sub = new Menu("5_1","SQL语法检测","page/sqlonline/sqlcheck.html",MENU_TYPE_NODE);
+		Menu firstMenu5Sub2 = new Menu("5_2","SQL备份","page/sqlonline/sqlback.html",MENU_TYPE_NODE);
+
+		firstMenu5.getSubMenus().add(firstMenu5Sub);
+		firstMenu5.getSubMenus().add(firstMenu5Sub2);
+
+		menus.add(firstMenu5);
+		
+		
         //屏蔽 2015-12-12 sohudo  
 		Menu mycatzone=getMycatZoneMenu();
 		

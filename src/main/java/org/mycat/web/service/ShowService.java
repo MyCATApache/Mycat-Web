@@ -1,12 +1,25 @@
 package org.mycat.web.service;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
+import org.mycat.web.task.server.ShowMycatProcessor;
 import org.mycat.web.util.DataSourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service; 
+import org.springframework.stereotype.Service;
+
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 
 @Lazy
 @Service
@@ -40,6 +53,7 @@ public class ShowService extends BaseService {
 				super.query(context, SYSPARAM_NAMESPACE, "setsqlslow");
 			}			
 		} 
+		
 		super.query(context, SYSPARAM_NAMESPACE, cmd); 
 		return context;
 	}
@@ -57,6 +71,121 @@ public class ShowService extends BaseService {
 	
 	public RainbowContext sql(RainbowContext context) {
 		return baseQuery(context, SYSSQL_NAMESPACE, "sql");
+	}
+	
+	
+	public RainbowContext sqlonline(RainbowContext context,String command) {
+		String tmpdir=System.getProperty("java.io.tmpdir");
+		String clientip=(String)context.getAttr("ip");
+		String fileindex="";
+		String filename;
+		String remotefilename;
+		Session session = null;
+		Channel channel = null;
+		JSch jsch = new JSch();
+		
+		if(clientip.indexOf(".")>0)
+		{
+			
+			fileindex=clientip.substring(clientip.lastIndexOf(".")+1);
+			
+			
+		}
+		else if (clientip.indexOf(":")>0)
+		{
+			fileindex=clientip.substring(clientip.lastIndexOf(":")+1);
+		}
+		filename=tmpdir+"/sqlcheck"+fileindex+".sql";
+		remotefilename="/tmp/sqlcheck"+fileindex+".sql";
+		command="sqlwatch <"+remotefilename+" 2>&1|grep "+command+"|grep -v Aborting$|uniq";
+		try
+		{
+			  File file =new File(filename);
+		      //if file doesnt exists, then create it
+		      if(file.exists()){
+		    	  file.delete();  
+		       file.createNewFile();
+		      }
+		      else
+		      {
+		    	  file.createNewFile();
+		      }
+		      FileWriter fileWritter = new FileWriter(filename);
+		  
+		      fileWritter.write((String)context.getAttr("sql"));
+		      fileWritter.close();
+        
+		      
+		      session = jsch.getSession(ShowMycatProcessor.ShowMycatSqlonlineUser(),ShowMycatProcessor.ShowMycatSqlonlineServer(),22);
+				session.setPassword(ShowMycatProcessor.ShowMycatSqlonlinePasswd());
+				session.setConfig("StrictHostKeyChecking", "no");
+				//设置登陆超时时间   
+			    session.connect(30000);
+			    
+			    channel = session.openChannel("sftp");
+			    channel.connect();
+			    ChannelSftp csftp = (ChannelSftp) channel;
+			    csftp.put(filename,remotefilename);
+			    csftp.disconnect();
+			    
+			    channel = (Channel) session.openChannel("exec");
+			    ((ChannelExec) channel).setCommand(command);  
+			    channel.connect();
+			    
+			    InputStream instream = channel.getInputStream();
+		        
+		        StringBuffer sb = new StringBuffer(4096);
+		        
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(instream));  
+		        String buf = null;  
+		        while ((buf = reader.readLine()) != null)  
+		        {  
+		        	sb.append(buf);
+		        	sb.append("\n;");
+		        }  
+		        
+		        reader.close();  
+		        
+		        channel.disconnect();  
+		        session.disconnect(); 
+		        
+		        if(sb.toString().indexOf("ERROR")>-1)
+		        {
+		        	context.setMsg(sb.toString());
+		        }
+		        else if(sb.toString().indexOf("dbtablename ")>-1)
+		        {
+		        	context.setMsg(sb.toString().replace("dbtablename", "mysqldump"));
+		        }
+		        else
+		        {
+		        	context.setMsg("check sql ok!");
+		        }
+		        System.out.println(context.getMsg());
+			    
+		}catch ( Exception e)
+		{
+			
+			  context.setMsg(e.getMessage());
+		}
+		
+		
+		
+		
+		
+		System.out.println("tmpdir:"+tmpdir);
+		
+		
+		return context;
+	}
+	public RainbowContext sqlcheck(RainbowContext context) {
+		return sqlonline(context,"ERROR");
+	
+	}
+	
+	public RainbowContext sqlback(RainbowContext context) {
+		return sqlonline(context,"dbtablename");
+	
 	}
 	
 	public RainbowContext sqlslow(RainbowContext context) { 
