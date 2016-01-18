@@ -1,6 +1,8 @@
 # mycat-web
 Mycat-web 是对mycat-server提供监控服务。功能不局限于对mycat-server使用。他基于jmx对所有JVM监控。通过JDBC连接对Mycat、Mysql
 监控。基于snmp协议，监控远程服务器(目前仅限于linux系统)的cpu、内存、网络、磁盘。
+
+支持SQL上线，基于sqlwatch开源项目，具备SQL语法检查和备份数据识别，释放DBA精力。
 ###<b> 新增 mycat all in one 镜像下载</b> <br/><br/>
 mycat all in one 是 mycat-server,mycat-web,mysql，zookeeper 于一身的测试开发环境，是您开发测试必备良器，
 您只需要执行如下几个步骤便可开启属于您的 mycat 之旅 :
@@ -57,4 +59,12 @@ mycat all in one 是 mycat-server,mycat-web,mysql，zookeeper 于一身的测试
 ````
 service network restart
 ````
-来让刚刚修改过的文件生效即可</b>
+来让刚刚修改过的文件生效即可
+
+mycat web SQL上线配置参考（可选）
+````
+修改mycat.properties文件的sqlwatch相关访问参数配置，具体参考sqlwatch.md
+````
+</b>
+
+
