@@ -58,3 +58,10 @@ mycat all in one 是 mycat-server,mycat-web,mysql，zookeeper 于一身的测试
 service network restart
 ````
 来让刚刚修改过的文件生效即可</b>
+
+
+mycat web SQL上线配置参考（可选）
+````
+修改mycat.properties文件的访问sqlwatch参数配置，具体参考sqlwatch.md
+````
+</b>
