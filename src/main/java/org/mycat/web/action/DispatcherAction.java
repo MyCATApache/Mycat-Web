@@ -233,5 +233,7 @@ public class DispatcherAction {
 				context.addAttr(key, request.getParameter(key));
 			}
 		}
+		
+		context.addAttr("ip",request.getRemoteAddr());       //add by xuliang 20160114
 	}
 }
