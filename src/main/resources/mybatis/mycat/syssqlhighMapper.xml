@@ -6,6 +6,7 @@
 	
 	<select id="insert" parameterType="map">
 		INSERT INTO t_mycat_syssqlhig (
+		    DB_NAME,
 			AVG_TIME,
 			MAX_TIME,
 			EXECUTE_TIME,
@@ -17,6 +18,7 @@
 			CONTENT
 		) 
 		values(  
+		    #{DB_NAME, jdbcType=VARCHAR},
 			#{AVG_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{MAX_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
@@ -32,6 +34,9 @@
 	<select id="query" parameterType="map" resultType="map">
 		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM , CONTENT as "SQL" from t_mycat_syssqlhig 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="ID >= 0">
 				and ID = #{ID}
 			</if> 
@@ -45,6 +50,9 @@
 	<select id="sqlhigh" parameterType="map" resultType="map">
 		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL" from t_mycat_syssqlhig
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="ID != null">
 				and ID = #{ID}
 			</if>
@@ -58,6 +66,9 @@
 	<select id="sqlhighCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqlhig 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="ID != null">
 				and ID = #{ID}
 			</if>

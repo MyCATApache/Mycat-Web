@@ -7,6 +7,7 @@ import java.util.Map;
 import org.hx.rainbow.common.core.SpringApplicationContext; 
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
+import org.mycat.web.util.DataSourceUtils;
 
 /*
  * 异步持久化mycat中数据
@@ -24,10 +25,11 @@ public class SyncSysSqlhigh implements ITask {
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sqlhigh"); 
 		for(Map<String,Object> entry : list){
 			entry.put("LAST_TM", new Date((long) entry.get("LAST_TIME")));
-			Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
-			if(entity == null){ 
+			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
+			//Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
+			//if(entity == null){ 
 				showService.getDao().insert(NAMESPACE, "insert", entry);
-			}
+			//}
 		} 
 		
 		 
