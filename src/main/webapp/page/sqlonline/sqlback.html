@@ -1,0 +1,157 @@
+<!-- Content Header (Page header) -->
+<style type="text/css">
+.form-control {
+display: block;
+width: 100%;
+height: 480px;
+padding: 6px 12px;
+font-size: 14px;
+line-height: 1.42857143;
+color: #555;
+background-color: #fff;
+background-image: none;
+border: 1px solid #ccc;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+textarea#sql  {width:800px;height:480px;}
+</style>
+<section class="content-header">
+	<h1>SQL语法检测</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>SQL上线</a></li>
+		<li><a href="#"></i>SQL备份数据识别</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+				<div class="box-header">
+					<form action="" id="query_Form">
+					
+								<div class="form-group">
+	    		<textarea class="inputfd longtext" name="sql" id="sql" ></textarea>
+								</div>
+					
+					</form>
+				</div>
+				<div class="box-footer">
+					<div class="form-group">
+						<div class="col-lg-offset-5 col-lg-2">
+							<button class="btn btn-primary" onclick="sqlcheck()">备份数据识别</button>
+							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">解析结果</h3>
+				</div>
+				<div class="box-body">
+					<div class="form-group" id="hostDetailtable">
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<a class="modal-title" id="mysqlexplain">SQL解析信息</a>
+			</div>
+			<div class="modal-body" id="explainDetail">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+	var dataNodeParam = "";
+	var sqlParam = "";
+	var Selected_Callback = function(target_select) {
+		this.onSuccess = function(data) {
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					var length = j_obj.rows.length;
+					for (var i = 0; i < length; i++) {
+						var mycatName = j_obj.rows[i].mycatName;
+						$("#" + target_select).append(
+								"<option value=\""+ mycatName+"\">" + mycatName
+										+ "</option>");
+					}
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	};
+
+
+
+	var sqlcheck = function() {
+		 $('#hostDetailtable').html("");
+		var rainbow = new Rainbow();
+		rainbow.setService("showService");
+		rainbow.setMethod("sqlback");
+		rainbow.setParam("sql", $('#sql').val());
+		rainbowAjax.query(rainbow, new function(){
+			this.onSuccess = function(data) {
+				 try {
+				
+					 var detail= "";
+					 var str= new Array();  
+					 str=data.msg.split(";");     
+					 for (i=0;i<str.length ;i++ )  
+						 {
+						 detail = detail +"<a class=\"box-title\" ><font  color=\"#FF0000\">"+ str[i]+"</font></a><br/>";
+						 }
+					 $('#hostDetailtable').html(detail);
+					
+				} catch (e) {
+					alert(e);
+				} 
+			};
+			this.onFail = function(jqXHR, textStatus, errorThrown) {
+				
+			};
+		});
+		
+	};
+	
+
+	$(document)
+			.ready(
+					function() {
+
+					
+					});
+</script>

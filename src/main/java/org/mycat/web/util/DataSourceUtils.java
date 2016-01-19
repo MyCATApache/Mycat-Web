@@ -104,7 +104,15 @@ public class DataSourceUtils {
 	public boolean register(String dbName) throws Exception {
 		return register(dbName, DEFULAT_MYCAT_MANGER);
 	}
-
+	public String getDbName(String dbName)  {
+		int n_pos = dbName.indexOf(DEFULAT_MYCAT_MANGER);
+		if (n_pos>0) {
+		   return dbName.substring(0,n_pos);
+		}
+		else {
+		   return dbName;
+		}
+	}
 	public  void remove(String dbName) {
 		SpringApplicationContext.removeBeans(dbName + NAME_SUFFIX, dbName + "sqlSessionFactory", dbName + "sqlSessionTemplate", dbName
 				+ "transactionManager");

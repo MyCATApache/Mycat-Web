@@ -98,6 +98,7 @@
 		<spring-framework.version>4.1.6.RELEASE</spring-framework.version>
 
 		<druid-version>1.0.14</druid-version>
+		<jsch-version>0.1.53</jsch-version>
 		<jstl.version>1.2</jstl.version>
 		<fastjson.version>1.1.22</fastjson.version>
 
@@ -137,7 +138,12 @@
            <groupId>com.alibaba</groupId>
            <artifactId>druid</artifactId>
            <version>${druid-version}</version>
-        </dependency>		
+        </dependency>	
+        <dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>${jsch-version}</version>
+	    </dependency>	
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>

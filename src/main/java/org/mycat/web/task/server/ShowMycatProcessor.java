@@ -32,4 +32,19 @@ public class ShowMycatProcessor extends BaseService implements ITask {
 		}
 	}
 
+	public static String ShowMycatSqlonlineServer(){
+	return (String)RainbowProperties.getProperties("sqlonline.server");
+
+	}
+	
+	public static String ShowMycatSqlonlineUser(){
+		return (String)RainbowProperties.getProperties("sqlonline.user");
+
+		}
+	
+	public static String ShowMycatSqlonlinePasswd(){
+		return (String)RainbowProperties.getProperties("sqlonline.passwd");
+
+		}
+	
 }
