@@ -61,7 +61,7 @@ public class ShowService extends BaseService {
 	
 	public RainbowContext baseQuery(RainbowContext context,String namespace ,String cmd) {  
 		String datasource = (String)context.getAttr("ds");
-		if(datasource ==  null || datasource.isEmpty()){
+		if(!(datasource ==  null || datasource.isEmpty())){
 			context.addAttr("DB_NAME", datasource);
 		}		
 		super.queryByPage(context, namespace, cmd, cmd+"Count"); 
