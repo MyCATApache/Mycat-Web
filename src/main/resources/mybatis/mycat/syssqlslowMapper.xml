@@ -6,6 +6,7 @@
 	
 	<select id="insert" parameterType="map">
 		INSERT INTO t_mycat_syssqlslow (
+		    DB_NAME,
 			START_TIME,
 		    START_TM,
 			EXECUTE_TIME, 
@@ -13,6 +14,7 @@
 			CONTENT
 		) 
 		values(
+		    #{DB_NAME, jdbcType=VARCHAR},
 			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{START_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },			
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
@@ -24,6 +26,9 @@
 	<select id="query" parameterType="map" resultType="map">
 		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
 		<where>  
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="START_TIME != null">
 				and START_TIME = #{START_TIME}
 			</if>			
@@ -34,6 +39,9 @@
 	<select id="sqlslow" parameterType="map" resultType="map">
 		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
 			</if>
@@ -47,6 +55,9 @@
 	<select id="sqlslowCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqlslow 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
 			</if>

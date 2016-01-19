@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.hx.rainbow.common.core.SpringApplicationContext; 
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
+import org.mycat.web.util.DataSourceUtils;
 
 /*
  * 异步持久化mycat中数据
@@ -40,6 +41,7 @@ public class SyncSysSqtable implements ITask {
 			entry.put("LAST_TM", new Date((long) entry.get("LAST_TIME"))); 
 			entry.put("PERCENT_R", entry.get("R%"));
 			entry.remove("R%");
+			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
 			Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
 			if(entity == null){ 
 				showService.getDao().insert(NAMESPACE, "insert", entry); 

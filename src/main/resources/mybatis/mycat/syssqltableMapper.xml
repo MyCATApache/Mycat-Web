@@ -6,6 +6,7 @@
 	
 	<select id="insert" parameterType="map">
 		INSERT INTO t_mycat_syssqltable (
+		    DB_NAME,
 			DB_TABLE,
 		    RELACOUNT,
 			R, 
@@ -17,6 +18,7 @@
 			LAST_TM
 		) 
 		values(
+		    #{DB_NAME, jdbcType=VARCHAR},
 			#{TABLE, jdbcType=VARCHAR},
 			#{RELACOUNT, jdbcType=VARCHAR},
 			#{R, jdbcType=NUMERIC,typeHandler=NumberHandler}, 		
@@ -60,8 +62,11 @@
 		</set> 
 		<where>  
 			<if test="TABLE != null">
-				DB_TABLE = #{TABLE, jdbcType=VARCHAR}
+				and DB_TABLE = #{TABLE, jdbcType=VARCHAR}
 			</if> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 			
 		</where>
 	</update>
 	
@@ -77,6 +82,9 @@
 			LAST_TM
 			from t_mycat_syssqltable 
 		<where>  
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="TABLE != null">
 				and DB_TABLE = #{TABLE}
 			</if>  
@@ -96,6 +104,9 @@
 			LAST_TM
 			from t_mycat_syssqltable 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
@@ -106,6 +117,9 @@
 	<select id="sqlsumtableCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqltable 
 		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
