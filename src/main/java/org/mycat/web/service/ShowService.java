@@ -224,5 +224,10 @@ public class ShowService extends BaseService {
 	public RainbowContext dataSouceDetail(RainbowContext context) {
 		return base(context,"dataSouceDetail");
 	}
-	
+	public RainbowContext whitehost(RainbowContext context) {
+		return base(context,"whitehost");
+	}
+	public RainbowContext addWhitehost(RainbowContext context) {
+		return base(context,"addWhitehost");
+	}
 }
