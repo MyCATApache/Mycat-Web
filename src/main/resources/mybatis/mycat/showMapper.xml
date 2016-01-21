@@ -43,4 +43,10 @@
 	<select id="dataSouceDetail" resultType="map" parameterType="map">
 		 show @@datasource.syndetail where name=${dataSouceName}
 	</select>	
+	<select id="whitehost" resultType="map" parameterType="map">
+		 show @@white
+	</select>	
+	<select id="addWhitehost" resultType="map" parameterType="map">
+		 show @@white.set=${ip},${username}
+	</select>	
 </mapper>
