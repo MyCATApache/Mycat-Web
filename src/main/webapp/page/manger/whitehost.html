@@ -60,71 +60,6 @@
 	   </div>
 	 </div>
  </div>
- 
- 
-<div class="modal fade" id="showInfo" tabindex="-1" role="dialog" 
-   aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" 
-               data-dismiss="modal" aria-hidden="true">
-                  &times;
-            </button>
-            <h4 class="modal-title" id="myModalLabel">
-               修改页面
-            </h4>
-         </div>
-         <div class="modal-body">
-			
-			<form action="" id="modify_form">
-			
-			<div class="row">
-	             <div class="col-xs-6">
-	             
-					<div class="form-group">
-		              <input type=hidden id="guid" name="guid"  />
-	                     <label for="text">Mycat名称(必须为英文哦):</label>
-		                  <input id="mycatName" type="text" name="mycatName" class="form-control"  validateType = "lengthRange-1-20|excludeCN"  placeholder="Mycat名称(必须问英文哦)">
-	                  </div>
-	                   <!-- json  -->
-	                  <div class="form-group">
-	                     <label for="IP">IP地址:</label>
-		                  <input id="ip" type="text" name="ip" class="form-control" placeholder="IP地址" validateType="lengthRange-1-100">
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="username">端口:</label>
-		                  <input id="port" type="text" name="port" class="form-control" placeholder="端口" validateType="lengthRange-1-100">
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="server">数据库名称:</label>
-		                  <input id="dbName" type="text" name="dbName" class="form-control" placeholder="数据库名称" validateType="lengthRange-1-100">
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="user">用户名:</label>
-		                  <input id="username" type="text" name="username" class="form-control" placeholder="用户名" validateType="lengthRange-1-100">
-	                  </div>
-	                  <div class="form-group">
-	                     <label for="pwd">密码:</label>
-		                  <input id="password" type="password" name="password" class="form-control" placeholder="密码" validateType="lengthRange-1-100">
-	                  </div>
-	                  	                  
-	             </div>
-	            </div> 
-			</form>
-			
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" 
-               data-dismiss="modal">关闭
-            </button>
-            <button id="modify_btn" onclick="javascript:updateForm('mycatService','update','modify_form','updateForm_extra_call');" type="button" class="btn btn-primary">
-               	修改
-            </button>
-         </div>
-      </div><!-- /.modal-content -->
-</div><!-- /.modal -->
-</div>
 </section><!-- /.content -->
 
 
@@ -134,6 +69,7 @@
 
 <script type="text/javascript">
 
+var whiltehost_datasouce;
 function ready4Update_extra_call(modifyForm_obj,row,attr_){
 	  if(attr_ == 'value'){
 		  var value_obj = jQuery.parseJSON(row[attr_]);
@@ -143,14 +79,6 @@ function ready4Update_extra_call(modifyForm_obj,row,attr_){
 	  }
 }
 
-function updateForm_extra_call(form_id,data){
-	   var value_obj = {};
-	   value_obj.url = data.url;
-	   value_obj.driverClassName = data.driverClassName;
-	   value_obj.username = data.username;
-	   value_obj.password = data.password;
-	   data.value = JSON.stringify(value_obj);
-}
 
 var datasouce_change = function(){
 	queryForm('query_Form');
