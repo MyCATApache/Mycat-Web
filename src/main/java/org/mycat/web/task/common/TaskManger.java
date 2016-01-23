@@ -31,7 +31,6 @@ public class TaskManger {
             	Date nowDate = new Date();
         		for(String dbName : dbNames){
         			try{
-        				System.out.println("dbName=============" + dbName);
         				task.excute(dbName, nowDate);
         			}catch(Exception ex){
                 		ex.printStackTrace();

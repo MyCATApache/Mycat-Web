@@ -48,16 +48,19 @@
 	</select>
 	
 	<select id="sqlhigh" parameterType="map" resultType="map">
-		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL" from t_mycat_syssqlhig
+		select AVG_TIME, MAX_TIME, DB_NAME as "dbName", EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL", username from t_mycat_syssqlhig
 		<where> 
-			<if test="DB_NAME != null">
-				and DB_NAME = #{DB_NAME}
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
 			</if> 		
 			<if test="ID != null">
 				and ID = #{ID}
 			</if>
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
+			</if>
+			<if test="username != null">
+				and username =  #{username}
 			</if>
 			 
 		</where>
@@ -66,8 +69,8 @@
 	<select id="sqlhighCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqlhig 
 		<where> 
-			<if test="DB_NAME != null">
-				and DB_NAME = #{DB_NAME}
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
 			</if> 		
 			<if test="ID != null">
 				and ID = #{ID}
@@ -75,7 +78,9 @@
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if>
-			 
+			 <if test="username != null">
+				and username =  #{username}
+			</if>
 		</where> 
 	</select>
 </mapper>

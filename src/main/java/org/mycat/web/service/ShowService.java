@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
+import org.hx.rainbow.common.util.JsonUtil;
 import org.mycat.web.task.server.ShowMycatProcessor;
 import org.mycat.web.util.DataSourceUtils;
 import org.slf4j.Logger;
@@ -59,11 +60,7 @@ public class ShowService extends BaseService {
 	}
 	
 	
-	public RainbowContext baseQuery(RainbowContext context,String namespace ,String cmd) {  
-		String datasource = (String)context.getAttr("ds");
-		if(!(datasource ==  null || datasource.isEmpty())){
-			context.addAttr("DB_NAME", datasource);
-		}		
+	public RainbowContext baseQuery(RainbowContext context,String namespace ,String cmd) {  		
 		super.queryByPage(context, namespace, cmd, cmd+"Count"); 
 		return context;
 	}
@@ -228,6 +225,7 @@ public class ShowService extends BaseService {
 		return base(context,"whitehost");
 	}
 	public RainbowContext addWhitehost(RainbowContext context) {
-		return base(context,"addWhitehost");
+		System.out.println(context.getAttr().toString());
+		return base(context,"addwhitehost");
 	}
 }
