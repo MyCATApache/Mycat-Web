@@ -61,6 +61,10 @@ public class ShowService extends BaseService {
 	
 	
 	public RainbowContext baseQuery(RainbowContext context,String namespace ,String cmd) {  		
+				String datasource = (String)context.getAttr("ds");		
+		 		if(!(datasource ==  null || datasource.isEmpty())){		
+		 			context.addAttr("DB_NAME", datasource);		
+		 		}
 		super.queryByPage(context, namespace, cmd, cmd+"Count"); 
 		return context;
 	}
@@ -201,6 +205,9 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlsumtable(RainbowContext context) {
 		return baseQuery(context, SYSSQLTABLE_NAMESPACE, "sqlsumtable");  
 	}	
+	public RainbowContext sqlsumtableInfo(RainbowContext context) {
+		return baseQuery(context, SYSSQLTABLE_NAMESPACE, "sqlsumtableInfo");  
+	}		
 	public RainbowContext syslog(RainbowContext context) {
 		return base(context,"syslog");
 	}	

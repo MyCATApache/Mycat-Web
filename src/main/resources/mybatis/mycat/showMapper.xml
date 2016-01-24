@@ -8,17 +8,17 @@
 	</select>
 	
 	<select id="sql" resultType="map" parameterType="map">
-		show @@sql
+		show @@sql true
 	</select>
 	
 	<select id="setsqlslow" resultType="map" parameterType="map">
 		reload @@sqlslow=${threshold}
 	</select>		
 	<select id="sqlslow" resultType="map" parameterType="map">
-		show @@sql.slow
+		show @@sql.slow true
 	</select>	
 	<select id="sqlhigh" resultType="map" parameterType="map">
-		show @@sql.high
+		show @@sql.high true
 	</select>		
 	<select id="syslog" resultType="map" parameterType="map">
 		show @@syslog limit=50
@@ -27,7 +27,7 @@
 		show @@sql.sum
 	</select>
 	<select id="sqlsumtable" resultType="map" parameterType="map">
-		show @@sql.sum.table
+		show @@sql.sum.table true
 	</select>		
 	<select id="heartbeat" resultType="map" parameterType="map">
 		show @@heartbeat
