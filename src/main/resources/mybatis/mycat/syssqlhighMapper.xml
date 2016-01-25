@@ -49,7 +49,7 @@
 		 limit 1;
 	</select>
 	
-	<select id="sqlhigh2" parameterType="map" resultType="map">
+	<select id="sqlhighInfo" parameterType="map" resultType="map">
 		select AVG_TIME, MAX_TIME, DB_NAME as "dbName", EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL", username from t_mycat_syssqlhig
 		<where> 
 			<if test="dbName != null">
@@ -64,11 +64,13 @@
 			<if test="username != null">
 				and username =  #{username}
 			</if>
-			 
+			 <if test="CONTENT != null">
+				and CONTENT =  #{CONTENT}
+			</if>			 
 		</where>
 	</select>
 	<select id="sqlhigh" parameterType="map" resultType="map">
-		select avg(AVG_TIME) as AVG_TIME, max(MAX_TIME) as MAX_TIME, DB_NAME as "dbName", sum(EXECUTE_TIME) as EXECUTE_TIME, sum(FREQUENCY) as FREQUENCY, MIN_TIME,   CONTENT as "SQL", username from t_mycat_syssqlhig
+		select avg(AVG_TIME) as AVG_TIME, max(MAX_TIME) as MAX_TIME, DB_NAME as "dbName", (sum(EXECUTE_TIME)/count(EXECUTE_TIME)) as EXECUTE_TIME, sum(FREQUENCY) as FREQUENCY, min(MIN_TIME) as MIN_TIME,   CONTENT as "SQL", username from t_mycat_syssqlhig
 		<where> 
 			<if test="dbName != null">
 				and DB_NAME = #{dbName}
@@ -105,7 +107,7 @@
 		group by CONTENT,username,DB_NAME) as atable
 	</select>
 	
-	<select id="sqlhighCount2" parameterType="map" resultType="int">
+	<select id="sqlhighInfoCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqlhig 
 		<where> 
 			<if test="dbName != null">
@@ -120,6 +122,9 @@
 			 <if test="username != null">
 				and username =  #{username}
 			</if>
+			 <if test="CONTENT != null">
+				and CONTENT =  #{CONTENT}
+			</if>			
 		</where> 
 	</select>	
 </mapper>

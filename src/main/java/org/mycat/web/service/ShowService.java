@@ -199,6 +199,9 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlhigh(RainbowContext context) {
 		return baseQuery(context, SYSSQLHIGH_NAMESPACE, "sqlhigh"); 
 	}	
+	public RainbowContext sqlhighInfo(RainbowContext context) {
+		return baseQuery(context, SYSSQLHIGH_NAMESPACE, "sqlhighInfo"); 
+	}		
 	public RainbowContext sqlsum(RainbowContext context) {
 		return base(context,"sqlsum");
 	}

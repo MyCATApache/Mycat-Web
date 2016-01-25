@@ -83,9 +83,32 @@
 </section>
 <!-- /.content -->
 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="mysqlexplain">高频SQL分析信息</h4>
+			</div>
+			<div class="modal-body" id="explainDetail">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
 	$.AdminLTE.boxWidget.activate();
+	var dataSource = "";
+	var sqlParam = "";   
+	var dataUsername="";
 </script>
 
 <script type="text/javascript">
@@ -192,12 +215,39 @@
 		var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlhigh&fileName=sqlhigh";
 		window.location = url;
 	}
-
+	
+	var explainMysql12 = function(dataNode, sql) {
+		$('#explainDetail').load('./page/sql/sqlhighreport.html?v=' + Math.random());
+		$('#myModal').modal({
+			show : true
+		});
+		dataSource = $('#datasource').val();
+		dataUsername=username;
+		sqlParam = sql;
+		var daterange = $('#reservationtime').val().split('~');
+		var begin = daterange[0].trim();
+		var end = daterange[1].trim();
+		$('#begin').val(begin);
+		$('#end').val(end);			
+	};
+	
 	$(document)
 			.ready(
 					function() {
 						var cols = [
-
+									{
+										title : '操作',
+										name : 'operation',
+										width : 100,
+										align : 'center',
+										renderer : function(val, item, rowIndex) {
+											//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+											return '<button  class="btn btn-primary btn-xs modify"  onclick="explainMysql12(\''
+													+ item.username
+													+ '\',\''
+													+ item.SQL + '\')">分析</button>';
+										}
+									},
 								{
 									title : '频率',
 									name : 'FREQUENCY',
