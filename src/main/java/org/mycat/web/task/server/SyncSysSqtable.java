@@ -42,12 +42,12 @@ public class SyncSysSqtable implements ITask {
 			entry.put("PERCENT_R", entry.get("R%"));
 			entry.remove("R%");
 			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
-			Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
-			if(entity == null){ 
+			//Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
+			//if(entity == null){ 
 				showService.getDao().insert(NAMESPACE, "insert", entry); 
-			}else{
-				showService.getDao().insert(NAMESPACE, "update", entry); 
-			}
+			//}else{
+		//		showService.getDao().insert(NAMESPACE, "update", entry); 
+		//	}
 		} 
  
 		list.clear(); 

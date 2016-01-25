@@ -22,6 +22,8 @@
 				</div>
 				<div class="box-body">
 					<form action="" id="query_Form">
+				 		<input name="begin" id="begin" type="hidden"/> 
+				 		<input name="end" id="end" type="hidden"/>					
 						<div class="row">
 							<div class="col-xs-3">
 								<div class="form-group">
@@ -115,7 +117,7 @@
 		var begin = daterange[0].trim();
 		var end = daterange[1].trim();
 		$('#begin').val(begin);
-		$('#end').val(end);
+		$('#end').val(end);		
 		queryForm('query_Form');
 	}
 
@@ -158,7 +160,7 @@
 		var end = daterange[1].trim();
 		$('#begin').val(begin);
 		$('#end').val(end);
-
+	//	alert(begin);
 		queryForm('query_Form');
 	});
 
@@ -245,21 +247,21 @@
 									align : 'left',
 									sortable : true,
 									type : 'number'
-								},
-								{
-									title : '最后执行',
-									name : 'LAST_TIME',
-									width : 160,
-									align : 'left',
-									sortable : true,
-									renderer : function(val) {
-										console.debug("vv:" + val);
-										var d = new Date(val)
-												.format("yyyy-MM-dd hh:mm:ss");
-										;
-										return d;
-									}
 								}
+								//{
+								//	title : '最后执行',
+								//	name : 'LAST_TIME',
+								//	width : 160,
+								//	align : 'left',
+								//	sortable : true,
+								//	renderer : function(val) {
+								//		console.debug("vv:" + val);
+								//		var d = new Date(val)
+								//				.format("yyyy-MM-dd hh:mm:ss");
+							//			;
+							//			return d;
+							//		}
+							//	}
 
 						];
 						mmgrid = $('#table')

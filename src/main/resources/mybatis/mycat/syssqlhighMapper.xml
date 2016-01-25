@@ -15,7 +15,8 @@
 			ID,
 			LAST_TIME,
 			LAST_TM,
-			CONTENT
+			CONTENT,
+			username
 		) 
 		values(  
 		    #{DB_NAME, jdbcType=VARCHAR},
@@ -27,7 +28,8 @@
 			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
 			#{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },  
-			#{SQL, jdbcType=NVARCHAR}
+			#{SQL, jdbcType=NVARCHAR},
+			#{USER, jdbcType=VARCHAR}
 		)
 	</select>
 	
@@ -47,7 +49,7 @@
 		 limit 1;
 	</select>
 	
-	<select id="sqlhigh" parameterType="map" resultType="map">
+	<select id="sqlhigh2" parameterType="map" resultType="map">
 		select AVG_TIME, MAX_TIME, DB_NAME as "dbName", EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL", username from t_mycat_syssqlhig
 		<where> 
 			<if test="dbName != null">
@@ -65,8 +67,45 @@
 			 
 		</where>
 	</select>
-	
+	<select id="sqlhigh" parameterType="map" resultType="map">
+		select avg(AVG_TIME) as AVG_TIME, max(MAX_TIME) as MAX_TIME, DB_NAME as "dbName", sum(EXECUTE_TIME) as EXECUTE_TIME, sum(FREQUENCY) as FREQUENCY, MIN_TIME,   CONTENT as "SQL", username from t_mycat_syssqlhig
+		<where> 
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if> 		
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			<if test="username != null">
+				and username =  #{username}
+			</if>			 
+		</where>
+		group by CONTENT,username,DB_NAME
+	</select>
+		
 	<select id="sqlhighCount" parameterType="map" resultType="int">
+		select count(1) from (select count(1) from t_mycat_syssqlhig 
+		<where> 
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if> 		
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			 <if test="username != null">
+				and username =  #{username}
+			</if>			
+		</where> 
+		group by CONTENT,username,DB_NAME) as atable
+	</select>
+	
+	<select id="sqlhighCount2" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqlhig 
 		<where> 
 			<if test="dbName != null">
@@ -82,5 +121,5 @@
 				and username =  #{username}
 			</if>
 		</where> 
-	</select>
+	</select>	
 </mapper>

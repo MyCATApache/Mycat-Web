@@ -88,11 +88,53 @@
 			<if test="TABLE != null">
 				and DB_TABLE = #{TABLE}
 			</if>  
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
 		</where>
 		 limit 1;
 	</select>
 	
 	<select id="sqlsumtable" parameterType="map" resultType="map">
+		select 
+		    DB_NAME,
+		    DB_TABLE,
+			sum(R) as R, 
+			sum(R)/(sum(R)+sum(W)) as PERCENT_R,
+			sum(W) as W
+			
+			from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				 
+		</where>
+		group by DB_NAME,DB_TABLE
+	</select>
+	
+	<select id="sqlsumtableCount" parameterType="map" resultType="int">
+		select count(1) from (select count(1) from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
+		</where> 
+		group by DB_NAME,DB_TABLE) atable
+	</select>
+	
+	<select id="sqlsumtableInfo" parameterType="map" resultType="map">
 		select DB_TABLE,
 		    RELACOUNT,
 			R, 
@@ -110,11 +152,13 @@
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
-			 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				 
 		</where>
 	</select>
 	
-	<select id="sqlsumtableCount" parameterType="map" resultType="int">
+	<select id="sqlsumtableInfoCount" parameterType="map" resultType="int">
 		select count(1) from t_mycat_syssqltable 
 		<where> 
 			<if test="DB_NAME != null">
@@ -123,6 +167,9 @@
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
 		</where> 
-	</select>
+	</select>	
 </mapper>

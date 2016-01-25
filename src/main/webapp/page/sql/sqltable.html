@@ -69,10 +69,31 @@
 	</div>
 </section>
 <!-- /.content -->
-
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="mysqlexplain">表分析信息</h4>
+			</div>
+			<div class="modal-body" id="explainDetail">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
    $.AdminLTE.boxWidget.activate();
+	var dataSource = "";
+	var sqlParam = "";   
 </script>
 
 <script type="text/javascript">
@@ -181,7 +202,7 @@ var Selected_Callback = function(target_select){
 				}
 				
 			} catch (e) {
-				alert("异常!")
+				alert("异常AA!")
 			}
 		};
 		this.onFail = function(jqXHR, textStatus, errorThrown){
@@ -195,25 +216,45 @@ var initDataSouce = function(){
 	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
 
-
+var explainMysql12 = function(dataNode, sql) {
+	$('#explainDetail').load('./page/sql/sqlreport.html?v=' + Math.random());
+	$('#myModal').modal({
+		show : true
+	});
+	dataSource = $('#datasource').val();
+	sqlParam = sql;
+};
 $(document).ready(function() {
 	initDataSouce();
 	
     var cols = [
 				{ title:'ID', name:'ID', width:60, align:'left'},
+				{
+					title : '操作',
+					name : 'operation',
+					width : 100,
+					align : 'center',
+					renderer : function(val, item, rowIndex) {
+						//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+						return '<button  class="btn btn-primary btn-xs modify"  onclick="explainMysql12(\''
+								+ item.R
+								+ '\',\''
+								+ item.DB_TABLE + '\')">分析</button>';
+					}
+				},
 				{ title:'表名', name:'DB_TABLE', width:200, align:'left'},
 				{ title:'读次数', name:'R', width:100, align:'left', sortable:true,type:'number'},
 				{ title:'写次数', name:'W', width:100, align:'left', sortable:true,type:'number'},
-				{ title:'读占比', name:'R%', width:60, align:'left', sortable:true,type:'number'},
-				{ title:'关联表', name:'RELATABLE', width:260, align:'left'},
-				{ title:'关联次数', name:'RELACOUNT', width:60, align:'left'},
-		        { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left',  sortable:true,
-		        	renderer: function(val){
-		        		console.debug( "vv:" + val);
-		        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
-		        		return d;
-		        	} 
-		        }
+				{ title:'读占比', name:'PERCENT_R', width:60, align:'left', sortable:true,type:'number'}
+				//{ title:'关联表', name:'RELATABLE', width:260, align:'left'},
+				//{ title:'关联次数', name:'RELACOUNT', width:60, align:'left'},
+		      //  { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left',  sortable:true,
+		      //  	renderer: function(val){
+		      //  		console.debug( "vv:" + val);
+		     //   		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
+		      //  		return d;
+		      //  	} 
+		     //   }
 	    ];
 		    
    		mmgrid = $('#table').mmGrid({

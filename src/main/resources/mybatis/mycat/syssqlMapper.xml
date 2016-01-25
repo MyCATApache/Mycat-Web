@@ -36,7 +36,10 @@
 			</if> 
 			<if test="START_TIME != null">
 				and START_TIME = #{START_TIME}
-			</if>			
+			</if>	
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>						
 		</where>
 		 limit 1;
 	</select>
@@ -53,7 +56,9 @@
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
 			</if>
-			 
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>			 
 		</where>
 	</select>
 	
@@ -69,7 +74,9 @@
 			<if test="begin != null and end != null">
 				and START_TM between #{begin} and #{end}
 			</if>
-			 
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>			 
 		</where> 
 	</select>
 </mapper>
