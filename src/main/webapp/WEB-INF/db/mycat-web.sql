@@ -51,6 +51,7 @@ CREATE TABLE `t_mycat_syssqlhig` (
   `LAST_TIME` bigint(15) DEFAULT NULL,
   `CONTENT` text,
   `LAST_TM` datetime DEFAULT NULL,
+  `username` varchar(30) DEFAULT NULL,
   PRIMARY KEY (`SID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
