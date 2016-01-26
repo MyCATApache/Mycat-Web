@@ -28,8 +28,10 @@ public class SyncSysSqlsum implements ITask {
 			entry.put("LAST_TM", DateUtil.toDateTimeString(new Date((long) entry.get("LAST_TIME")))); 
 			entry.put("PERCENT_R", entry.get("R%"));
 			entry.remove("R%"); 
-			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
-			showService.getDao().insert(NAMESPACE, "insert", entry);  
+			if (((long)entry.get("R")>0) || ((long)entry.get("W")>0) ) {
+			  entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
+			  showService.getDao().insert(NAMESPACE, "insert", entry);  
+			}
 		} 
  
 		list.clear(); 
