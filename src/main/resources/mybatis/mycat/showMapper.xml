@@ -24,7 +24,7 @@
 		show @@syslog limit=50
 	</select>		
 	<select id="sqlsum" resultType="map" parameterType="map">
-		show @@sql.sum
+		show @@sql.sum true
 	</select>
 	<select id="sqlsumtable" resultType="map" parameterType="map">
 		show @@sql.sum.table true
