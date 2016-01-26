@@ -31,6 +31,7 @@ public class ShowService extends BaseService {
 	private static final String SYSSQLHIGH_NAMESPACE = "SYSSQLHIGH";
 	private static final String SYSSQLSLOW_NAMESPACE = "SYSSQLSLOW";   
 	private static final String SYSSQLTABLE_NAMESPACE = "SYSSQLTABLE";   
+	private static final String SYSSQLSUM_NAMESPACE = "SYSSQLSUM";   
 
 	public RainbowContext base(RainbowContext context,String cmd) {
 		String datasource = (String)context.getAttr("ds");
@@ -210,8 +211,8 @@ public class ShowService extends BaseService {
 	public RainbowContext sqlhighInfo(RainbowContext context) {
 		return baseQuery(context, SYSSQLHIGH_NAMESPACE, "sqlhighInfo"); 
 	}		
-	public RainbowContext sqlsum(RainbowContext context) {
-		return base(context,"sqlsum");
+	public RainbowContext sqlsum(RainbowContext context) { 
+		return baseQuery(context, SYSSQLSUM_NAMESPACE, "sqlsum"); 
 	}
 	public RainbowContext sqlsumtable(RainbowContext context) {
 		return baseQueryAll(context, SYSSQLTABLE_NAMESPACE, "sqlsumtable");  

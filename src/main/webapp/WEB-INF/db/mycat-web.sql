@@ -100,3 +100,19 @@ CREATE TABLE `t_mycat_syssqltable` (
 -- ----------------------------
 -- Records of t_mycat_syssqltable
 -- ----------------------------
+DROP TABLE IF EXISTS `t_mycat_sqlsum`;
+CREATE TABLE `t_mycat_sqlsum` (
+  `SID` int(11) NOT NULL AUTO_INCREMENT,
+  `DB_NAME` varchar(30) DEFAULT NULL,
+  `R` int(11) DEFAULT NULL,
+  `PERCENT_R` varchar(15) DEFAULT NULL,
+  `MAX` int(11) DEFAULT NULL,
+  `W` int(11) DEFAULT NULL,
+  `ID` int(11) DEFAULT NULL,
+  `TIME_COUNT` varchar(255) DEFAULT NULL,
+  `USER` varchar(25) DEFAULT NULL,
+  `LAST_TIME` bigint(13) DEFAULT NULL,
+  `LAST_TM` datetime DEFAULT NULL,
+  `TTL_COUNT` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`SID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
