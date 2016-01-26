@@ -27,7 +27,7 @@
 			#{MIN_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
-			#{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },  
+			#{LAST_TM, jdbcType=VARCHAR },  
 			#{SQL, jdbcType=NVARCHAR},
 			#{USER, jdbcType=VARCHAR}
 		)
