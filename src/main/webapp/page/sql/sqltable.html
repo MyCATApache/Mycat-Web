@@ -299,14 +299,17 @@ function loadData(){
 				if (data.success) {
 					//var dataRow = data.rows[0];
 					//initMap(dataRow);
-					var length = data.rows.length;
+					var length = data.rows.length; 
+					//重置饼图数据 
+					for(var j=0;j<5;j++)
+						resetMap(j); 
 					if (length>5){
 						length=5;
 					}
 					for(var i=0;i<length;i++){
 						var dataRow = data.rows[i];
 						initMap(dataRow,i);
-					}
+					} 
 					mmgrid.load(data.rows);
 				}
 			} catch (e) {
@@ -323,6 +326,23 @@ function loadData(){
 //20秒钟刷新一次
 clearInterval(intervalId); 
 intervalId = setInterval("loadData()",20 * 1000); 
+ 
+//重置饼图数据
+function resetMap(i){
+	  
+		require(
+            [
+                'echarts',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+            	var myChart_read = ec.init(document.getElementById('redMap'+i));
+               // myChart_read.setOption(initReadMap(json["TABLE"],json["R"],json["W"]));
+            }
+        );
+}
 
 function initMap(json,i){
 	
@@ -339,7 +359,7 @@ function initMap(json,i){
 	
 	//var r_array = eval( '(' + r_str + ')');
 	//var t_array = eval( '(' + t_str + ')');
-		 
+		  
 			
 		require(
             [
