@@ -28,7 +28,7 @@
 			#{TIME_COUNT, jdbcType=VARCHAR},		
 			#{USER, jdbcType=VARCHAR},
 			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
-			#{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },
+			#{LAST_TM, jdbcType=VARCHAR},
 			#{TTL_COUNT, jdbcType=VARCHAR}
 		)
 	</select>

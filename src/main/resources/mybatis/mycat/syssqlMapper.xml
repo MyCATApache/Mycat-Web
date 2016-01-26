@@ -17,7 +17,7 @@
 		values(
 		    #{DB_NAME, jdbcType=VARCHAR},
 			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
-			#{START_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },			
+			#{START_TM, jdbcType=VARCHAR },			
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
@@ -26,7 +26,7 @@
 	</select>
 	
 	<select id="query" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
+		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -45,7 +45,7 @@
 	</select>
 	
 	<select id="sql" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,CONTENT as "SQL" from t_mycat_syssql 
+		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}

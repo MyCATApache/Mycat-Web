@@ -16,7 +16,7 @@
 		values(
 		    #{DB_NAME, jdbcType=VARCHAR},
 			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
-			#{START_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },			
+			#{START_TM, jdbcType=VARCHAR },			
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
 			#{SQL, jdbcType=NVARCHAR}

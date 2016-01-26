@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hx.rainbow.common.core.SpringApplicationContext;
+import org.hx.rainbow.common.util.DateUtil;
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.util.DataSourceUtils;
@@ -24,7 +25,7 @@ public class SyncSysSqlsum implements ITask {
  		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sqlsum");   
 		for(Map<String,Object> entry : list){ 
-			entry.put("LAST_TM", new Date((long) entry.get("LAST_TIME"))); 
+			entry.put("LAST_TM", DateUtil.toDateTimeString(new Date((long) entry.get("LAST_TIME")))); 
 			entry.put("PERCENT_R", entry.get("R%"));
 			entry.remove("R%"); 
 			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
