@@ -350,7 +350,7 @@ function initMap(json,i){
             ],
             function (ec) {
                 var myChart_read = ec.init(document.getElementById('redMap'+i));
-                   myChart_read.setOption(initReadMap(json["TABLE"],json["R"],json["W"]));
+                   myChart_read.setOption(initReadMap(json["DB_TABLE"],json["R"],json["W"]));
                // var myChart_request = ec.init(document.getElementById('requestMap'));
                 //myChart_request.setOption(initRequestMap(r_array));
                 
