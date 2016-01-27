@@ -128,17 +128,6 @@ public class ZkConfigService  extends BaseService {
 	public synchronized RainbowContext insert(RainbowContext context) throws Exception {
        String ip=(String)context.getAttr("ip");
        String port=(String)context.getAttr("port");
-     /*  if (ZookeeperService.getInstance().Connected(ip+":"+port)){
-    	   ZookeeperService.getInstance().UpdateZkConfig();
-		  context.setMsg("注册中心配置成功!");
-		  context.setSuccess(true);
-          return context;
-       }
-       else {
- 		  context.setMsg("连接注册中心失败，请检查!");
- 		  context.setSuccess(true);
-           return context;    	   
-       }*/
 		if (zkHander.connect(ip + ":" + port, Constant.LOCAL_ZK_URL_NAME)) {
 			zkHander.UpdateZkConfig(ip + ":" + port);
 			context.setMsg("注册中心配置成功!");
@@ -243,47 +232,12 @@ public class ZkConfigService  extends BaseService {
 
 		firstMenu5.getSubMenus().add(firstMenu5Sub);
 		firstMenu5.getSubMenus().add(firstMenu5Sub2);
-
-		menus.add(firstMenu5);
-		
+		menus.add(firstMenu5);		
 		
         //屏蔽 2015-12-12 sohudo  
-		Menu mycatzone=getMycatZoneMenu();
+		Menu mycatzone=getMycatZoneMenu();		
 		
-		/*先屏蔽 2015-12-3 sohudo
-		Menu firstMenu5 = new Menu("5","MySQL Group1","",MENU_TYPE_PROJECT_GROUP);
-		Menu firstMenu5Sub1 = new Menu("5-1","MySQLGroup管理","page/manger/myrep.html",MENU_TYPE_NODE);
-		Menu firstMenu5Sub2 = new Menu("5-2","MySQL Server1","page/manger/mysql.html",MENU_TYPE_NODE);
-		firstMenu5.getSubMenus().add(firstMenu5Sub1);
-		firstMenu5.getSubMenus().add(firstMenu5Sub2);
-		//menus.add(firstMenu5);		
-		mycatzone.getSubMenus().add(firstMenu5);
-			
-		
-		Menu firstMenu6 = new Menu("6","ZONE","",MENU_TYPE_PROJECT_GROUP);
-		Menu firstMenuSsubb1 = new Menu("6_1_1","Server","page/cluster/mycat_server_list.html",MENU_TYPE_CLUSTER_NODE);
-		Menu firstMenuSsuba1 = new Menu("6_1_1","cluster","page/cluster/mycat_cluster_list.html",MENU_TYPE_CLUSTER_NODE);
-		Menu firstMenuSsubb2 = new Menu("6_1_1","zone","page/cluster/mycat_zone_list.html",MENU_TYPE_CLUSTER_NODE);
-		firstMenu6.getSubMenus().add(firstMenuSsuba1);
-		firstMenu6.getSubMenus().add(firstMenuSsubb2);
-		firstMenu6.getSubMenus().add(firstMenuSsubb1);
-		menus.add(firstMenu6);		
-		*/	
-		
-		/*先屏蔽 2015-12-3 sohudo
-		Menu firstMenuSub3 = new Menu("5_3","Mycat LB","",MENU_TYPE_HOST_GROUP);
-		Menu firstMenuSub3_1 = new Menu("5_3_1","LB Host1","",MENU_TYPE_HOST_NODE);
-		Menu firstMenuSub3_2 = new Menu("5_3_2","LB Host2","",MENU_TYPE_HOST_NODE);
-		firstMenuSub3.getSubMenus().add(firstMenuSub3_1);
-		firstMenuSub3.getSubMenus().add(firstMenuSub3_2);		
-		mycatzone.getSubMenus().add(firstMenuSub3);			
-		*/
-		
-		menus.add(mycatzone);		
-		//context.addAttr("menu",menus);  
-		
-	//	Menu mycatzone = getMycatZoneMenu();
-	//	menus.add(mycatzone);	
+		menus.add(mycatzone);			
 		Map<String, Object> attr = new HashMap<String, Object>();
 		attr.put("menu", menus);
 		context.addRow(attr);

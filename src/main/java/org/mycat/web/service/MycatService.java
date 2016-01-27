@@ -11,6 +11,7 @@ import org.hx.rainbow.common.core.service.BaseService;
 import org.hx.rainbow.common.exception.AppException;
 import org.hx.rainbow.common.util.ObjectId;
 import org.mycat.web.util.Constant;
+import org.mycat.web.util.JrdsUtils;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class MycatService extends BaseService {
 		}
 		context.addRows(mycatlist);
 		context.setTotal(context.getRows().size());
+		CreateJrdsFiles(context.getRows());
 		return context;
 	}
 
@@ -88,6 +90,11 @@ public class MycatService extends BaseService {
 			//ZookeeperService.getInstance().insertMycat(guid,context.getAttr());
 			String path = ZKPaths.makePath(Constant.MYCATS, guid);
 			zkHander.updateNodeData(path, JSON.toJSONString(context.getAttr()));
+			if (jrdsfile == null){
+				jrdsfile = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
+				jrdsfile = jrdsfile + "D_" + context.getAttr("ip") + "_" + context.getAttr("port") + ".xml";				
+			}
+			JrdsUtils.getInstance().newJrdsFile("/templet/mycatjrds.ftl", jrdsfile, context.getAttr());
 			context.setMsg("更新成功!");
 			context.setSuccess(true);
 		}catch (Exception e) {
@@ -124,5 +131,25 @@ public class MycatService extends BaseService {
 				
 		context.getAttr().clear();
 		return context;
+	}
+	
+	private void CreateJrdsFiles(List<Map<String, Object>> mycatlist){
+	  if (!Constant.Mycat_JRDS){
+		for (int i = 0; i < mycatlist.size(); i++) {	
+			Map<String, Object> dbinfo = mycatlist.get(i);
+			String guid=(String)dbinfo.get("guid");
+			String jrdsfile = (String)dbinfo.get("jrdsfile");
+			if (jrdsfile == null){
+				jrdsfile = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
+				jrdsfile = jrdsfile + "D_" + dbinfo.get("ip") + "_" + dbinfo.get("port") + ".xml";				
+			}
+			File file = new File(jrdsfile);
+			System.out.println("CreateJrdsFile Mycat:"+jrdsfile);
+			if (!file.exists()) {			
+			  JrdsUtils.getInstance().newJrdsFile("/templet/mycatjrds.ftl", jrdsfile, dbinfo);		
+			}
+		  }
+		Constant.Mycat_JRDS=true;	
+	  }	
 	}
 }
