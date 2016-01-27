@@ -36,9 +36,9 @@
 	<select id="query" parameterType="map" resultType="map">
 		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM , CONTENT as "SQL" from t_mycat_syssqlhig 
 		<where> 
-			<if test="DB_NAME != null">
+			<if test="DB_NAME != null and DB_NAME != ''">
 				and DB_NAME = #{DB_NAME}
-			</if> 		
+			</if> 		 		
 			<if test="ID >= 0">
 				and ID = #{ID}
 			</if> 
@@ -72,9 +72,9 @@
 	<select id="sqlhigh" parameterType="map" resultType="map">
 		select avg(AVG_TIME) as AVG_TIME, max(MAX_TIME) as MAX_TIME, DB_NAME as "dbName", (sum(EXECUTE_TIME)/count(EXECUTE_TIME)) as EXECUTE_TIME, sum(FREQUENCY) as FREQUENCY, min(MIN_TIME) as MIN_TIME,   CONTENT as "SQL", username from t_mycat_syssqlhig
 		<where> 
-			<if test="dbName != null">
-				and DB_NAME = #{dbName}
-			</if> 		
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 		 		
 			<if test="ID != null">
 				and ID = #{ID}
 			</if>
@@ -91,9 +91,9 @@
 	<select id="sqlhighCount" parameterType="map" resultType="int">
 		select count(1) from (select count(1) from t_mycat_syssqlhig 
 		<where> 
-			<if test="dbName != null">
-				and DB_NAME = #{dbName}
-			</if> 		
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 				
 			<if test="ID != null">
 				and ID = #{ID}
 			</if>
