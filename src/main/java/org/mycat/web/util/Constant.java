@@ -38,5 +38,5 @@ public final class Constant {
     public  static final String MYCAT_SNMP = MYCAT_EYE+"/mycat_snmp";
     public  static final String MYCAT_PROCESSOR = MYCAT_EYE+"/mycat_processor";	
     
-    
+    public static boolean Mycat_JRDS=false;
 }
