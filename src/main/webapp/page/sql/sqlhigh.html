@@ -34,9 +34,8 @@
 							</div>
 							<div class="col-xs-3">
 								<div class="form-group">
-									<label for="username">数据源:</label> <input id="dbName" type="text"
-										name="dbName" class="form-control" placeholder="数据源"
-										validateType="lengthRange-1-100">
+									<label for="username">数据源:</label><select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		            				</select>
 								</div>
 							</div>
 							<div class="col-xs-6">
@@ -231,9 +230,17 @@
 		$('#end').val(end);			
 	};
 	
+	var initDataSouce = function(){
+		var rainbow = new Rainbow();
+		rainbow.setService("mycatService");
+		rainbow.setMethod("query");
+		rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+	};
+	
 	$(document)
 			.ready(
 					function() {
+						initDataSouce();
 						var cols = [
 									{
 										title : '操作',
