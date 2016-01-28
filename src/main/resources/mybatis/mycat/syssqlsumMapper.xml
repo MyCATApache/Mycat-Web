@@ -130,7 +130,7 @@
 	</select>
 	
 	<select id="sqlsumCount" parameterType="map" resultType="int">
-		select count(1) from (select count(1) from t_mycat_sqlsum 
+		select count(1) from (select * from t_mycat_sqlsum 
 		<where> 
 			<if test="DB_NAME != null and DB_NAME != ''">
 				and DB_NAME = #{DB_NAME}
