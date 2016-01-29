@@ -1,0 +1,45 @@
+<!-- Content Header (Page header) -->
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div >
+ 
+					<div style="clear: both;">
+						<div id="sql_table"></div> 
+					</div> 
+			</div>
+		</div>
+	</div> 
+</section>
+<!-- /.content -->
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+<script>
+
+
+function viewData(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("sqlInfo");  
+	rainbow.setParam("SID",sqlId);
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) { 
+					$("#sql_table").html(data.rows[0].SQL);
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+	
+}
+viewData();
+</script>

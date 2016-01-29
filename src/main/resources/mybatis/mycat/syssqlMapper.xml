@@ -45,7 +45,7 @@
 	</select>
 	
 	<select id="sql" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -59,6 +59,24 @@
 			 <if test="username != null">
 				and USER =  #{username}
 			</if>			 
+		</where>
+	</select>
+	 
+	<select id="sqlInfo" parameterType="map" resultType="map">
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
+		<where> 
+			<if test="SID != 0">
+				and SID = #{SID}
+			</if> 	 
+		</where>
+	</select>
+	
+	<select id="sqlInfoCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssql 
+		<where> 
+			<if test="SID != 0">
+				and SID = #{SID}
+			</if> 	 
 		</where>
 	</select>
 	
