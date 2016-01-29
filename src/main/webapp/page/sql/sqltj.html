@@ -54,7 +54,7 @@
 				<div class="box-footer">
 					<div class="form-group">
 						<div class="col-lg-offset-5 col-lg-2">
-							<button class="btn btn-primary" onclick="loadData();">查询</button>
+							<button class="btn btn-primary" onclick="queryForm('query_Form');loadData();">查询</button>
 							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
 						</div>
 					</div>
@@ -115,8 +115,11 @@ var datasouce_change = function(){
 	var begin = daterange[0].trim();
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
-	$('#end').val(end);
+	$('#end').val(end); 
+	queryForm('query_Form');
+
 	loadData();
+	//loadData();
 }
 
 
@@ -167,7 +170,10 @@ $("#reservationtime").on('apply.daterangepicker', function() {
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
+
+	queryForm('query_Form');
 	loadData();
+	//loadData();
 }); 
 
 
@@ -214,7 +220,7 @@ var initDataSouce = function(){
 
 $(document).ready(function() {
 	initDataSouce();
-	loadData();
+	//loadData();
     var cols = [
 				{ title:'ID', name:'ID', width:60, align:'left',sortable:true},
 				{ title:'用户', name:'USER', width:80, align:'left',sortable:true},
@@ -232,14 +238,14 @@ $(document).ready(function() {
 		        	} 
 		        }
 	    ];
-		    
+		 
    		mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        autoLoad: false,
-	        method: 'post',
+	        url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
+			method : 'post',  
 	        root: 'items',
 			plugins : [
 						//配置当前grid默认的分页大小以及总记录数的名称
@@ -278,12 +284,20 @@ function loadData(){
 	rainbow.setParam("USER", $('#username').val());
 	rainbowAjax.query(rainbow, new function(){
 		this.onSuccess = function(data) {
-			 try {
-				
-				if (data.success) {
-					var dataRow = data.rows[0];
-					initMap(dataRow);
-					mmgrid.load(data.rows);
+			 try { 
+				if (data.success) { 
+					
+					var r = 0;
+					var w = 0;
+					var length = data.rows.length;
+					for (var i = 0; i < length; i++) {
+						var row = data.rows[i];
+						r += parseInt(row['R']);
+						w += parseInt(row['W']);
+					} 
+					var dataRow = data.rows[0];    
+					initMap(dataRow,r,w);
+					//mmgrid.load(data.rows);
 				}
 			} catch (e) {
 				alert(e);
@@ -296,7 +310,7 @@ function loadData(){
 }
 
 
-function initMap(json){
+function initMap(json,r,w){
 	
 	 if ( json == undefined) {	
 		 var NULL_JSON = "{\"TTL_COUNT\":\"[0, 0, 0, 0]\",\"R\":\"0\",\"W\":\"0\",\"R%\":\"0\",\"MAX\":\"0\",\"ID\":1,\"LAST_TIME\":0,\"TIME_COUNT\":\"[0, 0, 0, 0]\",\"USER\":\"\"}";
@@ -307,8 +321,7 @@ function initMap(json){
 	 
 	//eval
 	var r_str = json["TIME_COUNT"];
-	var t_str = json["TTL_COUNT"];
-	
+	var t_str = json["TTL_COUNT"]; 
 	var r_array = eval( '(' + r_str + ')');
 	var t_array = eval( '(' + t_str + ')');
 		 
@@ -322,7 +335,7 @@ function initMap(json){
             ],
             function (ec) {
                 var myChart_read = ec.init(document.getElementById('redMap'));
-                myChart_read.setOption(initReadMap(json["R"],json["W"]));
+                myChart_read.setOption(initReadMap(r,w));
                 
                 var myChart_request = ec.init(document.getElementById('requestMap'));
                 myChart_request.setOption(initRequestMap(r_array));

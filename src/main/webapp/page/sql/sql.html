@@ -76,9 +76,31 @@
 </section>
 <!-- /.content -->
 
+<!-- /.content -->
+<div class="modal fade" id="sqlModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="mysqlexplain">SQL详情</h4>
+			</div>
+			<div class="modal-body" id="sqlDetail">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
-   $.AdminLTE.boxWidget.activate();
+   $.AdminLTE.boxWidget.activate(); 
+	var sqlId = "";   
 </script>
 
 <script type="text/javascript">
@@ -196,14 +218,38 @@ var initDataSouce = function(){
 	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
 
+ 
+var viewMysql = function(id) {    
+	sqlId = id;
+	$('#sqlDetail').load('./page/sql/sqldetail.html?v=' + Math.random());
+	$('#sqlModal').modal({
+		show : true
+	});  
+};
 
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [ 
-						{ title:'ID', name:'ID' ,width:100, align:'left', sortable:true},
+		                 {
+							title : '操作',
+							name : 'operation',
+							width : 100,
+							align : 'center',
+							renderer : function(val, item, rowIndex) {  
+								//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+								return '<button  class="btn btn-primary btn-xs modify" onclick=viewMysql(\"' + item.SID +'\")>详情</button>';
+							}
+						},
+						{ title:'ID', name:'ID' ,width:100, align:'left', sortable:true },
 						{ title:'数据源', name:'DB_NAME' ,width:100, align:'left', sortable:true},
 						{ title:'用户', name:'USER' ,width:100, align:'left', sortable:true},
-				        { title:'SQL', name:'SQL' ,width:600, align:'left'},						
+				        { title:'SQL', name:'SQL' ,width:600, align:'left',
+							renderer : function(val, item, rowIndex) {
+								//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+								//alert(item.SQL.substring(0,10));
+								var sql = item.SQL;
+								return  sql.length >= 100 ? sql.substring(0,100) + "..." : sql;
+							}},						
 						{ title:'耗时(ms)', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true, type:'number'},	 
 				        { title:'执行时间', name:'START_TIME' ,width:160, align:'left', sortable:true,
 				        	renderer: function(val){

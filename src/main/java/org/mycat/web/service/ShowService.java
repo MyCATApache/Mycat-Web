@@ -87,6 +87,10 @@ public class ShowService extends BaseService {
 		return baseQuery(context, SYSSQL_NAMESPACE, "sql");
 	}
 	
+
+	public RainbowContext sqlInfo(RainbowContext context) {
+		return baseQuery(context, SYSSQL_NAMESPACE, "sqlInfo");
+	}
 	
 	public RainbowContext sqlonline(RainbowContext context,String command) {
 		String tmpdir=System.getProperty("java.io.tmpdir");
