@@ -88,7 +88,8 @@
 </script>
 
 <script type="text/javascript">
-var mmgrid;
+
+var mmgridSqltj;
 /**
  * 时间原型增加一个 format 函数
  */
@@ -119,7 +120,6 @@ var datasouce_change = function(){
 	queryForm('query_Form');
 
 	loadData();
-	//loadData();
 }
 
 
@@ -175,11 +175,6 @@ $("#reservationtime").on('apply.daterangepicker', function() {
 	loadData();
 	//loadData();
 }); 
-
-
-//20秒钟刷新一次
-clearInterval(intervalId); 
-intervalId = setInterval("loadData()",20 * 1000); 
 
 
 var requestData = new Array();
@@ -239,12 +234,12 @@ $(document).ready(function() {
 		        }
 	    ];
 		 
-   		mmgrid = $('#table').mmGrid({
+    mmgridSqltj = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
+	        //url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
 			method : 'post',  
 	        root: 'items',
 			plugins : [
@@ -297,7 +292,7 @@ function loadData(){
 					} 
 					var dataRow = data.rows[0];    
 					initMap(dataRow,r,w);
-					//mmgrid.load(data.rows);
+					mmgridSqltj.load(data.rows);
 				}
 			} catch (e) {
 				alert(e);

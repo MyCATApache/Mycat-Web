@@ -97,7 +97,7 @@
 </script>
 
 <script type="text/javascript">
-var mmgrid;
+var mmgridSqlTable;
 /**
  * 时间原型增加一个 format 函数
  */
@@ -256,7 +256,7 @@ $(document).ready(function() {
 		     //   }
 	    ];
 		    
-   		mmgrid = $('#table').mmGrid({
+    mmgridSqlTable = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
@@ -310,7 +310,7 @@ function loadData(){
 						var dataRow = data.rows[i];
 						initMap(dataRow,i);
 					} 
-					mmgrid.load(data.rows);
+					mmgridSqlTable.load(data.rows);
 				}
 			} catch (e) {
 				//alert(e);
@@ -321,11 +321,6 @@ function loadData(){
 	});
 	
 }
-
- 
-//20秒钟刷新一次
-clearInterval(intervalId); 
-intervalId = setInterval("loadData()",20 * 1000); 
  
 //重置饼图数据
 function resetMap(i){
