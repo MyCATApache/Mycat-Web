@@ -15,6 +15,11 @@ import org.hx.rainbow.common.core.service.SoaManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mycat.web.task.common.TaskManger;
+import org.mycat.web.task.server.SyncSysSql;
+import org.mycat.web.task.server.SyncSysSqlhigh;
+import org.mycat.web.task.server.SyncSysSqlslow;
+import org.mycat.web.task.server.SyncSysSqlsum;
+import org.mycat.web.task.server.SyncSysSqtable;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -68,7 +73,7 @@ public class DataSourceUtils {
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
 			Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
-			TaskManger.getInstance().addDBName(dbName);
+			updateTask(dbName);
 			return true;
 			
 		} catch (Exception e) {
@@ -80,6 +85,17 @@ public class DataSourceUtils {
 				conn.close();
 			}
 		}
+	}
+	
+	private void updateTask(String dbName){
+		TaskManger taskManger = TaskManger.getInstance();
+		taskManger.addDBName(dbName);
+		taskManger.cancelTask("SyncSysSql", "SyncSysSqlhigh", "SyncSysSqlslow", "SyncSysSqtable", "SyncSysSqlsum");
+		taskManger.addTask(new SyncSysSql(), 60 * 1000, "SyncSysSql");//1分钟
+		taskManger.addTask(new SyncSysSqlhigh(), 60 * 1000*2, "SyncSysSqlhigh");//2分钟
+		taskManger.addTask(new SyncSysSqlslow(), 60 * 1000*2, "SyncSysSqlslow");//2分钟
+		taskManger.addTask(new SyncSysSqtable(), 60 * 1000*3, "SyncSysSqtable");//3分钟
+		taskManger.addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 	}
 	
 	public boolean register(String dbName, String mycatType) throws Exception {

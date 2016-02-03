@@ -413,6 +413,8 @@ function initMap(json,i){
 	 return option;
  }
  
-
+//20秒钟刷新一次
+ clearInterval(intervalId); 
+ intervalId = setInterval("loadData()",20 * 1000); 
 
 </script>

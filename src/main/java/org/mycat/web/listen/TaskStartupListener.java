@@ -44,11 +44,11 @@ public class TaskStartupListener implements ServletContextListener{
 					LOGGER.error(e.toString());
 				}
 			}
-			TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000);//1分钟
-			TaskManger.getInstance().addTask(new SyncSysSqlhigh(), 60 * 1000*2);//2分钟
-			TaskManger.getInstance().addTask(new SyncSysSqlslow(), 60 * 1000*2);//2分钟
-			TaskManger.getInstance().addTask(new SyncSysSqtable(), 60 * 1000*3);//3分钟
-			TaskManger.getInstance().addTask(new SyncSysSqlsum(), 60 * 1000*3);//3分钟
+			TaskManger.getInstance().addTask(new SyncSysSql(), 60 * 1000, "SyncSysSql");//1分钟
+			TaskManger.getInstance().addTask(new SyncSysSqlhigh(), 60 * 1000*2, "SyncSysSqlhigh");//2分钟
+			TaskManger.getInstance().addTask(new SyncSysSqlslow(), 60 * 1000*2, "SyncSysSqlslow");//2分钟
+			TaskManger.getInstance().addTask(new SyncSysSqtable(), 60 * 1000*3, "SyncSysSqtable");//3分钟
+			TaskManger.getInstance().addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
