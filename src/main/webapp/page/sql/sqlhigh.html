@@ -109,8 +109,8 @@
 	var sqlParam = "";   
 	var dataUsername="";
 </script>
-
 <script type="text/javascript">
+
 	/**
 	 * 时间原型增加一个 format 函数
 	 */
@@ -140,7 +140,7 @@
 		var end = daterange[1].trim();
 		$('#begin').val(begin);
 		$('#end').val(end);		
-		queryForm('query_Form');
+		//queryForm('query_Form');
 	}
 
 	//Date range picker with time picker
@@ -237,105 +237,91 @@
 		rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 	};
 	
-	$(document)
-			.ready(
-					function() {
-						initDataSouce();
-						var cols = [
-									{
-										title : '操作',
-										name : 'operation',
-										width : 100,
-										align : 'center',
-										renderer : function(val, item, rowIndex) {
-											//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
-											return '<button  class="btn btn-primary btn-xs modify"  onclick="explainMysql12(\''
-													+ item.username
-													+ '\',\''
-													+ item.SQL + '\')">分析</button>';
-										}
-									},
-								{
-									title : '频率',
-									name : 'FREQUENCY',
-									width : 100,
-									align : 'left',
-									sortable : true,
-									type : 'number'
-								},
-								{
-									title : '用户',
-									name : 'username',
-									width : 100,
-									align : 'left'
-								},
-								{
-									title : '数据源',
-									name : 'dbName',
-									width : 100,
-									align : 'left'
-								},
-								{
-									title : 'SQL',
-									name : 'SQL',
-									width : 600,
-									align : 'left'
-								},
-								{
-									title : '耗时(ms)',
-									name : 'AVG_TIME',
-									width : 100,
-									align : 'left',
-									sortable : true,
-									type : 'number'
-								},
-								{
-									title : '最大耗时(ms)',
-									name : 'MAX_TIME',
-									width : 100,
-									align : 'left',
-									sortable : true,
-									type : 'number'
-								},
-								{
-									title : '最小耗时(ms)',
-									name : 'MIN_TIME',
-									width : 100,
-									align : 'left',
-									sortable : true,
-									type : 'number'
-								}
-								//{
-								//	title : '最后执行',
-								//	name : 'LAST_TIME',
-								//	width : 160,
-								//	align : 'left',
-								//	sortable : true,
-								//	renderer : function(val) {
-								//		console.debug("vv:" + val);
-								//		var d = new Date(val)
-								//				.format("yyyy-MM-dd hh:mm:ss");
-							//			;
-							//			return d;
-							//		}
-							//	}
 
-						];
-					$('#table').mmGrid(
-										{
-											indexCol : true,
-											height : '400',
-											indexColWidth : 35,
-											cols : cols,
-											url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlhigh',
-											method : 'post',
-											root : 'items',
-											plugins : [
-											//配置当前grid默认的分页大小以及总记录数的名称
-											$('#paginator').mmPaginator({
-												limit : 20,
-												totalCountName : 'totalCount'
-											}) ]
-										});
-					});
+	$(document).ready(
+			function() {
+				initDataSouce();
+				var cols = [
+							{
+								title : '操作',
+								name : 'operation',
+								width : 100,
+								align : 'center',
+								renderer : function(val, item, rowIndex) {
+									//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+									return '<button  class="btn btn-primary btn-xs modify"  onclick="explainMysql12(\''
+											+ item.username
+											+ '\',\''
+											+ item.SQL + '\')">分析</button>';
+								}
+							},
+						{
+							title : '频率',
+							name : 'FREQUENCY',
+							width : 100,
+							align : 'left',
+							sortable : true,
+							type : 'number'
+						},
+						{
+							title : '用户',
+							name : 'username',
+							width : 100,
+							align : 'left'
+						},
+						{
+							title : '数据源',
+							name : 'dbName',
+							width : 100,
+							align : 'left'
+						},
+						{
+							title : 'SQL',
+							name : 'SQL',
+							width : 600,
+							align : 'left'
+						},
+						{
+							title : '耗时(ms)',
+							name : 'AVG_TIME',
+							width : 100,
+							align : 'left',
+							sortable : true,
+							type : 'number'
+						},
+						{
+							title : '最大耗时(ms)',
+							name : 'MAX_TIME',
+							width : 100,
+							align : 'left',
+							sortable : true,
+							type : 'number'
+						},
+						{
+							title : '最小耗时(ms)',
+							name : 'MIN_TIME',
+							width : 100,
+							align : 'left',
+							sortable : true,
+							type : 'number'
+						}
+
+				];
+				mmgrid = $('#table').mmGrid(
+								{
+									indexCol : true,
+									height : '400',
+									indexColWidth : 35,
+									cols : cols,
+									url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlhigh',
+									method : 'post',
+									root : 'items',
+									plugins : [
+									//配置当前grid默认的分页大小以及总记录数的名称
+									$('#paginator').mmPaginator({
+										limit : 20,
+										totalCountName : 'totalCount'
+									}) ]
+								});
+	});
 </script>

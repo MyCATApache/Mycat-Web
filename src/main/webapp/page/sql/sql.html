@@ -130,7 +130,6 @@ var datasouce_change = function(){
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
-	queryForm('query_Form');
 }
 
 
@@ -181,9 +180,9 @@ $("#reservationtime").on('apply.daterangepicker', function() {
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
-
 	queryForm('query_Form');
 });
+
 var Selected_Callback = function(target_select){
 	  this.onSuccess=function(data){
 			try {
@@ -259,7 +258,7 @@ $(document).ready(function() {
 				        	} }
 			        
 			    ];
-	$('#table').mmGrid({
+	mmgrid  = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,

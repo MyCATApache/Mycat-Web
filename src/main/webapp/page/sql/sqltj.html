@@ -88,8 +88,6 @@
 </script>
 
 <script type="text/javascript">
-
-var mmgridSqltj;
 /**
  * 时间原型增加一个 format 函数
  */
@@ -117,9 +115,9 @@ var datasouce_change = function(){
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end); 
-	queryForm('query_Form');
+//	queryForm('query_Form');
 
-	loadData();
+//	loadData();
 }
 
 
@@ -234,7 +232,7 @@ $(document).ready(function() {
 		        }
 	    ];
 		 
-    mmgridSqltj = $('#table').mmGrid({
+    mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
@@ -292,7 +290,7 @@ function loadData(){
 					} 
 					var dataRow = data.rows[0];    
 					initMap(dataRow,r,w);
-					mmgridSqltj.load(data.rows);
+					mmgrid.load(data.rows);
 				}
 			} catch (e) {
 				alert(e);

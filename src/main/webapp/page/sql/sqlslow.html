@@ -109,7 +109,7 @@ var datasouce_change = function(){
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
-	queryForm('query_Form');
+	//queryForm('query_Form');
 }
 
 
@@ -214,7 +214,7 @@ $(document).ready(function() {
 					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true,type:'number'},
 					{ title:'SQL', name:'SQL' ,width:600, align:'left'}
 			    ];
-	$('#table').mmGrid({
+	mmgrid = $('#table').mmGrid({
 	        indexCol: true,
 	        height: '400',
 	        indexColWidth: 35,
