@@ -15,6 +15,7 @@ import org.hx.rainbow.common.core.service.SoaManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mycat.web.task.common.TaskManger;
+import org.mycat.web.task.server.SyncClearData;
 import org.mycat.web.task.server.SyncSysSql;
 import org.mycat.web.task.server.SyncSysSqlhigh;
 import org.mycat.web.task.server.SyncSysSqlslow;
@@ -96,6 +97,7 @@ public class DataSourceUtils {
 		taskManger.addTask(new SyncSysSqlslow(), 60 * 1000*2, "SyncSysSqlslow");//2分钟
 		taskManger.addTask(new SyncSysSqtable(), 60 * 1000*3, "SyncSysSqtable");//3分钟
 		taskManger.addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
+		taskManger.addTask(new SyncClearData(),60 *1000*60*10, "SyncClearData");//10小时
 	}
 	
 	public boolean register(String dbName, String mycatType) throws Exception {

@@ -335,12 +335,16 @@ public final class ZookeeperCuratorHandler {
 		children = client.getChildren().forPath(path);
 		if ((children != null) && children.size() > 0) {
 			for (int i = 0; i < children.size(); i++) {
-				rows.add(readNode(path + "/" + children.get(i)));
-				//rows.add(getChildNodeData(path + "/" + children.get(i), Object.class));
+				Map<String,Object> node=readNode(path + "/" + children.get(i));
+				if (node!=null) {
+				  rows.add(node);
+				}
 			}
 		} else {
-			//rows.add(getChildNodeData(path, Object.class));
-			rows.add(readNode(path));
+			Map<String,Object> node=readNode(path);
+			if (node!=null) {
+				rows.add(node);
+			}
 		}
 		return rows;
 	}
@@ -350,11 +354,15 @@ public final class ZookeeperCuratorHandler {
         byte[] nodeData;
 		try {
 			nodeData = client.getData().storingStatIn(stat).forPath(aPath);
-			String dataNode = new String(nodeData);
-			return JsonUtils.json2Map(dataNode);
+			String dataNode = new String(nodeData).trim();
+			//System.out.println("zk node:"+dataNode);
+			if (dataNode.indexOf("{")>=0) {
+				return JsonUtils.json2Map(dataNode);	
+			}
+			else
+			  return null;		
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO Auto-generated catch block			
 			return null;
 		}        
     } 	
