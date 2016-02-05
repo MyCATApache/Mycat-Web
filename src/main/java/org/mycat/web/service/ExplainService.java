@@ -3,6 +3,7 @@ package org.mycat.web.service;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +18,16 @@ public class ExplainService extends BaseService{
 			return context;
 		}
 		try {
-			if(!DataSourceUtils.getInstance().register(datasource, "8066")){
+			if(!DataSourceUtils.getInstance().register(datasource, DataSourceUtils.MycatPortType.MYCAT_SERVER)){
 				context.setSuccess(false);
 				context.setMsg("数据源连接失败!");
+				logger.error(datasource + ":服务端口,数据源连接失败!");
 				return context;
 			}
 		} catch (Exception e) {
 			
 		}
-		context.setDs(datasource + "8066");
+		context.setDs(datasource + MycatPortType.MYCAT_SERVER);
 		super.query(context, NAMESPACE, cmd);
 		return context;
 	}

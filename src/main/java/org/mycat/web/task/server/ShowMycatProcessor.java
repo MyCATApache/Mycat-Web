@@ -7,7 +7,6 @@ import java.util.Map;
 import org.hx.rainbow.common.context.RainbowProperties;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.task.common.ITask;
-import org.mycat.web.task.common.TaskManger;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
- 
+
 import org.mycat.web.task.common.TaskManger;
 import org.mycat.web.task.server.SyncSysSql;
 import org.mycat.web.task.server.SyncSysSqlhigh;
@@ -14,6 +14,7 @@ import org.mycat.web.task.server.SyncSysSqlsum;
 import org.mycat.web.task.server.SyncSysSqtable;
 import org.mycat.web.util.Constant;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class TaskStartupListener implements ServletContextListener{
 			mycatList = ZookeeperCuratorHandler.getInstance().getChildNodeData(Constant.MYCATS);
 			for(Map<String,Object> mycat : mycatList){
 				String mycatName = (String)mycat.get("mycatName"); 
+				System.out.println("mycatName==============" + mycatName);
 				try {
 					DataSourceUtils.getInstance().register(mycatName); 
 					LOGGER.info("数据源["+mycatName+"]");

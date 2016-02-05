@@ -92,7 +92,7 @@ public class MycatService extends BaseService {
 			zkHander.updateNodeData(path, JSON.toJSONString(context.getAttr()));
 			if (jrdsfile == null){
 				jrdsfile = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-				jrdsfile = jrdsfile + "D_" + context.getAttr("ip") + "_" + context.getAttr("port") + ".xml";				
+				jrdsfile = jrdsfile + "D_" + context.getAttr("ip") + "_" + context.getAttr("mangerPort") + ".xml";				
 			}
 			JrdsUtils.getInstance().newJrdsFile("/templet/mycatjrds.ftl", jrdsfile, context.getAttr());
 			context.setMsg("更新成功!");
@@ -137,11 +137,10 @@ public class MycatService extends BaseService {
 	  if (!Constant.Mycat_JRDS){
 		for (int i = 0; i < mycatlist.size(); i++) {	
 			Map<String, Object> dbinfo = mycatlist.get(i);
-			String guid=(String)dbinfo.get("guid");
 			String jrdsfile = (String)dbinfo.get("jrdsfile");
 			if (jrdsfile == null){
 				jrdsfile = System.getProperty("webapp.root") + "/WEB-INF/jrdsconf/hosts/";
-				jrdsfile = jrdsfile + "D_" + dbinfo.get("ip") + "_" + dbinfo.get("port") + ".xml";				
+				jrdsfile = jrdsfile + "D_" + dbinfo.get("ip") + "_" + dbinfo.get("mangerPort") + ".xml";				
 			}
 			File file = new File(jrdsfile);
 			System.out.println("CreateJrdsFile Mycat:"+jrdsfile);

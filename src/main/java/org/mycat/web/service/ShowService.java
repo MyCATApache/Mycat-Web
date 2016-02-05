@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.service.BaseService;
-import org.hx.rainbow.common.util.JsonUtil;
 import org.mycat.web.task.server.ShowMycatProcessor;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -48,7 +48,7 @@ public class ShowService extends BaseService {
 			
 		}
 		LOGGER.info("数据源["+datasource+"]");
-		context.setDs(datasource + "9066");
+		context.setDs(datasource + MycatPortType.MYCAT_MANGER);
 		if (cmd.equals("sqlslow")){
 			String threshold = (String)context.getAttr("threshold");
 			if (!(threshold ==  null || threshold.isEmpty())){

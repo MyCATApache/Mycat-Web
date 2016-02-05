@@ -99,8 +99,12 @@
 		                  <input id="ip" type="text" name="ip" class="form-control" placeholder="IP地址" validateType="lengthRange-1-100">
 	                  </div>
 	                  <div class="form-group">
-	                     <label for="username">端口:</label>
-		                  <input id="port" type="text" name="port" class="form-control" placeholder="端口" validateType="lengthRange-1-100">
+	                     <label for="username">管理端口:</label>
+		                  <input id="mangerPort" type="text" name="mangerPort" class="form-control" placeholder="管理端口" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="username">服务端口:</label>
+		                  <input id="serverPort" type="text" name="serverPort" class="form-control" placeholder="服务端口" validateType="lengthRange-1-100">
 	                  </div>
 	                  <div class="form-group">
 	                     <label for="server">数据库名称:</label>
@@ -153,6 +157,8 @@ function updateForm_extra_call(form_id,data){
 	   var value_obj = {};
 	   value_obj.url = data.url;
 	   value_obj.driverClassName = data.driverClassName;
+	   value_obj.mangerPort = data.mangerPort;
+	   value_obj.serverPort = data.serverPort;
 	   value_obj.username = data.username;
 	   value_obj.password = data.password;
 	   data.value = JSON.stringify(value_obj);
@@ -167,7 +173,8 @@ $(document).ready(function() {
 					},
 					{ title:'Mycat名称', name:'mycatName' ,width:200, align:'center'},
 			        { title:'IP地址', name:'ip' ,width:200, align:'center'},
-			        { title:'端口', name:'port' ,width:150, align:'center'},
+			        { title:'管理端口', name:'mangerPort' ,width:150, align:'center'},
+			        { title:'服务端口', name:'serverPort' ,width:150, align:'center'},
 			        { title:'数据名称', name:'dbName' ,width:150, align:'center'},
 			        { title:'用户名', name:'username' ,width:150, align:'center'}
 			        

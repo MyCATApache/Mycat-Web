@@ -31,7 +31,10 @@ public class DataSourceUtils {
 
 	private static final Logger logger = LogManager
 			.getLogger(DataSourceUtils.class);
-	private static final String DEFULAT_MYCAT_MANGER = "9066";
+	public enum MycatPortType{
+		MYCAT_MANGER,
+		MYCAT_SERVER
+	} 
 	
 	public static final String DEFAULT_MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
 
@@ -53,12 +56,13 @@ public class DataSourceUtils {
 	private static final String NAME_SUFFIX = "dataSource";
 	
 	
-	public  boolean register(Map<String, Object> jdbc, String dbName, String mycatType) throws Exception {
+	public  boolean register(Map<String, Object> jdbc, String dbName, MycatPortType portType) throws Exception {
 		Connection conn = null;
 		try {
-			dbName = dbName + mycatType;
+			dbName = dbName + portType;
 			String beanName = dbName + NAME_SUFFIX;
 			remove(dbName);
+			logger.info("dbname:" + dbName + " is  initializing!!");
 			ConfigurableApplicationContext applicationContext = 
 					(ConfigurableApplicationContext) SpringApplicationContext.getApplicationContext();
 			DefaultListableBeanFactory beanFactory = 
@@ -73,7 +77,9 @@ public class DataSourceUtils {
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
 			Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
 			beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
-			updateTask(dbName);
+			if(MycatPortType.MYCAT_MANGER == portType){
+				updateTask(dbName);
+			}
 			return true;
 			
 		} catch (Exception e) {
@@ -98,8 +104,8 @@ public class DataSourceUtils {
 		taskManger.addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 	}
 	
-	public boolean register(String dbName, String mycatType) throws Exception {
-		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + mycatType + NAME_SUFFIX)){
+	public boolean register(String dbName, MycatPortType portType) throws Exception {
+		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + portType + NAME_SUFFIX)){
 			RainbowContext context = new RainbowContext("mycatService", "query");
 			context.addAttr("mycatName", dbName);
 			context = SoaManager.getInstance().invokeNoTx(context);
@@ -107,21 +113,47 @@ public class DataSourceUtils {
 				return false;
 			}
 			Map<String, Object> row = context.getRow(0);
-			row.put("port", mycatType);
-			return register(row, dbName, mycatType);
+			switch (portType) {
+			case MYCAT_MANGER:
+				row.put("port", row.get("mangerPort"));
+				break;
+			case MYCAT_SERVER:
+				row.put("port", row.get("serverPort"));
+				break;
+			default:
+				break;
+			};
+			
+			return register(row, dbName, portType);
 		}
 		return true;
 	}
 
 	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
-		return register(jdbc, dbName, DEFULAT_MYCAT_MANGER);
+		 boolean result = true; 
+		 if(!register(jdbc, dbName, MycatPortType.MYCAT_MANGER)){
+			 result = false;
+		 }
+		 if(! register(jdbc, dbName, MycatPortType.MYCAT_SERVER)){
+			 result = false; 
+		 }
+		 return result;
+		
 	}
 	
 	public boolean register(String dbName) throws Exception {
-		return register(dbName, DEFULAT_MYCAT_MANGER);
+		 boolean result = true; 
+		 if(!register(dbName, MycatPortType.MYCAT_MANGER)){
+			 result = false;
+		 }
+		 if(! register(dbName, MycatPortType.MYCAT_SERVER)){
+			 result = false; 
+		 }
+		 return result;
 	}
+	
 	public String getDbName(String dbName)  {
-		int n_pos = dbName.indexOf(DEFULAT_MYCAT_MANGER);
+		int n_pos = dbName.indexOf(MycatPortType.MYCAT_MANGER+"");
 		if (n_pos>0) {
 		   return dbName.substring(0,n_pos);
 		}
@@ -129,6 +161,7 @@ public class DataSourceUtils {
 		   return dbName;
 		}
 	}
+	
 	public  void remove(String dbName) {
 		SpringApplicationContext.removeBeans(dbName + NAME_SUFFIX, dbName + "sqlSessionFactory", dbName + "sqlSessionTemplate", dbName
 				+ "transactionManager");
