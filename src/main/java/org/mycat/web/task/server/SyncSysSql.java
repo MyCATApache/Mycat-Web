@@ -21,6 +21,11 @@ public class SyncSysSql implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
+		//System.out.println("持久化mycat中数据:"+dbName);
+//		if (!DataSourceUtils.getInstance().isMycatManger(dbName)){
+//			return ;
+//		}
+		//System.out.println("持久化mycat中数据开始:"+dbName);
 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sql"); 
 		for(Map<String,Object> entry : list){			

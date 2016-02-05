@@ -22,6 +22,9 @@ public class SyncSysSqlhigh implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
+//		if (!DataSourceUtils.getInstance().isMycatManger(dbName)){
+//			return ;
+//		}
 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sqlhigh"); 
 		for(Map<String,Object> entry : list){

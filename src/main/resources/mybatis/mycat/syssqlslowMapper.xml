@@ -67,4 +67,12 @@
 			</if>
 		</where> 
 	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqlslow 
+		<where> 
+			START_TM  &lt; #{clearday} 
+		</where>
+	</delete>	
+	
 </mapper>

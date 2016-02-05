@@ -144,5 +144,12 @@
 		</where> 
 		group by DB_NAME,USER) atable 
 	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_sqlsum 
+		<where> 
+			LAST_TM  &lt; #{clearday} 
+		</where>
+	</delete>		
 	 
 </mapper>

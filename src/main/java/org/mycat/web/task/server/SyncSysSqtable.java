@@ -24,7 +24,10 @@ public class SyncSysSqtable implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
- 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
+//		if (!DataSourceUtils.getInstance().isMycatManger(dbName)){
+//			return ;
+//		}
+		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sqlsumtable");  
 		Pattern pattern = Pattern.compile(",\\s+$");
 		for(Map<String,Object> entry : list){

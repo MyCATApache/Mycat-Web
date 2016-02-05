@@ -127,4 +127,13 @@
 			</if>			
 		</where> 
 	</select>	
+	
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqlhig 
+		<where> 
+			LAST_TM   &lt; #{clearday} 
+		</where>
+	</delete>		
+	
 </mapper>

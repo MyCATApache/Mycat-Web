@@ -111,9 +111,7 @@
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
-			<if test="DB_TABLE != null">
-				and DB_TABLE = #{DB_TABLE}
-			</if> 				 
+			 
 		</where>
 		group by DB_NAME,DB_TABLE
 	</select>
@@ -127,9 +125,7 @@
 			<if test="begin != null and end != null">
 				and LAST_TM between #{begin} and #{end}
 			</if> 
-			<if test="DB_TABLE != null">
-				and DB_TABLE = #{DB_TABLE}
-			</if> 				
+				
 		</where> 
 		group by DB_NAME,DB_TABLE) atable
 	</select>
@@ -172,4 +168,12 @@
 			</if> 				
 		</where> 
 	</select>	
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqltable 
+		<where> 
+			LAST_TM  &lt; #{clearday} 
+		</where>
+	</delete>	
+	
 </mapper>

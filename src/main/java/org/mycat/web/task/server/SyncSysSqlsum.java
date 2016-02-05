@@ -22,7 +22,10 @@ public class SyncSysSqlsum implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
- 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
+//		if (!DataSourceUtils.getInstance().isMycatManger(dbName)){
+//			return ;
+//		}
+		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
 		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sqlsum");   
 		for(Map<String,Object> entry : list){ 
 			entry.put("LAST_TM", DateUtil.toDateTimeString(new Date((long) entry.get("LAST_TIME")))); 
