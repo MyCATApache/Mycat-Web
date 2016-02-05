@@ -122,6 +122,17 @@ public class DataSourceUtils {
 	public boolean register(String dbName) throws Exception {
 		return register(dbName, DEFULAT_MYCAT_MANGER);
 	}
+	
+	public boolean isMycatManger(String dbName)  {
+		int n_pos = dbName.indexOf(DEFULAT_MYCAT_MANGER);
+		if (n_pos>0) {
+		   return true;
+		}
+		else {
+		   return false;
+		}
+	}
+	
 	public String getDbName(String dbName)  {
 		int n_pos = dbName.indexOf(DEFULAT_MYCAT_MANGER);
 		if (n_pos>0) {
