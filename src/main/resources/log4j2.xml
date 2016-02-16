@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!-- status=debug 可以查看log4j的装配过程 -->  
+<!-- 开启异步功能，需加入参数-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -->
 <configuration status="OFF"  monitorInterval="1800">  
     <properties>  
         <property name="BACKUP_HOME">backup</property>  
@@ -8,6 +9,8 @@
         <property name="SERVER_NAME">rainbow</property>  
         
         <!-- SMTP信息 -->
+        <property name="subject">${sys:mail.subject}</property>
+        <property name="to">1935326097@qq.com</property>
         <property name="from">agile_louie@139.com</property>
         <property name="smtpHost">smtp.139.com</property>
         <property name="smtpPort">25</property>
@@ -42,8 +45,10 @@
         </RollingRandomAccessFile>  --> 
         
         <SMTP name="Mail" 
-				subject="Error Log" 
-				to="mycatweb@163.com" 	
+				subject="${subject}" 
+				to="${to}"
+				cc="whyuan_8@hotmail.com,13817087645@163.com"
+
 				from="${from}" 
 				smtpUsername="${smtpUser}" 	
 				smtpPassword="${smtpPassword}"
@@ -51,7 +56,7 @@
 				smtpPort="${smtpPort}" 
 				bufferSize="1" 
 				smtpProtocol="${smtpProtocol}" 
-				smtpDebug="false">
+				smtpDebug="true">
 				<!-- 消息过滤器 -->
 		     	<RegexFilter regex=".* test .*" onMatch="ACCEPT" 	onMismatch="DENY"/>
 			</SMTP>
@@ -67,6 +72,8 @@
 		<logger name="jrds" level="error" />
 		<logger name="org.apache" level="error" />
 		<logger name="org.hx.rainbow" level="error" />
+		<!-- pattern layout actually uses location, so we need to include it -->
+
 		<Root  level="info">
 			<appender-ref ref="DevLog" />
 			<appender-ref ref="Console" />
