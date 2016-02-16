@@ -6,6 +6,15 @@
         <property name="PROJECT_PATH">${mvn.logpath}</property>  
         <property name="STAT_NAME">stat</property>  
         <property name="SERVER_NAME">rainbow</property>  
+        
+        <!-- SMTP信息 -->
+        <property name="from">agile_louie@139.com</property>
+        <property name="smtpHost">smtp.139.com</property>
+        <property name="smtpPort">25</property>
+        <property name="smtpProtocol">smtp</property>
+        <property name="smtpUser">agile_louie@139.com</property>
+        <property name="smtpPassword">agileadmin123</property>
+        
     </properties>  
     <appenders>  
         <!-- 定义控制台输出 -->  
@@ -31,6 +40,23 @@
                     modulate="true" />  
             </Policies>  
         </RollingRandomAccessFile>  --> 
+        
+        <SMTP name="Mail" 
+				subject="Error Log" 
+				to="mycatweb@163.com" 	
+				from="${from}" 
+				smtpUsername="${smtpUser}" 	
+				smtpPassword="${smtpPassword}"
+			    smtpHost="${smtpHost}" 
+				smtpPort="${smtpPort}" 
+				bufferSize="1" 
+				smtpProtocol="${smtpProtocol}" 
+				smtpDebug="false">
+				<!-- 消息过滤器 -->
+		     	<RegexFilter regex=".* test .*" onMatch="ACCEPT" 	onMismatch="DENY"/>
+			</SMTP>
+        
+        
     </appenders>  
     <loggers>  
         <!-- 3rdparty Loggers -->  
@@ -45,6 +71,10 @@
 			<appender-ref ref="DevLog" />
 			<appender-ref ref="Console" />
 		</Root> 
+		
+		<Root level="error">
+      		<AppenderRef ref="Mail" />
+    	</Root>
     </loggers>  
     
 </configuration>  
