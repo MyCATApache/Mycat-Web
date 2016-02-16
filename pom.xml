@@ -131,9 +131,15 @@
 		<jackson-annotations>2.3.0</jackson-annotations>
 		<jackson-core>2.3.1</jackson-core>
 		<jackson-databind>2.3.3</jackson-databind>
+		<java.mail.version>1.4</java.mail.version>
 	</properties>
 	
 	<dependencies>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${java.mail.version}</version>
+		</dependency>	
         <dependency>
            <groupId>com.alibaba</groupId>
            <artifactId>druid</artifactId>
