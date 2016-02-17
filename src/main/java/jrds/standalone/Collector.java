@@ -8,7 +8,7 @@ import jrds.PropertiesManager;
 import jrds.StoreOpener;
 import jrds.starter.Timer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 
 /**
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class Collector extends CommandStarterImpl {
-    static final private Logger logger = Logger.getLogger(Collector.class);
+    static final private Logger logger = LogManager.getLogger(Collector.class);
 
     String propFile = "jrds.properties";
 
@@ -29,7 +29,7 @@ public class Collector extends CommandStarterImpl {
     public void start(String[] args) throws Exception {
 
         PropertiesManager pm = new PropertiesManager(new File(propFile));
-        jrds.JrdsLoggerConfiguration.configure(pm);
+        //jrds.JrdsLoggerConfiguration.configure(pm);
 
         System.getProperties().setProperty("java.awt.headless","true");
         System.getProperties().putAll(pm);

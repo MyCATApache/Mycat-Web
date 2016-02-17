@@ -13,7 +13,7 @@ import javax.servlet.ServletContextListener;
 
 import jrds.StoreOpener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Used to start the application.<p>
@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
  * @version $Revision$,  $Date$
  */
 public class StartListener implements ServletContextListener {
-	static private final Logger logger = Logger.getLogger(StartListener.class);
+	static private final Logger logger = LogManager.getLogger(StartListener.class);
 	static private boolean started = false;
 
 	/* (non-Javadoc)
@@ -38,12 +38,6 @@ public class StartListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		//Resin and some others launch the listener twice !
 		if( ! started ) {
-			try {
-				jrds.JrdsLoggerConfiguration.initLog4J();
-			} catch (IOException e2) {
-				throw new RuntimeException("Log configuration failed", e2);
-			}
-
 			System.setProperty("java.awt.headless","true");
 
 			ServletContext ctxt = arg0.getServletContext();

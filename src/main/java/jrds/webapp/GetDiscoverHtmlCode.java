@@ -13,14 +13,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import jrds.Util;
 import jrds.factories.xml.JrdsDocument;
 
 public class GetDiscoverHtmlCode extends JrdsServlet {
 
-    static final private Logger logger = Logger.getLogger(GetDiscoverHtmlCode.class);
+    static final private Logger logger = LogManager.getLogger(GetDiscoverHtmlCode.class);
 
     private static final String CONTENT_TYPE = "application/xml";
     private static final long serialVersionUID = 1L;

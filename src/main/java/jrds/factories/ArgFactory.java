@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import jrds.Util;
 import jrds.factories.xml.JrdsElement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * A class to build args from a string constructor
@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  */
 
 public final class ArgFactory {
-    static private final Logger logger = Logger.getLogger(ArgFactory.class);
+    static private final Logger logger = LogManager.getLogger(ArgFactory.class);
 
     static private final String[] argPackages = new String[] {"java.lang.", "java.net.", "org.snmp4j.smi.", "java.io.", ""};
     static private final Map<String, Class<?>> classCache = new ConcurrentHashMap<String, Class<?>>();

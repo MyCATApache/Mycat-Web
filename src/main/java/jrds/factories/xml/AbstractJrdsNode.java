@@ -4,7 +4,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.UserDataHandler;
 
 public class AbstractJrdsNode<NodeType extends Node> implements Node {
-    static final private Logger logger = Logger.getLogger(AbstractJrdsNode.class);
+    static final private Logger logger = LogManager.getLogger(AbstractJrdsNode.class);
 
     private final NodeType parent;
 

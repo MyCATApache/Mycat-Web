@@ -12,7 +12,7 @@ import jrds.factories.ProbeBean;
 import jrds.probe.IndexedProbe;
 import jrds.snmp.SnmpRequester;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.smi.OID;
 
 

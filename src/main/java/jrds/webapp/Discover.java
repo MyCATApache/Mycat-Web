@@ -24,14 +24,14 @@ import jrds.factories.xml.JrdsDocument;
 import jrds.factories.xml.JrdsElement;
 import jrds.probe.IndexedProbe;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.w3c.dom.Document;
 
 /**
  * Servlet implementation class AutoDetect
  */
 public class Discover extends JrdsServlet {
-    static final private Logger logger = Logger.getLogger(Discover.class);
+    static final private Logger logger = LogManager.getLogger(Discover.class);
 
     private static final String CONTENT_TYPE = "application/xml";
     private static final long serialVersionUID = 1L;

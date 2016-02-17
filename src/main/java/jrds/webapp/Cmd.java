@@ -12,13 +12,13 @@ import jrds.HostsList;
 import jrds.Util;
 import jrds.starter.Timer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * Servlet implementation class Cmd
  */
 public class Cmd extends JrdsServlet {
-    static final private Logger logger = Logger.getLogger(Cmd.class);
+    static final private Logger logger = LogManager.getLogger(Cmd.class);
     private static final long serialVersionUID = 1L;
 
     /**

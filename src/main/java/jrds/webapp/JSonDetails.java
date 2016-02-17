@@ -11,11 +11,11 @@ import jrds.GraphNode;
 import jrds.Probe;
 import jrds.probe.IndexedProbe;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class JSonDetails extends JrdsServlet {
 
-	static final private Logger logger = Logger.getLogger(JSonDetails.class);
+	static final private Logger logger = LogManager.getLogger(JSonDetails.class);
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse

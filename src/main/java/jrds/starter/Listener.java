@@ -6,7 +6,7 @@ import java.util.Map;
 
 import jrds.probe.PassiveProbe;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public abstract class Listener<Message, KeyType> extends Starter {
 

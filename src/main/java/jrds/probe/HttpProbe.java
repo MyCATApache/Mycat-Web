@@ -20,7 +20,7 @@ import jrds.factories.ProbeBean;
 import jrds.starter.Resolver;
 import jrds.starter.Starter;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * A generic probe to collect an HTTP service

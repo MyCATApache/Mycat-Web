@@ -10,7 +10,7 @@ import jrds.HostInfo;
 import jrds.starter.Resolver;
 import jrds.starter.Starter;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public abstract class JdbcStarter extends Starter {
 	private Connection con;

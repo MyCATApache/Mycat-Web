@@ -17,7 +17,7 @@ import javax.naming.directory.SearchControls;
 
 import jrds.ProbeConnected;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class Ldap extends ProbeConnected<String, Number, LdapConnection> {
     private long uptime;

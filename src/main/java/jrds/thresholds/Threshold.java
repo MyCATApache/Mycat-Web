@@ -7,13 +7,13 @@ import java.util.List;
 import jrds.Probe;
 import jrds.PropertiesManager;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.core.FetchRequest;
 import org.rrd4j.core.RrdDb;
 public class Threshold {
-	static final private Logger logger = Logger.getLogger(Threshold.class);
+	static final private Logger logger = LogManager.getLogger(Threshold.class);
 
 	public enum Comparator {
 		HIGH {

@@ -4,8 +4,8 @@ import java.util.Date;
 
 import jrds.PropertiesManager;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 
 public abstract class Starter {
 	long uptime = Long.MAX_VALUE;
@@ -16,7 +16,7 @@ public abstract class Starter {
 
 	public Starter() {
 		String[] classElements = getClass().getName().split("\\.");
-		namedLogger = Logger.getLogger("jrds.Starter."
+		namedLogger = LogManager.getLogger("jrds.Starter."
 				+ classElements[classElements.length - 1].replaceAll("\\$",
 						".\\$"));
 	}

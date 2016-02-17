@@ -8,14 +8,14 @@ import jrds.GraphNode;
 import jrds.Probe;
 import jrds.PropertiesManager;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class AutoGraph extends GraphNode {
     public enum Operation {
         SUM, MIN, MAX, AVERAGE
     };
 
-    static final private Logger logger = Logger.getLogger(AutoGraph.class);
+    static final private Logger logger = LogManager.getLogger(AutoGraph.class);
     static int i;
     Operation op;
 

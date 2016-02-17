@@ -18,7 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import jrds.factories.ArgFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.DsType;
 import org.rrd4j.core.DsDef;
 import org.snmp4j.smi.OID;
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  *
  */
 public class ProbeDesc implements Cloneable {
-    static final private Logger logger = Logger.getLogger(ProbeDesc.class);
+    static final private Logger logger = LogManager.getLogger(ProbeDesc.class);
 
     static public final double MINDEFAULT = 0;
     static public final double MAXDEFAULT = Double.NaN;

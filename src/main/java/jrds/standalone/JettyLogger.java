@@ -4,16 +4,17 @@ import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.mortbay.log.Logger;
 
 public class JettyLogger implements Logger {
-	org.apache.log4j.Logger logger =  org.apache.log4j.Logger.getLogger(JettyLogger.class);
+	org.apache.logging.log4j.Logger logger = LogManager.getLogger(JettyLogger.class);
 	public JettyLogger() {
 	}
 
 	public JettyLogger(String name) {
-		logger = org.apache.log4j.Logger.getLogger(name);
+		logger = LogManager.getLogger(name);
 	}
 
 	public void debug(String message, Throwable arg1) {
@@ -48,7 +49,7 @@ public class JettyLogger implements Logger {
 	}
 	
 	private void doLog(Level l, String message, Throwable error, Object... args) {
-		if(logger.isEnabledFor(l)) {
+		if(logger.isEnabled(l)) {
 			logger.log(l, String.format(message.replaceAll("\\{\\}", "\\%s"), args));
 			if(error != null) {
 				Writer w = new CharArrayWriter(error.getStackTrace().length + 20);

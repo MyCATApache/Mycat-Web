@@ -23,7 +23,7 @@ import jrds.ConnectedProbe;
 import jrds.ProbeConnected;
 import jrds.ProbeDesc;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * 

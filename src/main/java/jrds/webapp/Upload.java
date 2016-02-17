@@ -20,7 +20,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONWriter;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXParseException;
  * Servlet implementation class Upload
  */
 public class Upload extends JrdsServlet {
-    static final private Logger logger = Logger.getLogger(Upload.class);
+    static final private Logger logger = LogManager.getLogger(Upload.class);
 
     /**
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)

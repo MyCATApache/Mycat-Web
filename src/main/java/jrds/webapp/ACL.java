@@ -1,9 +1,9 @@
 package jrds.webapp;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public abstract class ACL {
-	static final protected Logger logger = Logger.getLogger(ACL.class);
+	static final protected Logger logger = LogManager.getLogger(ACL.class);
 
 	static final public ACL ALLOWEDACL = new ACL(){
 		public boolean check(ParamsBean params) {

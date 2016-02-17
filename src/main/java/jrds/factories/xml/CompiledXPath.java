@@ -8,10 +8,10 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class CompiledXPath {
-	static final private Logger logger = Logger.getLogger(CompiledXPath.class);
+	static final private Logger logger = LogManager.getLogger(CompiledXPath.class);
 
 	private static final XPath xpather = XPathFactory.newInstance().newXPath();
 	private static final Map<String, XPathExpression> xpc = new HashMap<String, XPathExpression>();

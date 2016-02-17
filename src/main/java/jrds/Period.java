@@ -8,7 +8,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -20,7 +20,7 @@ import org.joda.time.LocalTime;
  * @author Fabrice Bacchella
  */
 public class Period {
-    static final private Logger logger = Logger.getLogger(Period.class);
+    static final private Logger logger = LogManager.getLogger(Period.class);
     static private final String dateRegexpBoth = "((\\d\\d\\d\\d)-?(\\d\\d)-?(\\d\\d))?";
     static private final String timeRegexp = "((\\d?\\d):(\\d\\d))?(:(\\d\\d))?";
     static private final Pattern datePatternBoth = Pattern.compile( dateRegexpBoth+ "[T ]?" + timeRegexp + "(.*)");

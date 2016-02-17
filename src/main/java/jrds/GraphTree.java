@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  *
@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  */
 public class GraphTree {
 
-	static final private Logger logger = Logger.getLogger(GraphTree.class);
+	static final private Logger logger = LogManager.getLogger(GraphTree.class);
 
 	public static final String HOSTROOT = "Sorted by host";
 	public static final String VIEWROOT = "Sorted by view";

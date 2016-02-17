@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import jrds.Period;
 import jrds.Probe;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.core.FetchData;
 import org.rrd4j.data.DataProcessor;
 
@@ -30,7 +30,7 @@ import org.rrd4j.data.DataProcessor;
  */
 
 public class Download extends JrdsServlet {
-    static final private Logger logger = Logger.getLogger(Download.class);
+    static final private Logger logger = LogManager.getLogger(Download.class);
     private static final String CONTENT_TYPE = "text/csv";
     private static final SimpleDateFormat humanDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     protected static final ThreadLocal<DateFormat> epochFormat = 

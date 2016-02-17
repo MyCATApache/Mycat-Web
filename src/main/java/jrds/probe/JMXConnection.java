@@ -16,7 +16,7 @@ import javax.management.remote.JMXServiceURL;
 import jrds.factories.ProbeBean;
 import jrds.starter.Connection;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 @ProbeBean({"url", "protocol", "port", "path", "user", "password"})
 public class JMXConnection extends Connection<MBeanServerConnection> {

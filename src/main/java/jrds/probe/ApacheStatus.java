@@ -19,7 +19,7 @@ import java.util.Map;
 
 import jrds.Util;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * A class to probe the apache status from the mod_status

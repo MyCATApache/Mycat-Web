@@ -114,7 +114,6 @@
 		<rainbow-common.version>1.5.11-RELEASE</rainbow-common.version>
 		<joda-time.version>2.3</joda-time.version>
 		<jrds.version>1.0</jrds.version>
-		<log4j1.version>1.2.17</log4j1.version>
 		<rrd4j.version>2.3</rrd4j.version>
 		<snmp4j.version>2.2.5</snmp4j.version>
 		<snmpprobes.version>1.0</snmpprobes.version>
@@ -439,11 +438,6 @@
 				<artifactId>jrds</artifactId>
 				<version>${jrds.version}</version>
 			</dependency> -->
- 			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>${log4j1.version}</version>
-			</dependency> 
 <!-- 			<dependency>
 				<groupId>org.rrd4j</groupId>
 				<artifactId>rrd4j</artifactId>

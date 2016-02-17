@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.Target;
@@ -112,7 +112,7 @@ public enum SnmpRequester {
         }        
     };
 
-    static private final Logger logger = Logger.getLogger(SnmpRequester.class);
+    static private final Logger logger = LogManager.getLogger(SnmpRequester.class);
 
     /**
      * The method that need to be implemented to do the request

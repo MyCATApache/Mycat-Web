@@ -5,10 +5,9 @@ package jrds.snmp;
 
 import java.io.IOException;
 
-import jrds.JrdsLoggerConfiguration;
 import jrds.starter.Starter;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.Snmp;
 import org.snmp4j.log.Log4jLogFactory;
@@ -21,7 +20,7 @@ public class MainStarter extends Starter {
         SNMP4JSettings.setAllowSNMPv2InV1(true);
         org.snmp4j.log.LogFactory.setLogFactory(new Log4jLogFactory());
         //If not already configured, we filter it
-        JrdsLoggerConfiguration.configureLogger("org.snmp4j", Level.ERROR);
+      //  JrdsLoggerConfiguration.configureLogger("org.snmp4j", Level.ERROR);
     }
     public volatile Snmp snmp = null;
 

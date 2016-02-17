@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 import jrds.Probe;
 

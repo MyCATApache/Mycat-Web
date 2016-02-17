@@ -14,7 +14,7 @@ import jrds.snmp.SnmpConnection;
 import jrds.snmp.SnmpDiscoverAgent;
 import jrds.snmp.SnmpRequester;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.smi.OID;
 
 /**

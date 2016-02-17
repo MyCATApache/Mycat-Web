@@ -22,7 +22,7 @@ import jrds.ProbeDesc;
 import jrds.Util;
 import jrds.probe.UrlProbe;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class PowerJdbcProbe extends
 		ProbeConnected<String, Number, JdbcConnection> implements UrlProbe {

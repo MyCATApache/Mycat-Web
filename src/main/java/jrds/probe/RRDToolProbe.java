@@ -11,7 +11,7 @@ import jrds.Probe;
 import jrds.factories.ProbeBean;
 import jrds.graphe.RRDToolGraphNode;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.rrd4j.core.jrrd.RRDatabase;
 
 /**

@@ -5,12 +5,12 @@ import java.net.URL;
 
 import jrds.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class EntityResolver implements org.xml.sax.EntityResolver {
-	static final Logger logger = Logger.getLogger(EntityResolver.class);
+	static final Logger logger = LogManager.getLogger(EntityResolver.class);
 	public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException, IOException {
 		logger.trace(Util.delayedFormatString("Will look for DTD %s %s", publicId, systemId));

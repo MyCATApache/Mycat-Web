@@ -13,7 +13,7 @@ import jrds.factories.ProbeBean;
 import jrds.snmp.SnmpVars;
 import jrds.snmp.TabularIterator;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.rrd4j.core.Sample;
 import org.snmp4j.smi.OID;
 

@@ -29,7 +29,7 @@ import jrds.webapp.ACL;
 import jrds.webapp.DiscoverAgent;
 import jrds.webapp.RolesACL;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * The central repository of all informations : hosts, graph, and everything else
@@ -93,11 +93,6 @@ public class HostsList extends StarterNode {
 
     public void configure(PropertiesManager pm) {
         started = false;
-        try {
-            jrds.JrdsLoggerConfiguration.configure(pm);
-        } catch (IOException e1) {
-            log(Level.ERROR, e1, "Unable to set log file to " + pm.logfile);
-        }
 
         if(pm.rrddir == null) {
             log(Level.ERROR, "Probes directory not configured, can't configure");

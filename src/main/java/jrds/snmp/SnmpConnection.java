@@ -8,7 +8,7 @@ import jrds.factories.ProbeBean;
 import jrds.starter.Connection;
 import jrds.starter.Resolver;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
 import org.snmp4j.Snmp;

@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * This a a filter generated using an XML config file
  * @author Fabrice Bacchella 
  */
 public class FilterXml extends Filter {
-    static private final Logger logger = Logger.getLogger(FilterXml.class);
+    static private final Logger logger = LogManager.getLogger(FilterXml.class);
 
     private final Set<Pattern> goodPaths = new HashSet<Pattern>();
     private final Set<Pattern> tags = new HashSet<Pattern>();

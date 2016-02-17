@@ -9,14 +9,14 @@ import java.util.Map;
 import jrds.webapp.ACL;
 import jrds.webapp.WithACL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.data.DataProcessor;
 import org.rrd4j.data.Plottable;
 import org.rrd4j.graph.RrdGraph;
 import org.rrd4j.graph.RrdGraphDef;
 
 public class Graph implements WithACL {
-    static final private Logger logger = Logger.getLogger(Graph.class);
+    static final private Logger logger = LogManager.getLogger(Graph.class);
 
     static final private SimpleDateFormat lastUpdateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 

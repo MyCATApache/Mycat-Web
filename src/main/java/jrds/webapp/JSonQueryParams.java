@@ -11,7 +11,7 @@ import jrds.HostsList;
 import jrds.Tab;
 import jrds.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -20,7 +20,7 @@ import org.json.JSONException;
  */
 public class JSonQueryParams extends JrdsServlet {
     private static final long serialVersionUID = 1L;
-    static final private Logger logger = Logger.getLogger(JSonQueryParams.class);
+    static final private Logger logger = LogManager.getLogger(JSonQueryParams.class);
 
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

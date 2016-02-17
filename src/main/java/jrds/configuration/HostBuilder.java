@@ -33,10 +33,11 @@ import jrds.starter.HostStarter;
 import jrds.starter.Listener;
 import jrds.starter.Timer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class HostBuilder extends ConfigObjectBuilder<HostInfo> {
-    static final private Logger logger = Logger.getLogger(HostBuilder.class);
+    static final private Logger logger = LogManager.getLogger(HostBuilder.class);
 
     private ClassLoader classLoader = null;
     private ProbeFactory pf;

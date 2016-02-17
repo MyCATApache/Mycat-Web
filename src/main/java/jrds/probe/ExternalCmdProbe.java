@@ -21,7 +21,7 @@ import jrds.Probe;
 import jrds.PropertiesManager;
 import jrds.Util;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.rrd4j.core.Sample;
 
 /**

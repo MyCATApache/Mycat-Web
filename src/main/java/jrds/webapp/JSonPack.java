@@ -18,14 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 import jrds.Util;
 import jrds.Base64.OutputStream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONException;
 
 /**
  * Servlet implementation class JSonPack
  */
 public class JSonPack extends HttpServlet {
-    static final private Logger logger = Logger.getLogger(JSonPack.class);
+    static final private Logger logger = LogManager.getLogger(JSonPack.class);
     static final public List<String> JSONKEYS =  Arrays.asList(new String[] {"id", "autoperiod", "filter", "host", "path", "begin", "end", "max", "min", "tab", "sort", "tree"});
     static final public Map<String, Integer> JSONDICT = new HashMap<String, Integer>(JSONKEYS.size());
     static {

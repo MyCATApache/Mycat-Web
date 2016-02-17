@@ -17,7 +17,7 @@ import jrds.HostsList;
 import jrds.PropertiesManager;
 import jrds.webapp.ParamsBean;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcRequest;
 import org.apache.xmlrpc.common.XmlRpcHttpRequestConfig;
@@ -31,7 +31,7 @@ import org.apache.xmlrpc.webserver.XmlRpcServlet;
 import org.apache.xmlrpc.webserver.XmlRpcServletServer;
 
 public class JrdsXmlRpcServlet extends XmlRpcServlet {
-	static final private Logger logger = Logger.getLogger(JrdsXmlRpcServlet.class);
+	static final private Logger logger = LogManager.getLogger(JrdsXmlRpcServlet.class);
 	Class<?>[] handlersClass = new Class<?>[] {ConfigurationInformations.class};
 
 	private RequestProcessorFactoryFactory factoryfactory;

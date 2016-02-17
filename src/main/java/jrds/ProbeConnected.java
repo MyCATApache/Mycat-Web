@@ -5,7 +5,7 @@ import java.util.Map;
 
 import jrds.starter.Connection;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public abstract class ProbeConnected<KeyType, ValueType, ConnectionClass extends jrds.starter.Connection<?>> extends Probe<KeyType, ValueType> implements ConnectedProbe {
     private String connectionName;

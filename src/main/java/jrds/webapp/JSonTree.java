@@ -16,14 +16,14 @@ import jrds.GraphTree;
 import jrds.HostsList;
 import jrds.Tab;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONException;
 
 /**
  * Servlet implementation class JSonTree
  */
 public class JSonTree extends JSonData {
-    static final private Logger logger = Logger.getLogger(JSonTree.class);
+    static final private Logger logger = LogManager.getLogger(JSonTree.class);
 
     @Override
     public boolean generate(JrdsJSONWriter w, HostsList root, ParamsBean params) throws IOException, JSONException {
