@@ -1,10 +1,8 @@
 package org.mycat.web;
 
 
-import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 public class TestMailLog {
