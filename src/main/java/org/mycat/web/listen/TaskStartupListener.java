@@ -7,6 +7,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.mycat.web.task.common.TaskManger;
+import org.mycat.web.task.server.CheckMycatSuspend;
 import org.mycat.web.task.server.SyncSysSql;
 import org.mycat.web.task.server.SyncSysSqlhigh;
 import org.mycat.web.task.server.SyncSysSqlslow;
@@ -54,6 +55,9 @@ public class TaskStartupListener implements ServletContextListener{
 			  TaskManger.getInstance().addTask(new SyncSysSqtable(), 60 * 1000*3, "SyncSysSqtable");//3分钟
 			  TaskManger.getInstance().addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 			  TaskManger.getInstance().addTask(new SyncClearData(),60 *1000*60*10, "SyncClearData");//10小时
+			  
+
+			  TaskManger.getInstance().addTask(new CheckMycatSuspend(), 60 * 1000, "CheckMycatSuspend",10);//1分钟  10秒没响应报警
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
