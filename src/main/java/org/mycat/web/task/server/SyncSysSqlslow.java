@@ -9,6 +9,7 @@ import org.hx.rainbow.common.util.DateUtil;
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.MailUtil;
 
 /*
  * 异步持久化mycat中数据
@@ -35,6 +36,12 @@ public class SyncSysSqlslow implements ITask {
 			//if(entity == null){ 
 				showService.getDao().insert(NAMESPACE, "insert", entry);
 			//}
+				
+				
+			try { 
+				MailUtil.send("监控到慢SQL", (String)entry.get("SQL"));
+			} catch (Exception e) { 
+			}
 		} 
 		
 		 
