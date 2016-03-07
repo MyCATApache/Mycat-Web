@@ -183,7 +183,8 @@ public class ZkConfigService  extends BaseService {
 		Menu mycatMenuSub4= new Menu("1-4","mycat系统参数","page/manger/sysparam.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub5= new Menu("1-5","IP白名单","page/manger/whitehost.html",MENU_TYPE_NODE);
 		Menu mycatMenuSub6= new Menu("1-6","mycat日志管理","page/manger/syslog.html",MENU_TYPE_NODE);
-		Menu mycatMenuSub7= new Menu("1-7","网络拓扑图","page/manger/topol.html",MENU_TYPE_NODE);		 
+		Menu mycatMenuSub7= new Menu("1-7","网络拓扑图","page/manger/topol.html",MENU_TYPE_NODE);	
+		Menu mycatMenuSub8= new Menu("1-8","邮件告警","page/manger/mail.html",MENU_TYPE_NODE);			 
 		mycatMenu.getSubMenus().add(mycatMenuSub1);
 		mycatMenu.getSubMenus().add(mycatMenuSub2);
 		mycatMenu.getSubMenus().add(mycatMenuSub3);
@@ -191,6 +192,7 @@ public class ZkConfigService  extends BaseService {
 		mycatMenu.getSubMenus().add(mycatMenuSub5);
 		mycatMenu.getSubMenus().add(mycatMenuSub6);
 		mycatMenu.getSubMenus().add(mycatMenuSub7);
+		mycatMenu.getSubMenus().add(mycatMenuSub8);
 		menus.add(mycatMenu);
 		
 		Menu monitorMenu= new Menu("2","Mycat-监控","",MENU_TYPE_PROJECT_GROUP);
