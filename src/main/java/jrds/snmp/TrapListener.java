@@ -9,7 +9,7 @@ import jrds.factories.ProbeBean;
 import jrds.probe.PassiveProbe;
 import jrds.starter.Listener;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.CommandResponder;
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.Snmp;

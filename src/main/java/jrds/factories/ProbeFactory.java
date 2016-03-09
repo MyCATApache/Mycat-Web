@@ -12,7 +12,7 @@ import jrds.Probe;
 import jrds.ProbeDesc;
 import jrds.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * A class to find probe by their names
@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  */
 public class ProbeFactory {
 
-    private final Logger logger = Logger.getLogger(ProbeFactory.class);
+    private final Logger logger = LogManager.getLogger(ProbeFactory.class);
     final private List<String> probePackages = new ArrayList<String>(5);
     private Map<String, ProbeDesc> probeDescMap;
     private Map<String, GraphDesc> graphDescMap;

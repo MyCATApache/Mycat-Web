@@ -29,7 +29,7 @@ import jrds.HostInfo;
 import jrds.HostsList;
 import jrds.Probe;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.hx.rainbow.common.util.JsonUtil;
 
 /**
@@ -44,7 +44,7 @@ public final class Graph extends JrdsServlet {
 	 */
 	private static final long serialVersionUID = -2438020478080172748L;
 	
-	static final private Logger logger = Logger.getLogger(Graph.class);
+	static final private Logger logger = LogManager.getLogger(Graph.class);
 
 	/**
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,

@@ -39,4 +39,7 @@ public final class Constant {
     public  static final String MYCAT_PROCESSOR = MYCAT_EYE+"/mycat_processor";	
     
     public static boolean Mycat_JRDS=false;
+    
+
+    public static final String MYCATY_WARN_MAIL = "mycat_warn_mail";
 }

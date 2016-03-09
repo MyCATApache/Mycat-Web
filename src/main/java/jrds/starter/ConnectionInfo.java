@@ -9,11 +9,11 @@ import jrds.Util;
 import jrds.factories.ArgFactory;
 import jrds.factories.ConnectionName;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 
 public class ConnectionInfo {
-    static final private Logger logger = Logger.getLogger(ConnectionInfo.class);
+    static final private Logger logger = LogManager.getLogger(ConnectionInfo.class);
 
     private final List<Object> args;
     private final Map<String, String> beansValue;

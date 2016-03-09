@@ -19,7 +19,7 @@ import jrds.factories.xml.JrdsElement;
 import jrds.webapp.Discover.ProbeDescSummary;
 import jrds.webapp.DiscoverAgent;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.Snmp;
 import org.snmp4j.Target;

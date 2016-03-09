@@ -22,7 +22,7 @@ import jrds.starter.Starter;
 import jrds.starter.StarterNode;
 import jrds.webapp.DiscoverAgent;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class CheckJar extends CommandStarterImpl {
 

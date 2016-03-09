@@ -39,8 +39,8 @@ import jrds.probe.IndexedProbe;
 import jrds.probe.UrlProbe;
 import jrds.starter.HostStarter;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 
@@ -50,7 +50,7 @@ import org.w3c.dom.DocumentType;
  * @version $Revision$,  $Date$
  */
 public class Util {
-    static final private Logger logger = Logger.getLogger(Util.class);
+    static final private Logger logger = LogManager.getLogger(Util.class);
 
     static private MessageDigest md5digest;
     static {
@@ -697,7 +697,7 @@ public class Util {
     }
 
     static final public void log(Object source, Logger namedLogger, Level l, Throwable e, String format, Object... args) {
-        if(namedLogger.isEnabledFor(l)) {
+        if(namedLogger.isEnabled(l)) {
             StringBuilder line = new StringBuilder();
             if(source != null)
                 line.append("[" + source.toString() + "] ");

@@ -27,13 +27,13 @@ public abstract class CommandStarterImpl implements CommandStarter {
         System.out.println("Unimplemented help");
     }
 
-    static {
-        try {
-            jrds.JrdsLoggerConfiguration.initLog4J();
-        } catch (IOException e) {
-            throw new RuntimeException("Log configuration failed", e);
-        }
-    }
+//    static {
+//        try {
+//            jrds.JrdsLoggerConfiguration.initLog4J();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Log configuration failed", e);
+//        }
+//    }
 
     public  void configure(Properties configuration) {
     }

@@ -7,14 +7,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 import jrds.Configuration;
 import jrds.HostsList;
 import jrds.PropertiesManager;
 
 public abstract class JrdsServlet extends HttpServlet {
-    static final private Logger logger = Logger.getLogger(JrdsServlet.class);
+    static final private Logger logger = LogManager.getLogger(JrdsServlet.class);
 
     protected HostsList getHostsList() {
         return Configuration.get().getHostsList();

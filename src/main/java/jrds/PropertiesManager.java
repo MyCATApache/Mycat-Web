@@ -31,8 +31,8 @@ import jrds.starter.Timer;
 import jrds.webapp.ACL;
 import jrds.webapp.RolesACL;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 import org.rrd4j.core.RrdBackendFactory;
 
 /**
@@ -42,7 +42,7 @@ import org.rrd4j.core.RrdBackendFactory;
  * @version $Revision$,  $Date$
  */
 public class PropertiesManager extends Properties {
-    private final Logger logger = Logger.getLogger(PropertiesManager.class);
+    private final Logger logger = LogManager.getLogger(PropertiesManager.class);
 
     public static final class TimerInfo {
         public int step;
@@ -263,14 +263,6 @@ public class PropertiesManager extends Properties {
         boolean nologging = parseBoolean(getProperty("nologging", "false"));
         String log4jXmlFile = getProperty("log4jxmlfile", "");
         String log4jPropFile = getProperty("log4jpropfile", "");
-        if(log4jXmlFile != null && ! "".equals(log4jXmlFile.trim())) {
-            org.apache.log4j.xml.DOMConfigurator.configure(log4jXmlFile.trim());
-            nologging = true;
-        }
-        else if(log4jPropFile != null && ! "".equals(log4jPropFile.trim())) {
-            org.apache.log4j.PropertyConfigurator.configure(log4jPropFile.trim());
-            nologging = true;
-        }
 
         if(! nologging) {
             for(String ls: new String[]{ "trace", "debug", "info", "error", "fatal", "warn"}) {
@@ -288,13 +280,6 @@ public class PropertiesManager extends Properties {
             }
             loglevel = Level.toLevel(getProperty("loglevel", "info"));
             logfile = getProperty("logfile");
-
-            //Let's configure the log fast
-            try {
-                jrds.JrdsLoggerConfiguration.configure(this);
-            } catch (IOException e1) {
-                logger.error("Unable to set log file to " + this.logfile + ": " + e1);
-            }
         }
         legacymode = parseBoolean(getProperty("legacymode", "1"));
 

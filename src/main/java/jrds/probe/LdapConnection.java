@@ -9,7 +9,7 @@ import javax.naming.directory.InitialDirContext;
 
 import jrds.starter.Connection;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class LdapConnection extends Connection<DirContext> {
 	private String binddn;

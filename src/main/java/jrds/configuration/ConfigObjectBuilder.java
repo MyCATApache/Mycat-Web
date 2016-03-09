@@ -16,12 +16,13 @@ import jrds.factories.xml.JrdsElement;
 import jrds.webapp.RolesACL;
 import jrds.webapp.WithACL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.rrd4j.DsType;
 import org.snmp4j.smi.OID;
 
 abstract class ConfigObjectBuilder<BuildObject> {
-    static final private Logger logger = Logger.getLogger(ConfigObjectBuilder.class);
+    static final private Logger logger = LogManager.getLogger(ConfigObjectBuilder.class);
 
     PropertiesManager pm;
     public ConfigType ct;

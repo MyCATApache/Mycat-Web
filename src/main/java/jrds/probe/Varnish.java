@@ -15,7 +15,7 @@ import jrds.Probe;
 import jrds.factories.ProbeBean;
 import jrds.starter.SocketFactory;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 @ProbeBean({"port", "welcome"})
 public class Varnish extends Probe<String, Number> implements IndexedProbe {

@@ -23,8 +23,8 @@ import jrds.probe.UrlProbe;
 import jrds.starter.HostStarter;
 import jrds.starter.StarterNode;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.core.ArcDef;
 import org.rrd4j.core.Archive;
@@ -62,7 +62,7 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 	private ProbeDesc pd;
 	private long uptime = Long.MAX_VALUE;
 	private String label = null;
-	private Logger namedLogger = Logger.getLogger("jrds.Probe.EmptyProbe");
+	private Logger namedLogger = LogManager.getLogger("jrds.Probe.EmptyProbe");
 	private volatile boolean running = false;
 	public ConcurrentHashMap<String, Object> latestCollectionValues = new ConcurrentHashMap<String, Object>();
 
@@ -91,7 +91,7 @@ public abstract class Probe<KeyType, ValueType> extends StarterNode implements
 
 	public void setPd(ProbeDesc pd) {
 		this.pd = pd;
-		namedLogger = Logger.getLogger("jrds.Probe." + pd.getName());
+		namedLogger = LogManager.getLogger("jrds.Probe." + pd.getName());
 		if (!readSpecific()) {
 			throw new RuntimeException("Creation failed");
 		}

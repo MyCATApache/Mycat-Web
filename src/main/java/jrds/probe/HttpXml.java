@@ -15,7 +15,7 @@ import jrds.Util;
 import jrds.factories.ProbeMeta;
 import jrds.starter.XmlProvider;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.w3c.dom.Document;
 
 /**

@@ -6,7 +6,7 @@
 
 package jrds.probe.snmp;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 /**
  * A extention of the partitionSpace probe, used tom manager the long naming convention

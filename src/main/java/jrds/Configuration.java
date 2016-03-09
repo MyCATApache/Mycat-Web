@@ -4,10 +4,10 @@ import java.util.Properties;
 
 import jrds.starter.Timer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class Configuration {
-    static private final Logger logger = Logger.getLogger(Configuration.class);
+    static private final Logger logger = LogManager.getLogger(Configuration.class);
 
     static private Configuration conf;
 

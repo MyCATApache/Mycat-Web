@@ -16,11 +16,11 @@ import jrds.PropertiesManager;
 import jrds.configuration.ConfigObjectFactory;
 import jrds.factories.ArgFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.core.DsDef;
 
 public class EnumerateWikiProbes extends CommandStarterImpl {
-    static private final Logger logger = Logger.getLogger(EnumerateWikiProbes.class);
+    static private final Logger logger = LogManager.getLogger(EnumerateWikiProbes.class);
 
     static final private String JAVADOCURLTEMPLATES = "http://jrds.fr/apidoc-core/index.html?%s.html";
 
@@ -41,7 +41,7 @@ public class EnumerateWikiProbes extends CommandStarterImpl {
     public void start(String args[]) throws Exception {
         PropertiesManager pm = new PropertiesManager(new File(propFile));
         pm.update();
-        jrds.JrdsLoggerConfiguration.configure(pm);
+//        jrds.JrdsLoggerConfiguration.configure(pm);
 
         System.getProperties().setProperty("java.awt.headless","true");
 

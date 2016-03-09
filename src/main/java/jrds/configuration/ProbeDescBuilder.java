@@ -11,10 +11,10 @@ import jrds.Util;
 import jrds.factories.xml.JrdsDocument;
 import jrds.factories.xml.JrdsElement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public class ProbeDescBuilder extends ConfigObjectBuilder<ProbeDesc> {
-    static final private Logger logger = Logger.getLogger(ProbeDescBuilder.class);
+    static final private Logger logger = LogManager.getLogger(ProbeDescBuilder.class);
 
     private ClassLoader classLoader = ProbeDescBuilder.class.getClassLoader();
     private Map<String, GraphDesc> graphDescMap = Collections.emptyMap();

@@ -9,8 +9,8 @@ import java.util.Set;
 import jrds.HostsList;
 import jrds.PropertiesManager;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 
 @SuppressWarnings("deprecation")
 public abstract class StarterNode implements StartersSet {
@@ -243,11 +243,11 @@ public abstract class StarterNode implements StartersSet {
     }
 
     public void log(Level l, Throwable e, String format, Object... elements) {
-        jrds.Util.log(this, Logger.getLogger(getClass()), l, e, format, elements);
+        jrds.Util.log(this, LogManager.getLogger(getClass()), l, e, format, elements);
     }
 
     public void log(Level l, String format, Object... elements) {
-        jrds.Util.log(this, Logger.getLogger(getClass()), l, null, format, elements);
+        jrds.Util.log(this, LogManager.getLogger(getClass()), l, null, format, elements);
     }
 
     /**

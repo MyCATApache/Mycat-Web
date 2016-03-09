@@ -11,7 +11,7 @@ import jrds.starter.Resolver;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.NtpV3Packet;
 import org.apache.commons.net.ntp.TimeInfo;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 @ProbeBean({"port"})
 public class Ntp extends Probe<String, Number> {

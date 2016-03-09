@@ -19,7 +19,7 @@ import jrds.PropertiesManager;
 import jrds.Renderer;
 import jrds.StoreOpener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 
 /**
@@ -29,16 +29,16 @@ import org.apache.log4j.Logger;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Grapher {
-    static final private Logger logger = Logger.getLogger(Grapher.class);
+    static final private Logger logger = LogManager.getLogger(Grapher.class);
 
     public static void main(String[] args) throws Exception {
-        jrds.JrdsLoggerConfiguration.initLog4J();
+//        jrds.JrdsLoggerConfiguration.initLog4J();
 
         String propFile = "jrds.properties";
         if(args.length == 1)
             propFile = args[0];
         PropertiesManager pm = new PropertiesManager(new File(propFile));
-        jrds.JrdsLoggerConfiguration.configure(pm);
+//        jrds.JrdsLoggerConfiguration.configure(pm);
 
         System.getProperties().setProperty("java.awt.headless","true");
         System.getProperties().putAll(pm);

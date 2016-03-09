@@ -8,7 +8,7 @@ import java.sql.Statement;
 import jrds.factories.ProbeBean;
 import jrds.starter.Connection;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 @ProbeBean({"user", "password", "url", "driverClass"})
 public class JdbcConnection extends Connection<Statement> {

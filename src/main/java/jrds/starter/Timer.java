@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import jrds.HostInfo;
 import jrds.PropertiesManager;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class Timer extends StarterNode {
 

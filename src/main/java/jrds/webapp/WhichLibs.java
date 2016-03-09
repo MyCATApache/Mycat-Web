@@ -18,13 +18,13 @@ import jrds.HostsList;
 import jrds.PropertiesManager;
 import jrds.StoreOpener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 /**
  * @author Fabrice Bacchella
  */
 public final class WhichLibs extends JrdsServlet {
-    static final private Logger logger = Logger.getLogger(WhichLibs.class);
+    static final private Logger logger = LogManager.getLogger(WhichLibs.class);
     /**
      * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */

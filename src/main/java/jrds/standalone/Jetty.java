@@ -11,8 +11,8 @@ import javax.management.MBeanServer;
 import jrds.PropertiesManager;
 import jrds.jmx.Management;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
@@ -31,7 +31,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 public class Jetty extends CommandStarterImpl {
 
-    static private final Logger logger = Logger.getLogger(Jetty.class);
+    static private final Logger logger = LogManager.getLogger(Jetty.class);
 
     int port = 8080;
     String propFileName = "jrds.properties";
@@ -49,8 +49,6 @@ public class Jetty extends CommandStarterImpl {
     }
 
     public void start(String args[]) {
-        Logger.getRootLogger().setLevel(Level.ERROR);
-
         PropertiesManager pm = new PropertiesManager();
         File propFile = new File(propFileName);
         if(propFile.isFile())

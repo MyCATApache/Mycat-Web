@@ -9,14 +9,14 @@ import jrds.HostsList;
 import jrds.PlottableMap;
 import jrds.Util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.core.FetchData;
 import org.rrd4j.data.LinearInterpolator;
 import org.rrd4j.data.Plottable;
 
 public class Sum extends AutonomousGraphNode {
-    static final private Logger logger = Logger.getLogger(Sum.class);
+    static final private Logger logger = LogManager.getLogger(Sum.class);
 
     private final ArrayList<String> graphList;
     private HostsList hl;

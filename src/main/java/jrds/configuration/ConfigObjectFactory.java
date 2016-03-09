@@ -20,10 +20,11 @@ import jrds.graphe.Sum;
 import jrds.starter.Listener;
 import jrds.starter.Timer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ConfigObjectFactory {
-    static final private Logger logger = Logger.getLogger(ConfigObjectFactory.class);
+    static final private Logger logger = LogManager.getLogger(ConfigObjectFactory.class);
 
     private ProbeFactory pf;
     private ClassLoader cl = this.getClass().getClassLoader();

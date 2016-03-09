@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 import jrds.HostInfo;
 import jrds.Probe;

@@ -30,14 +30,14 @@ import jrds.Util;
 import jrds.factories.xml.EntityResolver;
 import jrds.factories.xml.JrdsDocument;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 class Loader {
 
-    static final private Logger logger = Logger.getLogger(Loader.class);
+    static final private Logger logger = LogManager.getLogger(Loader.class);
 
     private static final FileFilter filter = new FileFilter(){
         public boolean accept(File file) {

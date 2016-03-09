@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import jrds.Probe;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.core.FetchData;
 
@@ -26,7 +26,7 @@ import org.rrd4j.core.FetchData;
  * @version $Revision: 236 $
  */
 public final class ProbeSummary extends JrdsServlet {
-	static final private Logger logger = Logger.getLogger(ProbeSummary.class);
+	static final private Logger logger = LogManager.getLogger(ProbeSummary.class);
 	
 	/**
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)

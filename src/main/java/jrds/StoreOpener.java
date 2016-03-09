@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.core.RrdBackendFactory;
 import org.rrd4j.core.RrdDb;
 import org.rrd4j.core.RrdDbPool;
@@ -15,7 +15,7 @@ import org.rrd4j.core.RrdRandomAccessFileBackendFactory;
  * A wrapper classe, to manage the rrdDb operations
  */
 public final class StoreOpener {
-    static final private Logger logger = Logger.getLogger(StoreOpener.class);
+    static final private Logger logger = LogManager.getLogger(StoreOpener.class);
 
     private static RrdDbPool instance = null;
 

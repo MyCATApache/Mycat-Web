@@ -17,12 +17,12 @@ import jrds.ProbeDesc;
 import jrds.probe.snmp.RdsIndexedSnmpRrd;
 import jrds.probe.snmp.RdsSnmpSimple;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.DsType;
 import org.snmp4j.smi.OID;
 
 public class DoSnmpProbe  extends CommandStarterImpl {
-    static final private Logger logger = Logger.getLogger(DoSnmpProbe.class);
+    static final private Logger logger = LogManager.getLogger(DoSnmpProbe.class);
     static final Pattern oidPattern = Pattern.compile("^(.\\d+)+$");
     static final Pattern namePattern = Pattern.compile("^(.+)\\s+OBJECT-TYPE$");
     static final Pattern syntaxPattern = Pattern.compile(".*SYNTAX\\s+([a-zA-Z0-9]+).*");

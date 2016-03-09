@@ -18,10 +18,6 @@ public class PublishServiceStartupListener implements ServletContextListener {
     }
     @Override
     public void contextInitialized(ServletContextEvent arg0) {
-    	
-    	System.out
-				.println("PublishServiceStartupListener.contextInitialized()");
-    	
     	String connStr = (String)RainbowProperties.getProperties("zookeeper");
     	if(connStr == null || connStr.isEmpty()){
     		throw new SysException("zookeeper is null, please check mycat.properties!");

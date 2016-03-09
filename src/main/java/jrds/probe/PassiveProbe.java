@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.rrd4j.core.RrdDb;
 import org.rrd4j.core.Sample;
 

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 
 public abstract class Tab {
     public static final class Filters extends Tab {
@@ -77,7 +77,7 @@ public abstract class Tab {
         }
     }
 
-    static protected final Logger logger = Logger.getLogger(Tab.class);
+    static protected final Logger logger = LogManager.getLogger(Tab.class);
 
     protected String name;
     protected String id;

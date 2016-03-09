@@ -25,7 +25,7 @@ import jrds.probe.jdbc.JdbcProbe;
 import jrds.webapp.ACL;
 import jrds.webapp.WithACL;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.data.DataProcessor;
 import org.rrd4j.data.Plottable;
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  */
 public class GraphDesc
 implements Cloneable, WithACL {
-    static final private Logger logger = Logger.getLogger(GraphDesc.class);
+    static final private Logger logger = LogManager.getLogger(GraphDesc.class);
 
     static public final ConsolFun DEFAULTCF = ConsolFun.AVERAGE;
 

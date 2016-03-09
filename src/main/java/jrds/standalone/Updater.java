@@ -13,15 +13,15 @@ import jrds.Probe;
 import jrds.PropertiesManager;
 import jrds.StoreOpener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.rrd4j.core.RrdDb;
 import org.rrd4j.core.RrdDef;
 
 public class Updater {
-	static final private Logger logger = Logger.getLogger(Updater.class);
+	static final private Logger logger = LogManager.getLogger(Updater.class);
 
 	public static void main(String[] args) throws IOException {
-		jrds.JrdsLoggerConfiguration.initLog4J();
+//		jrds.JrdsLoggerConfiguration.initLog4J();
 
 		PropertiesManager pm = new PropertiesManager(new File("jrds.properties"));
 		//jrds.log.JrdsLoggerFactory.setOutputFile(pm.logfile);

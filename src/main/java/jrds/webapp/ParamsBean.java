@@ -38,7 +38,7 @@ import jrds.Tab;
 import jrds.Util;
 import jrds.Util.SiPrefix;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONException;
 
 /**
@@ -48,7 +48,7 @@ import org.json.JSONException;
  */
 public class ParamsBean implements Serializable {
 
-	static final private Logger logger = Logger.getLogger(ParamsBean.class);
+	static final private Logger logger = LogManager.getLogger(ParamsBean.class);
 
 	static public final String TREECHOICE = "tree";
 	static public final String TABCHOICE = "tab";

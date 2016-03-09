@@ -8,7 +8,7 @@ package jrds.probe.snmp;
 
 import java.util.Map;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 import org.rrd4j.core.Sample;
 import org.snmp4j.smi.OID;
 

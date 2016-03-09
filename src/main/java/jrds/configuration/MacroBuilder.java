@@ -5,11 +5,11 @@ import jrds.Util;
 import jrds.factories.xml.JrdsDocument;
 import jrds.factories.xml.JrdsElement;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.w3c.dom.DocumentFragment;
 
 public class MacroBuilder extends ConfigObjectBuilder<Macro> {
-    static final private Logger logger = Logger.getLogger(MacroBuilder.class);
+    static final private Logger logger = LogManager.getLogger(MacroBuilder.class);
 
     public MacroBuilder() {
         super(ConfigType.MACRODEF);

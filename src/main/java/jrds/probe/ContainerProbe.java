@@ -8,7 +8,7 @@ import jrds.HostInfo;
 import jrds.Probe;
 import jrds.ProbeDesc;
 
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
 
 public class ContainerProbe extends Probe<Object, Number> {
     static private final HostInfo ContainerHost = new HostInfo("ContainerHost");

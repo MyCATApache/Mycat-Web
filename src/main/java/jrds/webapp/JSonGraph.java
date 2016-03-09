@@ -13,14 +13,14 @@ import jrds.HostsList;
 import jrds.Probe;
 import jrds.Renderer;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.json.JSONException;
 
 /**
  * Servlet implementation class JSonGraph
  */
 public class JSonGraph extends JSonData {
-    static final private Logger logger = Logger.getLogger(JSonGraph.class);
+    static final private Logger logger = LogManager.getLogger(JSonGraph.class);
     private static final long serialVersionUID = 1L;
     private int periodHistory[] = {7, 9, 11, 16};
 

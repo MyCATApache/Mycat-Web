@@ -21,8 +21,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.*;
 
 public class Renderer {
     final int PRIME = 31;
@@ -137,7 +137,7 @@ public class Renderer {
 
     };
 
-    static private final Logger logger = Logger.getLogger(Renderer.class);
+    static private final Logger logger = LogManager.getLogger(Renderer.class);
     static private final float hashTableLoadFactor = 0.75f;
     final private Object counter = new Object() {
         int i = 0;

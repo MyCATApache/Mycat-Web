@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hx.rainbow.common.context.RainbowContext;
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.SoaManager;
@@ -59,11 +59,23 @@ public class DataSourceUtils {
 	
 	public  boolean register(Map<String, Object> jdbc, String dbName, MycatPortType portType) throws Exception {
 		Connection conn = null;
+		dbName = dbName + portType;
+		String beanName = dbName + NAME_SUFFIX;
 		try {
-			dbName = dbName + portType;
-			String beanName = dbName + NAME_SUFFIX;
-			remove(dbName);
 			logger.info("dbname:" + dbName + " is  initializing!!");
+			
+			remove(beanName);
+			
+			switch (portType) {
+			case MYCAT_MANGER:
+				jdbc.put("port", jdbc.get("mangerPort"));
+				break;
+			case MYCAT_SERVER:
+				jdbc.put("port", jdbc.get("serverPort"));
+				break;
+			default:
+				break;
+			};
 			ConfigurableApplicationContext applicationContext = 
 					(ConfigurableApplicationContext) SpringApplicationContext.getApplicationContext();
 			DefaultListableBeanFactory beanFactory = 
@@ -85,7 +97,7 @@ public class DataSourceUtils {
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e.getCause());
-			remove(dbName);
+			remove(beanName);
 			return false;
 		}finally{
 			if(conn != null){
@@ -125,33 +137,30 @@ public class DataSourceUtils {
 			default:
 				break;
 			};
-			
 			return register(row, dbName, portType);
 		}
 		return true;
 	}
 
 	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
-		 boolean result = true; 
 		 if(!register(jdbc, dbName, MycatPortType.MYCAT_MANGER)){
-			 result = false;
+			 return false;
 		 }
 		 if(! register(jdbc, dbName, MycatPortType.MYCAT_SERVER)){
-			 result = false; 
+			 return false; 
 		 }
-		 return result;
+		 return true;
 		
 	}
 	
 	public boolean register(String dbName) throws Exception {
-		 boolean result = true; 
 		 if(!register(dbName, MycatPortType.MYCAT_MANGER)){
-			 result = false;
+			 return false;
 		 }
 		 if(! register(dbName, MycatPortType.MYCAT_SERVER)){
-			 result = false; 
+			 return false;
 		 }
-		 return result;
+		 return true;
 	}
 	
 	public String getDbName(String dbName)  {
