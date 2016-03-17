@@ -57,8 +57,7 @@
 				bufferSize="1" 
 				smtpProtocol="${smtpProtocol}" 
 				smtpDebug="true">
-				<!-- 消息过滤器 -->
-		     	<RegexFilter regex=".* test .*" onMatch="ACCEPT" 	onMismatch="DENY"/>
+				
 			</SMTP>
         
         
@@ -77,11 +76,18 @@
 		<Root  level="info">
 			<appender-ref ref="DevLog" />
 			<appender-ref ref="Console" />
-		</Root> 
-		
-		<Root level="error">
+		</Root>
+		<logger name="org.mycat.web.task.common" level="error" >
+			<AppenderRef ref="Mail" />
+		</logger> 
+		<logger name="org.mycat.web.TestMailLog" level="error" >
+			<AppenderRef ref="Mail" />
+			<!-- 消息过滤器 -->
+		     	<RegexFilter regex=".* test .*" onMatch="ACCEPT" 	onMismatch="DENY"/>
+		</logger>
+<!-- 		<Root level="error">
       		<AppenderRef ref="Mail" />
-    	</Root>
+    	</Root> -->
     </loggers>  
     
 </configuration>  

@@ -15,6 +15,8 @@ import org.hx.rainbow.common.core.service.SoaManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mycat.web.task.common.TaskManger;
+import org.mycat.web.task.server.CheckMycatSuspend;
+import org.mycat.web.task.server.CheckServerDown;
 import org.mycat.web.task.server.SyncClearData;
 import org.mycat.web.task.server.SyncSysSql;
 import org.mycat.web.task.server.SyncSysSqlhigh;
@@ -116,6 +118,8 @@ public class DataSourceUtils {
 		taskManger.addTask(new SyncSysSqtable(), 60 * 1000*3, "SyncSysSqtable");//3分钟
 		taskManger.addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 		taskManger.addTask(new SyncClearData(),60 *1000*60*10, "SyncClearData");//10小时
+		taskManger.addTask(new CheckMycatSuspend(), 60 * 1000*5, "CheckMycatSuspend",10);//5分钟检查一次，10秒一次
+		taskManger.addTask(new CheckServerDown(), 60 * 1000*5, "CheckServerDown");//5分钟检查一次
 	}
 	
 	public boolean register(String dbName, MycatPortType portType) throws Exception {
