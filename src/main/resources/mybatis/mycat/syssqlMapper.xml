@@ -60,6 +60,7 @@
 				and USER =  #{username}
 			</if>			 
 		</where>
+		order by START_TM desc
 	</select>
 	 
 	<select id="sqlInfo" parameterType="map" resultType="map">
