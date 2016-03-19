@@ -264,6 +264,18 @@ $(document).ready(function() {
 	        indexColWidth: 35,
 	        cols: cols,
 	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sql',
+	        params: function(){
+	        	var daterange = $('#reservationtime').val().split('~');
+	        	var begin = daterange[0].trim();
+	        	var end = daterange[1].trim();
+	        	if ($('#username').val().length>0){
+	        		return {ds:$('#datasource').val(),begin:begin,end:end,username:$('#username').val()};
+	        	}else{
+	        		return {ds:$('#datasource').val(),begin:begin,end:end};
+	        	}	
+	        	
+	        	//return $('#query_Form').serializeJson();
+	        },	        	
 	        method: 'post',
 	        root: 'items',
 	        plugins:[

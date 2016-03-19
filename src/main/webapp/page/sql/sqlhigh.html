@@ -314,6 +314,18 @@
 									indexColWidth : 35,
 									cols : cols,
 									url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlhigh',
+							        params: function(){
+							        	var daterange = $('#reservationtime').val().split('~');
+							        	var begin = daterange[0].trim();
+							        	var end = daterange[1].trim();
+							        	if ($('#username').val().length>0){
+							        		return {ds:$('#datasource').val(),begin:begin,end:end,username:$('#username').val()};
+							        	}else{
+							        		return {ds:$('#datasource').val(),begin:begin,end:end};
+							        	}	
+							        	
+							        	//return $('#query_Form').serializeJson();
+							        },
 									method : 'post',
 									root : 'items',
 									plugins : [
@@ -324,4 +336,24 @@
 									}) ]
 								});
 	});
+	
+	$.fn.serializeJson=function(){ 
+		
+	    var serializeObj={}; // 目标对象 
+	    var array=this.serializeArray(); // 转换数组格式 
+	    // var str=this.serialize(); 
+	    $(array).each(function(){ // 遍历数组的每个元素 {name : xx , value : xxx} 
+	            if(serializeObj[this.name]){ // 判断对象中是否已经存在 name，如果存在name 
+	                  if($.isArray(serializeObj[this.name])){ 
+	                         serializeObj[this.name].push(this.value); // 追加一个值 hobby : ['音乐','体育'] 
+	                  }else{ 
+	                          // 将元素变为 数组 ，hobby : ['音乐','体育'] 
+	                          serializeObj[this.name]=[serializeObj[this.name],this.value]; 
+	                  } 
+	            }else{ 
+	                    serializeObj[this.name]=this.value; // 如果元素name不存在，添加一个属性 name:value 
+	            } 
+	    }); 
+	    return serializeObj; 
+	};     	
 </script>

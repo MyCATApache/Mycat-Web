@@ -54,7 +54,7 @@
 				<div class="box-footer">
 					<div class="form-group">
 						<div class="col-lg-offset-5 col-lg-2">
-							<button class="btn btn-primary" onclick="queryForm('query_Form');loadData();">查询</button>
+							<button class="btn btn-primary" onclick="queryForm('query_Form');">查询</button>
 							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
 						</div>
 					</div>
@@ -237,7 +237,19 @@ $(document).ready(function() {
 	        height: '400',
 	        indexColWidth: 35,
 	        cols: cols,
-	        //url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
+	        url : './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlsum',
+	        params: function(){
+	        	var daterange = $('#reservationtime').val().split('~');
+	        	var begin = daterange[0].trim();
+	        	var end = daterange[1].trim();
+	        	if ($('#username').val().length>0){
+	        		return {ds:$('#datasource').val(),begin:begin,end:end,USER:$('#username').val()};
+	        	}else{
+	        		return {ds:$('#datasource').val(),begin:begin,end:end};
+	        	}	
+	        	
+	        	//return $('#query_Form').serializeJson();
+	        },
 			method : 'post',  
 	        root: 'items',
 			plugins : [
@@ -246,6 +258,7 @@ $(document).ready(function() {
 							limit : 20,
 							totalCountName : 'totalCount'
 						}) ]
+
 	    });
 });
 
