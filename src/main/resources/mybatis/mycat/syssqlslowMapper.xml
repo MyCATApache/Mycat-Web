@@ -37,7 +37,7 @@
 	</select>
 	
 	<select id="sqlslow" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",DB_NAME as "DATASOURCE" from t_mycat_syssqlslow 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -49,7 +49,8 @@
 				and EXECUTE_TIME >= #{threshold,javaType=[Ljava.lang.Integer;,jdbcType=NUMERIC,typeHandler=NumberHandler }
 			</if>
 			 
-		</where>
+		</where>		
+		order by START_TIME desc
 	</select>
 	
 	<select id="sqlslowCount" parameterType="map" resultType="int">

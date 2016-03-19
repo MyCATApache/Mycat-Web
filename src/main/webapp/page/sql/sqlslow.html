@@ -102,7 +102,6 @@ Date.prototype.format = function(fmt) {
   fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
   return fmt;
 }
-
 var datasouce_change = function(){
 	var daterange = $('#reservationtime').val().split('~');
 	var begin = daterange[0].trim();
@@ -111,9 +110,6 @@ var datasouce_change = function(){
 	$('#end').val(end);
 	//queryForm('query_Form');
 }
-
-
-
 //Date range picker with time picker
 $('#reservationtime').daterangepicker(
 		{
@@ -161,15 +157,12 @@ $("#reservationtime").on('apply.daterangepicker', function() {
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
-
 	queryForm('query_Form');
 });
-
 var exportcsv =function(){
 	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlslow&ds="+$('#datasource').val()+"&threshold="+$('#threshold').val()+"&fileName=sqlslow";
 	window.location = url;
 }
-
 var Selected_Callback = function(target_select){
 	  this.onSuccess=function(data){
 			try {
@@ -191,15 +184,12 @@ var Selected_Callback = function(target_select){
 		this.onFail = function(jqXHR, textStatus, errorThrown){
 		};
 };
-
 var initDataSouce = function(){
 	var rainbow = new Rainbow();
 	rainbow.setService("mycatService");
 	rainbow.setMethod("query");
 	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
-
-
 $(document).ready(function() {
 	initDataSouce();
 		    var cols = [
@@ -221,6 +211,19 @@ $(document).ready(function() {
 	        cols: cols,
 	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlslow',
 	        method: 'post',
+	        //params: function(){return $('#query_Form').serializeJson();},
+	        params: function(){
+	        	var daterange = $('#reservationtime').val().split('~');
+	        	var begin = daterange[0].trim();
+	        	var end = daterange[1].trim();
+	        	if ($('#threshold').val().length>0){
+	        		return {ds:$('#datasource').val(),begin:begin,end:end,threshold:$('#threshold').val()};
+	        	}else{
+	        		return {ds:$('#datasource').val(),begin:begin,end:end};
+	        	}	
+	        	
+	        	//return $('#query_Form').serializeJson();
+	        },
 	        root: 'items',
 	        plugins:[
 	                 //配置当前grid默认的分页大小以及总记录数的名称
@@ -228,5 +231,23 @@ $(document).ready(function() {
 	               ]
 	    });
 });
-  
+$.fn.serializeJson=function(){ 
+	
+    var serializeObj={}; // 目标对象 
+    var array=this.serializeArray(); // 转换数组格式 
+    // var str=this.serialize(); 
+    $(array).each(function(){ // 遍历数组的每个元素 {name : xx , value : xxx} 
+            if(serializeObj[this.name]){ // 判断对象中是否已经存在 name，如果存在name 
+                  if($.isArray(serializeObj[this.name])){ 
+                         serializeObj[this.name].push(this.value); // 追加一个值 hobby : ['音乐','体育'] 
+                  }else{ 
+                          // 将元素变为 数组 ，hobby : ['音乐','体育'] 
+                          serializeObj[this.name]=[serializeObj[this.name],this.value]; 
+                  } 
+            }else{ 
+                    serializeObj[this.name]=this.value; // 如果元素name不存在，添加一个属性 name:value 
+            } 
+    }); 
+    return serializeObj; 
+};     
 </script>
