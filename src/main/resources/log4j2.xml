@@ -9,15 +9,19 @@
         <property name="SERVER_NAME">rainbow</property>  
         
         <!-- SMTP信息 -->
-        <property name="subject">${sys:mail.subject}</property>
-        <property name="to">1935326097@qq.com</property>
-        <property name="from">agile_louie@139.com</property>
-        <property name="smtpHost">smtp.139.com</property>
-        <property name="smtpPort">25</property>
-        <property name="smtpProtocol">smtp</property>
+        <property name="subject">Mycat Eye告警</property>
+        <property name="to">${sys:mail_to}</property>
+        <property name="cc">${sys:mail_cc}</property>
+        <property name="from">${sys:mail_from}</property>
+        <property name="smtpHost">${sys:mail_server}</property>
+        <property name="smtpPort">${sys:mail_port}</property>
+        <property name="smtpProtocol">${sys:mail_protocal}</property>
+        <property name="smtpUser">${sys:mail_user}</property>
+        <property name="smtpPassword">${sys:mail_password}</property>
+        <!-- 
         <property name="smtpUser">agile_louie@139.com</property>
         <property name="smtpPassword">agileadmin123</property>
-        
+         -->
     </properties>  
     <appenders>  
         <!-- 定义控制台输出 -->  
@@ -47,7 +51,7 @@
         <SMTP name="Mail" 
 				subject="${subject}" 
 				to="${to}"
-				cc="whyuan_8@hotmail.com,13817087645@163.com"
+				cc="${cc}"
 
 				from="${from}" 
 				smtpUsername="${smtpUser}" 	
@@ -77,7 +81,7 @@
 			<appender-ref ref="DevLog" />
 			<appender-ref ref="Console" />
 		</Root>
-		<logger name="org.mycat.web.task.common" level="error" >
+		<logger name="org.mycat.web.util.MailUtil" level="error" >
 			<AppenderRef ref="Mail" />
 		</logger> 
 		<logger name="org.mycat.web.TestMailLog" level="error" >

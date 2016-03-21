@@ -10,6 +10,7 @@ import org.hx.rainbow.common.exception.AppException;
 import org.mycat.web.util.Constant;
 import org.mycat.web.util.JsonUtils;
 import org.mycat.web.util.MailConfigUtils;
+import org.mycat.web.util.MailUtil;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -24,8 +25,10 @@ public class MailService extends BaseService{
 			JSONArray mailArray = mailJSONArray();
 			JSONObject mailJson = mailJSON(context,mailArray); 
 			mailArray.add(mailJson);
-			MailConfigUtils.getInstance().setValue(Constant.MYCATY_WARN_MAIL, mailArray.toJSONString()); 
-			context.setMsg("新增成功!");
+			MailConfigUtils.getInstance().setValue(Constant.MYCATY_WARN_MAIL, mailArray.toJSONString());
+			MailConfigUtils.getInstance().setMailInfo(mailJson);
+			MailUtil.send("hello", "这个是一个测试邮件。");
+			context.setMsg("新增成功!已发送测试邮件，请查看是否收到。");
 			context.setSuccess(true); 
 		}catch (Exception e) {
 			logger.error(e.getCause());
