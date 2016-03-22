@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class MailUtil {
-	
+
 
 	private static final Logger LOG = LoggerFactory.getLogger(MailUtil.class);
 	
@@ -52,8 +52,10 @@ public class MailUtil {
 	@SuppressWarnings("static-access")
 	public static void send(String subject, String content) throws MessagingException{
 		if (true){
-			MailConfigUtils.getInstance();
-			LOG.error(content);
+			if (System.getProperty("mail_to")==null)
+				LOG.warn(content);
+			else
+				LOG.error(content);
 			return;
 		}
 		
