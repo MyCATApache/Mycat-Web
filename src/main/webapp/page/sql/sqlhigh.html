@@ -287,7 +287,10 @@
 							width : 100,
 							align : 'left',
 							sortable : true,
-							type : 'number'
+							renderer: function(val){
+				        		//console.debug( "AVG_TIME:" + val);
+				        		return val.toFixed();
+				        	} 
 						},
 						{
 							title : '最大耗时(ms)',
