@@ -12,10 +12,19 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.mycat.web.task.common.TaskManger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class MailUtil {
+	
+
+	private static final Logger LOG = LoggerFactory.getLogger(MailUtil.class);
+	
+	
 	public static Properties props;
 	private static String mangerPort;
 	private static String smtpProtocol;
@@ -42,7 +51,14 @@ public class MailUtil {
 	
 	@SuppressWarnings("static-access")
 	public static void send(String subject, String content) throws MessagingException{
-
+		if (true){
+			MailConfigUtils.getInstance();
+			LOG.error(content);
+			return;
+		}
+		
+		
+		
 		JSONArray jsonArray = JSONArray.parseArray(MailConfigUtils.getInstance().getValue(Constant.MYCATY_WARN_MAIL)); 
 		for(int i=0;i<jsonArray.size();i++){
 			props = new Properties();

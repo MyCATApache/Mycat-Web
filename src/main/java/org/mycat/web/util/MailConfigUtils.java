@@ -7,6 +7,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 public class MailConfigUtils {
 
 	private static Properties prop;
@@ -22,6 +28,12 @@ public class MailConfigUtils {
 			synchronized (MailConfigUtils.class) {
 				if (mailConfigUtils == null) {
 					mailConfigUtils = new MailConfigUtils();
+					String mailInfo = mailConfigUtils.getValue(Constant.MYCATY_WARN_MAIL);
+					if(mailInfo != null && !"".equals(mailInfo)){
+						JSONArray mailArray = JSONArray.parseArray(mailInfo); 
+						mailConfigUtils.setMailInfo( (JSONObject)mailArray.get(0));
+						
+					}
 				}
 			}
 		}
@@ -30,6 +42,18 @@ public class MailConfigUtils {
 	
 	static {
 		
+	}
+	
+	public void setMailInfo(JSONObject json){
+		System.setProperty("mail_to", (String)json.get("to"));
+		System.setProperty("mail_cc", (String)json.get("cc"));
+		System.setProperty("mail_from", (String)json.get("smtpUser"));
+		System.setProperty("mail_user", (String)json.get("smtpUser"));
+		System.setProperty("mail_password", (String)json.get("smtpPassword"));
+		System.setProperty("mail_server", (String)json.get("smtpHost"));
+		System.setProperty("mail_protocal", (String)json.get("smtpProtocol"));
+		System.setProperty("mail_port", (String)json.get("mangerPort"));
+		((LoggerContext) LogManager.getContext(false)).reconfigure();
 	}
 
 	public String getValue(String key){
