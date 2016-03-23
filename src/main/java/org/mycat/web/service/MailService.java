@@ -23,11 +23,18 @@ public class MailService extends BaseService{
 		try{  
 
 			JSONArray mailArray = mailJSONArray();
+			if (mailArray.size()>0){
+
+				context.setSuccess(false);
+				throw new AppException("新增失败,系统只支持一个邮件设置，请删除后，再新建。");
+			}
+			
+			
 			JSONObject mailJson = mailJSON(context,mailArray); 
 			mailArray.add(mailJson);
 			MailConfigUtils.getInstance().setValue(Constant.MYCATY_WARN_MAIL, mailArray.toJSONString());
 			MailConfigUtils.getInstance().setMailInfo(mailJson);
-			MailUtil.send("hello", "这个是一个测试邮件。");
+			MailUtil.send("hello", "这是一封测试邮件。");
 			context.setMsg("新增成功!已发送测试邮件，请查看是否收到。");
 			context.setSuccess(true); 
 		}catch (Exception e) {
@@ -51,6 +58,7 @@ public class MailService extends BaseService{
 			MailConfigUtils.getInstance().setValue(Constant.MYCATY_WARN_MAIL, mailArray.toJSONString());
 			context.setMsg("删除成功!");
 			context.setSuccess(true); 
+			System.clearProperty("mail_to");
 		}catch (Exception e) {
 			logger.error(e.getCause());
 			context.setSuccess(false);

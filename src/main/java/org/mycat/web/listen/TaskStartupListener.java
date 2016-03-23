@@ -3,6 +3,7 @@ package org.mycat.web.listen;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -17,6 +18,8 @@ import org.mycat.web.task.server.SyncSysSqtable;
 import org.mycat.web.task.server.SyncClearData;
 import org.mycat.web.util.Constant;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.MailConfigUtils;
+import org.mycat.web.util.MailUtil;
 import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.mycat.web.util.ZookeeperCuratorHandler;
 import org.slf4j.Logger;
@@ -36,6 +39,9 @@ public class TaskStartupListener implements ServletContextListener{
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) { 
+
+
+		MailConfigUtils.getInstance();
 		List<Map<String, Object>> mycatList;
 		try {
 			mycatList = ZookeeperCuratorHandler.getInstance().getChildNodeData(Constant.MYCATS);

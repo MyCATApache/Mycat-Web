@@ -9,12 +9,16 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.mycat.web.listen.PublishServiceStartupListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public class MailConfigUtils {
 
+    private final Logger log = LoggerFactory.getLogger(MailConfigUtils.class);
 	private static Properties prop;
 	private static InputStream inStream;
 	private static final String MYCAT_PROP = "mycat.properties";
@@ -27,11 +31,12 @@ public class MailConfigUtils {
 		if (mailConfigUtils == null) {
 			synchronized (MailConfigUtils.class) {
 				if (mailConfigUtils == null) {
-					mailConfigUtils = new MailConfigUtils();
+ 					mailConfigUtils = new MailConfigUtils();
 					String mailInfo = mailConfigUtils.getValue(Constant.MYCATY_WARN_MAIL);
 					if(mailInfo != null && !"".equals(mailInfo)){
 						JSONArray mailArray = JSONArray.parseArray(mailInfo); 
-						mailConfigUtils.setMailInfo( (JSONObject)mailArray.get(0));
+						if (mailArray.size()>0)
+							mailConfigUtils.setMailInfo( (JSONObject)mailArray.get(0));
 						
 					}
 				}
@@ -45,6 +50,7 @@ public class MailConfigUtils {
 	}
 	
 	public void setMailInfo(JSONObject json){
+		System.out.println("Loading Mail Setting....");
 		System.setProperty("mail_to", (String)json.get("to"));
 		System.setProperty("mail_cc", (String)json.get("cc"));
 		System.setProperty("mail_from", (String)json.get("smtpUser"));
