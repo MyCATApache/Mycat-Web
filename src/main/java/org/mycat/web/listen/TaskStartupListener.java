@@ -63,14 +63,14 @@ public class TaskStartupListener implements ServletContextListener{
 			  TaskManger.getInstance().addTask(new SyncSysSqlsum(), 60 * 1000*3, "SyncSysSqlsum");//3分钟
 			  TaskManger.getInstance().addTask(new SyncClearData(),60 *1000*60*10, "SyncClearData");//10小时
 			  
-			  TaskManger.getInstance().addTask(new CheckMycatSuspend(), 60 * 1000, "CheckMycatSuspend",10);//1分钟  10秒没响应报警
+			  TaskManger.getInstance().addTask(new CheckMycatSuspend(), 5*60 * 1000, "CheckMycatSuspend",20);//5分钟  20秒没响应报警（包括10秒宕机）
 		
-			  TaskManger.getInstance().addTask(new CheckServerDown(), 60 * 1000*5, "CheckServerDown");//5分钟检查一次
+			  //TaskManger.getInstance().addTask(new CheckServerDown(), 60 * 1000*5, "CheckServerDown");//5分钟检查一次
 			  
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
-			TaskManger.getInstance().addTask(new CheckMycatSuspend(), 60 * 1000, "CheckMycatSuspend",10);//1分钟  10秒没响应报警
+			//TaskManger.getInstance().addTask(new CheckMycatSuspend(), 60 * 1000, "CheckMycatSuspend",10);//1分钟  10秒没响应报警
 			e1.printStackTrace();
 		}
 	}

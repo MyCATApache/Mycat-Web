@@ -25,6 +25,10 @@
 		</where>
 
 	</select>
+	<select id="testMycat" resultType="map" parameterType="map">
+		select user()
+	</select>
+	
 	
 	<select id="queryMycat" resultType="map" parameterType="map">
 		show @@processor
