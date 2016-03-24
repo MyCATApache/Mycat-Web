@@ -1,0 +1,21 @@
+重新设计Eye2.0的基础架构,大家来讨论一下有什么问题或改进点：
+
+spring boot
+spring mvc （web，restful api， 页面展现用velocity）
+
+mybatis+sqlite(支持主流数据库) ：
+  由于这部分本身的工作量就本身就不大，影响比较小。
+  mybatis简单快速，可以继承使用原程序。
+  准备先使用sqlite，以后再考虑其他db，
+    
+UI部分还是准备沿用1.x （AdminLTE + Jquery）
+  考虑到替换这部分的话，开发成本太高。暂时不更改。
+  
+安全认证：优先级低 （不影响功能开发，可以后期追加）
+1）企业版，安装license,根据硬件信息（例如CPU序列号等），加密算法生成license文件
+2）Eye用户,角色管理（Spring Security 或 Apache Shiro ）
+
+
+最大变动就是spring mvc替代了rainbow,虽然代码量有所增加，但功能处理可以独立出来，便于以后的升级和改动。
+
+如没有问题的话，就按照这个设计搭建工程。
