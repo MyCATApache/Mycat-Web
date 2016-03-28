@@ -10,6 +10,7 @@ import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.util.DateUtil;
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
+import org.mycat.web.task.common.SqliteStore;
 import org.mycat.web.util.DataSourceUtils;
 
 /*
@@ -48,7 +49,7 @@ public class SyncSysSqtable implements ITask {
 			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));
 			//Map<String,Object> entity = showService.getDao().get(NAMESPACE, "query",entry);
 			//if(entity == null){ 
-				showService.getDao().insert(NAMESPACE, "insert", entry); 
+			SqliteStore.getInstance().insert(showService.getDao(), NAMESPACE, "insert", entry); 
 			//}else{
 		//		showService.getDao().insert(NAMESPACE, "update", entry); 
 		//	}
