@@ -99,7 +99,7 @@ public class DataSourceUtils {
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e.getCause());
-			remove(beanName);
+			remove(dbName);
 			return false;
 		}finally{
 			if(conn != null){
@@ -123,7 +123,8 @@ public class DataSourceUtils {
 	}
 	
 	public boolean register(String dbName, MycatPortType portType) throws Exception {
-		if(!SpringApplicationContext.getApplicationContext().containsBean(dbName + portType + NAME_SUFFIX)){
+		String beanId = dbName + portType + NAME_SUFFIX;
+		if(!SpringApplicationContext.getApplicationContext().containsBean(beanId)){
 			RainbowContext context = new RainbowContext("mycatService", "query");
 			context.addAttr("mycatName", dbName);
 			context = SoaManager.getInstance().invokeNoTx(context);
@@ -142,6 +143,20 @@ public class DataSourceUtils {
 				break;
 			};
 			return register(row, dbName, portType);
+		}else{
+			Connection conn = null;
+			try{
+				BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanId);
+				conn = dbSource.getConnection();
+			}catch(Exception ex){
+				logger.warn("连接异常,进行重试!");
+				remove(dbName + portType);
+				return register(dbName, portType);
+			}finally{
+				if(conn != null){
+					conn.close();
+				}
+			}
 		}
 		return true;
 	}
