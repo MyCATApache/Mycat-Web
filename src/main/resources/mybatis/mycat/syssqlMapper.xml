@@ -12,7 +12,8 @@
 			EXECUTE_TIME,
 			ID,
 			USER,
-			CONTENT
+			CONTENT,
+			IPAddr
 		) 
 		values(
 		    #{DB_NAME, jdbcType=VARCHAR},
@@ -21,12 +22,13 @@
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
 			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
-			#{SQL, jdbcType=NVARCHAR}
+			#{SQL, jdbcType=NVARCHAR},
+			#{IP, jdbcType=NVARCHAR}
 		)
 	</select>
 	
 	<select id="query" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
+		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -45,7 +47,7 @@
 	</select>
 	
 	<select id="sql" parameterType="map" resultType="map">
-		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -64,7 +66,7 @@
 	</select>
 	 
 	<select id="sqlInfo" parameterType="map" resultType="map">
-		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL" from t_mycat_syssql 
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
 		<where> 
 			<if test="SID != 0">
 				and SID = #{SID}
