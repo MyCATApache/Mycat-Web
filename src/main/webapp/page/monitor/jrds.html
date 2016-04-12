@@ -240,7 +240,7 @@
 		rainbowAjax.get("./graph/hostMycatList?hostprefix=D", "",
 				function callback(data) {
 					var jrds = JSON.parse(data);
-					$('#hosts').html('');
+					$('#hosts').html(''); //清空host
 					for ( var i in jrds) {
 						$("#hosts").append(
 								"<option value=\""+ jrds[i]+"\">" + jrds[i]
