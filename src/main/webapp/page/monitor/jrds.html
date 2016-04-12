@@ -203,9 +203,7 @@
 		$('#hostDetailtable').html('');
 		$('#contentGraph').attr('src', '');
 		rainbowAjax
-				.get(
-						"./graph/showMycatGraphs?hostName=" + $("#hosts").val(),
-						"",
+				.get("./graph/showMycatGraphs?hostName=" + $("#hosts").val(),"",
 						function callback(data) {
 							var jrdsHtml = '';
 							var jrds = JSON.parse(data);
@@ -242,6 +240,7 @@
 		rainbowAjax.get("./graph/hostMycatList?hostprefix=D", "",
 				function callback(data) {
 					var jrds = JSON.parse(data);
+					$('#hosts').html('');
 					for ( var i in jrds) {
 						$("#hosts").append(
 								"<option value=\""+ jrds[i]+"\">" + jrds[i]

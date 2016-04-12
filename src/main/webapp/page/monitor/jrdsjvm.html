@@ -211,6 +211,7 @@ var create_host = function() {
 	rainbowAjax.get("./graph/hostMycatList?hostprefix=JMX", "",
 			function callback(data) {
 				var jrds = JSON.parse(data);
+				$('#hosts').html('');
 				for ( var i in jrds) {
 					$("#hosts").append(
 							"<option value=\""+ jrds[i]+"\">" + jrds[i]
