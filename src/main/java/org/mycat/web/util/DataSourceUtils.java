@@ -10,6 +10,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hx.rainbow.common.context.RainbowContext;
+import org.hx.rainbow.common.context.RainbowProperties;
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.SoaManager;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -215,10 +216,10 @@ public class DataSourceUtils {
 		original.put("username", jdbc.get("username"));
 		original.put("password", jdbc.get("password"));
 		
-		original.put("maxActive", 20);
-		original.put("initialSize", 5);
-		original.put("maxWait", 60000);
-		original.put("minIdle", 5);
+		original.put("maxActive", RainbowProperties.getProperties("jdbc.maxActive"));
+		original.put("initialSize", RainbowProperties.getProperties("jdbc.initialSize"));
+		original.put("maxWait", RainbowProperties.getProperties("jdbc.maxWait"));
+		original.put("minIdle", RainbowProperties.getProperties("jdbc.minIdle"));
 
 		messageSourceDefinition.setBeanClass(BasicDataSource.class);
 		messageSourceDefinition.setDestroyMethodName("close");

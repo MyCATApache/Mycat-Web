@@ -108,38 +108,26 @@
 	</servlet>
 	<servlet>
 		<servlet-name>discover</servlet-name>
-		<display-name>discover</display-name>
-		<description></description>
 		<servlet-class>jrds.webapp.Discover</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonTree</servlet-name>
-		<display-name>JSonTree</display-name>
-		<description></description>
 		<servlet-class>jrds.webapp.JSonTree</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonGraph</servlet-name>
-		<display-name>JSonGraph</display-name>
-		<description></description>
 		<servlet-class>jrds.webapp.JSonGraph</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonPeriod</servlet-name>
-		<display-name>JSonPeriod</display-name>
-		<description></description>
 		<servlet-class>jrds.webapp.JSonPeriod</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonQueryParams</servlet-name>
-		<display-name>JSonQueryParams</display-name>
-		<description></description>
 		<servlet-class>jrds.webapp.JSonQueryParams</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Cmd</servlet-name>
-		<display-name>Cmd</display-name>
-		<description></description>
 		<servlet-class>
 			jrds.webapp.Cmd</servlet-class>
 	</servlet>
@@ -149,30 +137,20 @@
 		<init-param>
 			<param-name>enabledForExtensions</param-name>
 			<param-value>true</param-value>
-			<description>
-				Sets, whether the servlet supports vendor extensions for
-				XML-RPC.
-          </description>
 		</init-param>
 	</servlet>
 	<servlet>
 		<servlet-name>JSonPack</servlet-name>
-		<display-name>JSonPack</display-name>
-		<description></description>
 		<servlet-class>
 			jrds.webapp.JSonPack</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>upload</servlet-name>
-		<display-name>upload</display-name>
-		<description></description>
 		<servlet-class>
 			jrds.webapp.Upload</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>GetDiscoverHtmlCode</servlet-name>
-		<display-name>GetDiscoverHtmlCode</display-name>
-		<description></description>
 		<servlet-class>
 			jrds.webapp.GetDiscoverHtmlCode</servlet-class>
 	</servlet>
