@@ -12,6 +12,7 @@ import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.MailUtil;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 
 /*
  * 异步持久化mycat中数据
@@ -23,10 +24,8 @@ public class CheckServerDown implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
-		String beanName = dbName + "dataSource";
-		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);
 		try {
-			if (!dbSource.getConnection().isValid(timeout)){
+			if (!DataSourceUtils.getInstance().register(dbName, MycatPortType.MYCAT_SERVER)){
 				MailUtil.send("Mycat死机", dbName+"死机");
 			}
 		} catch (Exception e) {

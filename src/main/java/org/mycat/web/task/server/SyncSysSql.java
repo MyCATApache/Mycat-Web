@@ -9,6 +9,7 @@ import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.task.common.SqliteStore;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.hx.rainbow.common.util.DateUtil;
 /*
  * 异步持久化mycat中数据
@@ -28,7 +29,7 @@ public class SyncSysSql implements ITask {
 //		}
 		//System.out.println("持久化mycat中数据开始:"+dbName);
 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
-		List<Map<String,Object>> list = showService.getDao().query(dbName, SYSPARAM_NAMESPACE, "sql"); 
+		List<Map<String,Object>> list = showService.getDao().query(dbName + MycatPortType.MYCAT_MANGER, SYSPARAM_NAMESPACE, "sql"); 
 		for(Map<String,Object> entry : list){			
 			entry.put("START_TM", DateUtil.toDateTimeString(new Date((long) entry.get("START_TIME"))));
 			entry.put("DB_NAME", DataSourceUtils.getInstance().getDbName(dbName));

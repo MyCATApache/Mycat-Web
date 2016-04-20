@@ -1,4 +1,4 @@
-BuildTime  20160203-0024
+BuildTime  20160412-1351
 GitVersion   null
 MavenVersion 1.0-SNAPSHOT
 GitUrl https://github.com/MyCATApache/Mycat-Web.git

@@ -43,6 +43,7 @@ public class TaskManger {
 		ScheduledFuture<?> sf = scheduler.scheduleAtFixedRate(new Runnable() {  
             public void run() {
             	Date nowDate = new Date();
+            	LOG.info("定时任务中的dbName列表:" + dbNames.toString());
         		for(String dbName : dbNames){
         			try{
         				task.excute(dbName, nowDate);
@@ -64,7 +65,7 @@ public class TaskManger {
 		}
 	}
 	
-	public void addDBName(String dbName){
+	public synchronized void addDBName(String dbName){
 		if(dbName != null){
 			if(!dbNames.contains(dbName)){
 				dbNames.add(dbName);

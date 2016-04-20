@@ -62,12 +62,12 @@ public class DataSourceUtils {
 	
 	public  boolean register(Map<String, Object> jdbc, String dbName, MycatPortType portType) throws Exception {
 		Connection conn = null;
-		dbName = dbName + portType;
-		String beanName = dbName + NAME_SUFFIX;
+		String dbBean = dbName + portType;
+		String beanName = dbBean + NAME_SUFFIX;
 		try {
-			logger.info("dbname:" + dbName + " is  initializing!!");
+			logger.info("dbname:" + dbBean + " is  initializing!!");
 			
-			remove(beanName);
+			remove(dbBean);
 			
 			switch (portType) {
 			case MYCAT_MANGER:
@@ -90,9 +90,9 @@ public class DataSourceUtils {
 			
 			conn = dbSource.getConnection();
 			
-			beanFactory.registerBeanDefinition(dbName + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
-			Object sqlSessionFactory = SpringApplicationContext.getBean(dbName + "sqlSessionFactory");
-			beanFactory.registerBeanDefinition(dbName + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
+			beanFactory.registerBeanDefinition(dbBean + "sqlSessionFactory", getSqlSessionFactoryDef(dbSource));
+			Object sqlSessionFactory = SpringApplicationContext.getBean(dbBean + "sqlSessionFactory");
+			beanFactory.registerBeanDefinition(dbBean + "sqlSessionTemplate", getSqlSessionTemplateDef(sqlSessionFactory));
 			if(MycatPortType.MYCAT_MANGER == portType){
 				updateTask(dbName);
 			}
@@ -100,7 +100,7 @@ public class DataSourceUtils {
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e.getCause());
-			remove(dbName);
+			remove(dbBean);
 			return false;
 		}finally{
 			if(conn != null){
@@ -111,6 +111,7 @@ public class DataSourceUtils {
 	
 	private void updateTask(String dbName){
 		TaskManger taskManger = TaskManger.getInstance();
+		System.out.println("添加监控dbName:" + dbName);
 		taskManger.addDBName(dbName);
 		taskManger.cancelTask("SyncSysSql", "SyncSysSqlhigh", "SyncSysSqlslow", "SyncSysSqtable", "SyncSysSqlsum");
 		taskManger.addTask(new SyncSysSql(), 60 * 1000, "SyncSysSql");//1分钟
@@ -123,7 +124,7 @@ public class DataSourceUtils {
 		taskManger.addTask(new CheckServerDown(), 60 * 1000*5, "CheckServerDown");//5分钟检查一次
 	}
 	
-	public boolean register(String dbName, MycatPortType portType) throws Exception {
+	public synchronized boolean register(String dbName, MycatPortType portType) throws Exception {
 		String beanId = dbName + portType + NAME_SUFFIX;
 		if(!SpringApplicationContext.getApplicationContext().containsBean(beanId)){
 			RainbowContext context = new RainbowContext("mycatService", "query");

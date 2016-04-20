@@ -9,6 +9,7 @@ import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.util.DataSourceUtils;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.mycat.web.util.MailUtil;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);*/
 		
 		try {
-			if(DataSourceUtils.getInstance().register(dbName)){
+			if(!DataSourceUtils.getInstance().register(dbName, MycatPortType.MYCAT_SERVER)){
 				MailUtil.send("Mycat死机", dbName+"死机");
 				return;
 			}
@@ -61,7 +62,7 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 		this.dbName = dbName;
 
 		ShowService showService = (ShowService)SpringApplicationContext.getBean("showService"); 
-		showService.getDao().query(dbName, NAMESPACE, "testMycat");
+		showService.getDao().query(dbName + MycatPortType.MYCAT_MANGER, NAMESPACE, "testMycat");
 	}
 
 	public String getDbName(){

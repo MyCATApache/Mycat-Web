@@ -7,6 +7,8 @@ import java.util.Map;
 import org.hx.rainbow.common.context.RainbowProperties;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.task.common.ITask;
+import org.mycat.web.task.common.SqliteStore;
+import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,11 +25,11 @@ public class ShowMycatProcessor extends BaseService implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {
-		List<Map<String, Object>> datas = super.getDao().query(dbName, NAMESPACE, STATEMENT);
+		List<Map<String, Object>> datas = super.getDao().query(dbName + MycatPortType.MYCAT_MANGER, NAMESPACE, STATEMENT);
 		for(Map<String, Object> data : datas){
 			data.put("createTime", nowDate);
 			data.put("mycatName", dbName);
-			super.getDao().insert(NAMESPACE, "insert", data);
+			SqliteStore.getInstance().insert(super.getDao(), NAMESPACE, "insert", data);
 		}
 	}
 
