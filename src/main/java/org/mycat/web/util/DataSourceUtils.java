@@ -85,7 +85,7 @@ public class DataSourceUtils {
 					(DefaultListableBeanFactory) applicationContext.getBeanFactory();
 				
 			beanFactory.registerBeanDefinition(beanName, getDefinition(jdbc));
-			
+		
 			BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);
 			
 			conn = dbSource.getConnection();
@@ -163,7 +163,7 @@ public class DataSourceUtils {
 		return true;
 	}
 
-	public  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
+	public synchronized  boolean register(Map<String, Object> jdbc, String dbName) throws Exception {
 		 if(!register(jdbc, dbName, MycatPortType.MYCAT_MANGER)){
 			 return false;
 		 }
@@ -174,7 +174,7 @@ public class DataSourceUtils {
 		
 	}
 	
-	public boolean register(String dbName) throws Exception {
+	public synchronized boolean register(String dbName) throws Exception {
 		 if(!register(dbName, MycatPortType.MYCAT_MANGER)){
 			 return false;
 		 }
@@ -205,8 +205,14 @@ public class DataSourceUtils {
 	}
 	
 	public  void remove(String dbName) {
-		SpringApplicationContext.removeBeans(dbName + NAME_SUFFIX, dbName + "sqlSessionFactory", dbName + "sqlSessionTemplate", dbName
-				+ "transactionManager");
+		ConfigurableApplicationContext applicationContext = 
+				(ConfigurableApplicationContext) SpringApplicationContext.getApplicationContext();
+		DefaultListableBeanFactory beanFactory = 
+				(DefaultListableBeanFactory) applicationContext.getBeanFactory();
+		beanFactory.destroySingleton(dbName + NAME_SUFFIX);
+		beanFactory.destroySingleton(dbName + "sqlSessionFactory");
+		beanFactory.destroySingleton(dbName + "sqlSessionTemplate");
+		beanFactory.destroySingleton(dbName+ "transactionManager");
 	}
 
 	private  GenericBeanDefinition getDefinition(Map<String, Object> jdbc) {

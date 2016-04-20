@@ -48,7 +48,6 @@ public class TaskStartupListener implements ServletContextListener{
 			if (mycatList!=null){
 			  for(Map<String,Object> mycat : mycatList){
 				String mycatName = (String)mycat.get("mycatName"); 
-				System.out.println("mycatName==============" + mycatName);
 				try {
 					DataSourceUtils.getInstance().register(mycatName, MycatPortType.MYCAT_MANGER); 
 					LOGGER.info("数据源["+mycatName+"]");

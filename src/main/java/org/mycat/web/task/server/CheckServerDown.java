@@ -1,18 +1,14 @@
 package org.mycat.web.task.server;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hx.rainbow.common.core.SpringApplicationContext; 
-import org.hx.rainbow.common.util.DateUtil;
-import org.mycat.web.service.ShowService;
+import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.mycat.web.task.common.ITask;
-import org.mycat.web.util.DataSourceUtils;
-import org.mycat.web.util.MailUtil;
 import org.mycat.web.util.DataSourceUtils.MycatPortType;
+import org.mycat.web.util.MailUtil;
 
 /*
  * 异步持久化mycat中数据
@@ -24,13 +20,23 @@ public class CheckServerDown implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
+		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
+		Connection conn = null;
 		try {
-			if (!DataSourceUtils.getInstance().register(dbName, MycatPortType.MYCAT_SERVER)){
-				MailUtil.send("Mycat死机", dbName+"死机");
-			}
+				conn = dbSource.getConnection();
+				if(!conn.isValid(timeout)){
+					MailUtil.send("Mycat死机", dbName+"死机");
+				}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			if(conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		 
 	}

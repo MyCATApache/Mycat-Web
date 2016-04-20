@@ -1,9 +1,12 @@
 package org.mycat.web.task.server;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 
 import javax.mail.MessagingException;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.service.ShowService;
@@ -35,15 +38,16 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 	
 	private static final String NAMESPACE = "MYCATSHOWPROCESSOR";
 	
-//	private static final int timeout = 10;  //宕机timeout：10S
+	private static final int timeout = 10;  //宕机timeout：10S
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {
-/*		String beanName = dbName + "dataSource";
-		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);*/
 		
+		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
+		Connection conn = null;
 		try {
-			if(!DataSourceUtils.getInstance().register(dbName, MycatPortType.MYCAT_SERVER)){
+			conn = dbSource.getConnection();
+			if(!conn.isValid(timeout)){
 				MailUtil.send("Mycat死机", dbName+"死机");
 				return;
 			}
@@ -55,6 +59,14 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 				e1.printStackTrace();
 			}
 			return;			
+		}finally{
+			if(conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		 
 		this.dbName = dbName;

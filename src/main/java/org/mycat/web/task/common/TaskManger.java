@@ -1,6 +1,7 @@
 package org.mycat.web.task.common;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.mycat.web.task.server.CheckMycatSuspend;
 import org.slf4j.LoggerFactory;
-
 import org.slf4j.Logger;
 
 public class TaskManger {
@@ -24,7 +24,7 @@ public class TaskManger {
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10); 
 	public final static Map<String, ScheduledFuture<?>> taskPool = new ConcurrentHashMap<String, ScheduledFuture<?>>();
 	private static volatile TaskManger taskManger;
-	private static final List<String> dbNames = new ArrayList<String>();
+	private static final List<String> dbNames = Collections.synchronizedList(new ArrayList<String>());
 	private TaskManger(){}
 
 	
@@ -65,7 +65,7 @@ public class TaskManger {
 		}
 	}
 	
-	public synchronized void addDBName(String dbName){
+	public void addDBName(String dbName){
 		if(dbName != null){
 			if(!dbNames.contains(dbName)){
 				dbNames.add(dbName);
