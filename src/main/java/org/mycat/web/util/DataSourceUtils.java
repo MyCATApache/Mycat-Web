@@ -8,7 +8,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hx.rainbow.common.context.RainbowContext;
@@ -152,11 +151,13 @@ public class DataSourceUtils {
 		}else{
 			Connection conn = null;
 			try{
-				BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanId);
+				DataSource dbSource = (DataSource)SpringApplicationContext.getBean(beanId);
 				conn = dbSource.getConnection();
 			}catch(Exception ex){
+				ex.printStackTrace();
 				logger.warn("连接异常,进行重试!");
 				remove(dbName + portType);
+//				return false;
 				return register(dbName, portType);
 			}finally{
 				if(conn != null){
