@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.apache.commons.dbcp.BasicDataSource;
+import javax.sql.DataSource;
+
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.mycat.web.task.common.ITask;
 import org.mycat.web.util.DataSourceUtils.MycatPortType;
@@ -20,7 +21,7 @@ public class CheckServerDown implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {  
-		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
+		DataSource dbSource = (DataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
 		Connection conn = null;
 		try {
 				conn = dbSource.getConnection();

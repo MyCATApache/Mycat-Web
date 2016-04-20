@@ -5,13 +5,12 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import javax.mail.MessagingException;
+import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.hx.rainbow.common.core.SpringApplicationContext;
 import org.hx.rainbow.common.core.service.BaseService;
 import org.mycat.web.service.ShowService;
 import org.mycat.web.task.common.ITask;
-import org.mycat.web.util.DataSourceUtils;
 import org.mycat.web.util.DataSourceUtils.MycatPortType;
 import org.mycat.web.util.MailUtil;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 	@Override
 	public void excute(String dbName, Date nowDate) {
 		
-		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
+		DataSource dbSource = (DataSource)SpringApplicationContext.getBean(dbName + MycatPortType.MYCAT_MANGER + "dataSource");
 		Connection conn = null;
 		try {
 			conn = dbSource.getConnection();

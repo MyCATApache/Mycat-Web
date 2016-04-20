@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +31,8 @@ import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import com.alibaba.druid.pool.DruidDataSource;
 
 
 public class DataSourceUtils {
@@ -84,9 +88,9 @@ public class DataSourceUtils {
 			DefaultListableBeanFactory beanFactory = 
 					(DefaultListableBeanFactory) applicationContext.getBeanFactory();
 				
-			beanFactory.registerBeanDefinition(beanName, getDefinition(jdbc));
+			beanFactory.registerBeanDefinition(beanName, getDefinition(jdbc, portType));
 		
-			BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);
+			DataSource dbSource = (DataSource)SpringApplicationContext.getBean(beanName);
 			
 			conn = dbSource.getConnection();
 			
@@ -215,7 +219,7 @@ public class DataSourceUtils {
 		beanFactory.destroySingleton(dbName+ "transactionManager");
 	}
 
-	private  GenericBeanDefinition getDefinition(Map<String, Object> jdbc) {
+	private  GenericBeanDefinition getDefinition(Map<String, Object> jdbc, MycatPortType portType) {
 		GenericBeanDefinition messageSourceDefinition = new GenericBeanDefinition();
 		Map<String, Object> original = new HashMap<String, Object>();
 		original.put("driverClassName", DEFAULT_MYSQL_DRIVER_CLASS);
@@ -227,8 +231,32 @@ public class DataSourceUtils {
 		original.put("initialSize", RainbowProperties.getProperties("jdbc.initialSize"));
 		original.put("maxWait", RainbowProperties.getProperties("jdbc.maxWait"));
 		original.put("minIdle", RainbowProperties.getProperties("jdbc.minIdle"));
+		original.put("timeBetweenEvictionRunsMillis", 3600000);
+		original.put("minEvictableIdleTimeMillis",300000);
+		switch (portType) {
+		case MYCAT_MANGER:
+			original.put("validationQuery", "show @@sysparam");
+			original.put("testWhileIdle", false);
+			break;
+		case MYCAT_SERVER:
+			original.put("validationQuery", "select user()");
+			original.put("testWhileIdle", true);
+			break;
+		default:
+			break;
+		};
+	
+		
+		original.put("testOnBorrow", false);
+		original.put("testOnReturn", false);
+		original.put("poolPreparedStatements", false);
+		original.put("maxPoolPreparedStatementPerConnectionSize", 200);
+		
+        original.put("removeAbandoned", true);
+        original.put("removeAbandonedTimeout", 1800);
+        original.put("logAbandoned", true);  
 
-		messageSourceDefinition.setBeanClass(BasicDataSource.class);
+		messageSourceDefinition.setBeanClass(DruidDataSource.class);
 		messageSourceDefinition.setDestroyMethodName("close");
 		messageSourceDefinition.setPropertyValues(new MutablePropertyValues(original));
 		return messageSourceDefinition;
