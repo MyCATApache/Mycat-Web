@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT sum (role*, element+)>
-<!ATTLIST sum name CDATA #REQUIRED>
-<!ELEMENT role (#PCDATA)>
-<!ELEMENT element (#PCDATA)>
-<!ATTLIST element name CDATA #REQUIRED>

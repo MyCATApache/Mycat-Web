@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT path (#PCDATA)>
-<!ELEMENT tag (#PCDATA)>
-<!ELEMENT name (#PCDATA)>
-<!ELEMENT qualifiedname (#PCDATA)>
-<!ELEMENT role (#PCDATA)>
-<!ELEMENT filter (name, role*, (path | tag | qualifiedname)+)>

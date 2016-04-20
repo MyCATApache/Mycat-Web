@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!ELEMENT tab (filter+|(graph|cgraph)+)>
-<!ATTLIST tab name CDATA #REQUIRED>
-<!ELEMENT filter (#PCDATA)>
-<!ELEMENT graph (path)+>
-<!ATTLIST graph id CDATA #REQUIRED>
-<!ELEMENT cgraph (path)+>
-<!ATTLIST cgraph id CDATA #REQUIRED>
-<!ELEMENT path (#PCDATA)>
