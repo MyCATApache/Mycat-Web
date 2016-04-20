@@ -39,8 +39,6 @@ public class CheckMycatSuspend extends BaseService implements ITask {
 	
 	@Override
 	public void excute(String dbName, Date nowDate) {
-		
-		System.out.println("================="+dbName+"============");
 /*		String beanName = dbName + "dataSource";
 		BasicDataSource dbSource = (BasicDataSource)SpringApplicationContext.getBean(beanName);*/
 		
