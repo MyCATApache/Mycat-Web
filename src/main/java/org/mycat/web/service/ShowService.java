@@ -38,16 +38,7 @@ public class ShowService extends BaseService {
 		if(datasource ==  null || datasource.isEmpty()){
 			return context;
 		}
-		try {
-			if(!DataSourceUtils.getInstance().register(datasource)){
-				context.setSuccess(false);
-				context.setMsg("数据源["+datasource+"]连接失败!");
-				return context;
-			}
-		} catch (Exception e) {
-			
-		}
-		LOGGER.info("数据源["+datasource+"]");
+		//System.out.println("数据源["+datasource+"]");
 		context.setDs(datasource + MycatPortType.MYCAT_MANGER);
 		if (cmd.equals("sqlslow")){
 			String threshold = (String)context.getAttr("threshold");
@@ -205,7 +196,18 @@ public class ShowService extends BaseService {
 		return sqlonline(context,"dbtablename");
 	
 	}
-	
+	public RainbowContext setsqlslow(RainbowContext context) {
+		String datasource = (String)context.getAttr("ds");
+		context.setDs(datasource + MycatPortType.MYCAT_MANGER);
+		if (!(datasource ==  null || datasource.isEmpty())){
+			String threshold = (String)context.getAttr("threshold");
+			if (!(threshold ==  null || threshold.isEmpty())){
+				super.query(context, SYSPARAM_NAMESPACE, "setsqlslow");
+			}			
+			//System.out.println("慢SQL阀值["+threshold+"]");
+		}	
+		return context;	
+	}
 	public RainbowContext sqlslow(RainbowContext context) { 
 		return baseQuery(context, SYSSQLSLOW_NAMESPACE, "sqlslow"); 
 	}
