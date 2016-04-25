@@ -28,6 +28,7 @@ CREATE TABLE `t_mycat_syssql` (
   `USER` varchar(25) NOT NULL,
   `CONTENT` text NOT NULL,
   `START_TM` datetime NOT NULL,
+  `IPAddr` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`SID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4026 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
@@ -71,6 +72,7 @@ CREATE TABLE `t_mycat_syssqlslow` (
   `USER` varchar(25) NOT NULL,
   `CONTENT` text NOT NULL,
   `START_TM` datetime NOT NULL,
+  `IPAddr` varchar(25) DEFAULT NULL,
   PRIMARY KEY (`SID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 

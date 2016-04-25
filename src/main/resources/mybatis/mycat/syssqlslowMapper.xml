@@ -11,7 +11,8 @@
 		    START_TM,
 			EXECUTE_TIME, 
 			USER,
-			CONTENT
+			CONTENT,
+			IPAddr
 		) 
 		values(
 		    #{DB_NAME, jdbcType=VARCHAR},
@@ -19,12 +20,13 @@
 			#{START_TM, jdbcType=VARCHAR },			
 			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
 			#{USER, jdbcType=VARCHAR},
-			#{SQL, jdbcType=NVARCHAR}
+			#{SQL, jdbcType=NVARCHAR},
+			#{IP, jdbcType=NVARCHAR}
 		)
 	</select>
 	
 	<select id="query" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL" from t_mycat_syssqlslow 
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",IPAddr from t_mycat_syssqlslow 
 		<where>  
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}
@@ -37,7 +39,7 @@
 	</select>
 	
 	<select id="sqlslow" parameterType="map" resultType="map">
-		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",DB_NAME as "DATASOURCE" from t_mycat_syssqlslow 
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",DB_NAME as "DATASOURCE",IPAddr from t_mycat_syssqlslow 
 		<where> 
 			<if test="DB_NAME != null">
 				and DB_NAME = #{DB_NAME}

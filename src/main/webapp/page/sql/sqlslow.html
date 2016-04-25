@@ -54,8 +54,9 @@
 				<div class="box-footer">
 					<div class="form-group">
 						<div class="col-lg-offset-3 col-lg-3">
-							<button class="btn btn-primary" onclick="queryForm('query_Form')">阀值设置</button>
-							<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+							<button class="btn btn-primary" onclick="queryForm('query_Form')">查询</button>
+							<!--<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>-->
+							<button class="btn btn-primary" onclick="setsqlslow()" type="button">阀值设置</button>
 						<!-- 	<button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button> -->
 						</div>
 					</div>
@@ -159,6 +160,27 @@ $("#reservationtime").on('apply.daterangepicker', function() {
 	$('#end').val(end);
 	queryForm('query_Form');
 });
+var setsqlslow=function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("setsqlslow");
+	rainbow.setParam("ds", $('#datasource').val());
+	rainbow.setParam("threshold", $('#threshold').val());
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) {
+					alert("设置阀值成功！");
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+}
 var exportcsv =function(){
 	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlslow&ds="+$('#datasource').val()+"&threshold="+$('#threshold').val()+"&fileName=sqlslow";
 	window.location = url;
@@ -202,6 +224,7 @@ $(document).ready(function() {
 			        		return d;
 			        	} },
 					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true,type:'number'},
+					{ title:'IP', name:'IPAddr' ,width:80, align:'left', sortable:true},
 					{ title:'SQL', name:'SQL' ,width:600, align:'left'}
 			    ];
 	mmgrid = $('#table').mmGrid({
