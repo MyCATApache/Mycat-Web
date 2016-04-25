@@ -204,7 +204,7 @@ public class ShowService extends BaseService {
 			if (!(threshold ==  null || threshold.isEmpty())){
 				super.query(context, SYSPARAM_NAMESPACE, "setsqlslow");
 			}			
-			System.out.println("慢SQL阀值["+threshold+"]");
+			//System.out.println("慢SQL阀值["+threshold+"]");
 		}	
 		return context;	
 	}
