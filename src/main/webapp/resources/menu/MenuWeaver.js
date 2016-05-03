@@ -21,7 +21,8 @@ MenuWeaver.prototype.weaver = function(){
 
 
 MenuWeaver.prototype._createLeaf = function(j_menu_leaf){
-	var html = "<li><a href=\"javascript:loadContext('"+j_menu_leaf["url"]+"');\"><i class=\"fa fa-circle-o\"></i>"+j_menu_leaf["text"]+"</a></li>";
+	var html = "<li onclick='selectedMenu(this)' data-url='"+j_menu_leaf["url"]+"'><a href=\"javascript:loadContext('"+j_menu_leaf["url"]+"');\"><i class=\"fa fa-circle-o\"></i>"+j_menu_leaf["text"]+"</a></li>";
+	alert(html)
 	return $(html);
 }
 
