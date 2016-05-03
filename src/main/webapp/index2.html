@@ -323,6 +323,12 @@
 							//alert(Object.prototype.toString.apply(dataRow).toString());
 							setMenu($('.sidebar-menu'), dataRow);
 							//mmgrid.load(data.rows);
+							
+							
+							var url = window.location.hash;
+							if(url && url.length > 1){
+								openMenu(url.substring(1));
+							}
 						}
 					} catch (e) {
 					//	alert(e);
