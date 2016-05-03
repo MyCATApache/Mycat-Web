@@ -331,7 +331,7 @@ function initMap(json,r,w){
 	var r_array = eval( '(' + r_str + ')');
 	var t_array = eval( '(' + t_str + ')');
 		 
-			
+	console.log(json);
 		require(
             [
                 'echarts',
@@ -467,4 +467,9 @@ function initMap(json,r,w){
 			};
 	return option;
  }
+ 
+ $(function(){
+	queryForm('query_Form');
+	loadData(); 
+ });
 </script>
