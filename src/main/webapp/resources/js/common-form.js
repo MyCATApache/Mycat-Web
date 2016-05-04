@@ -276,6 +276,7 @@ function queryForm(form_id,extra_call){
 		  if(extra_func)
 			  extra_func(datas);
 	}
+	console.log(datas);
 	if(mmgrid){
 		mmgrid.load(datas);
 	}else{
@@ -328,6 +329,17 @@ var zkPath = "";
 var zkId = "";
 function loadContext(url,copy){
 	
+	/**
+	 * 兼容以前的代码
+	 */
+	if(copy){
+		openContext(url,copy)
+	}else{
+		window.location.hash = "#"+url;
+	}
+}
+
+function openContext(url,copy){
 	if(intervalId)
 		clearInterval(intervalId); 
 	if(copy && mmgrid){

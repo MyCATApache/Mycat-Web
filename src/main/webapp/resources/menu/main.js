@@ -1,11 +1,53 @@
 $(function(){
 	initUserMenu();
-})
+	
+	var menus = [""];
+	
+	$(window).on("hashchange",function(){
+		var url = window.location.hash;
+		if(url && url.length > 1){
+			openContext(url.substring(1));
+		}
+	});
+	
+	
+});
+
+function getopenId(url){
+	url = url.replace(/\//g, "");
+	url = url.replace(/\./g, "");
+	return url;
+}
+
+/**
+ * 携带展开菜单功能的方法
+ * @param url
+ */
+function openMenu(url){
+	$(".treeview li").removeClass("active");
+	var $act = $(".treeview ."+getopenId(url));
+	if($act.length > 0){
+		var $parent = $act.parents(".treeview");
+		if(!$parent.hasClass("menu-open")){
+			$parent.find("span").click();
+		}
+		openContext(url);
+		$act.addClass("active");
+	}
+}
 
 function initUserMenu(){
 	 $.ajax({url: '/menus', success: function(menu){
 	    setMenu($('.sidebar-menu'),menu);
+	    
      }});
+}
+
+function selectedMenu(_this){
+	$(".treeview li").removeClass("active");
+	var $this = $(_this);
+	$this.addClass("active");
+	
 }
 
 function setMenu(menuid,menus){
@@ -33,7 +75,7 @@ function setSecondLevelMenu(menus){
 	var menuhtm = [];
 	menuhtm.push("<ul class=\"treeview-menu\" style=\"display: none;\">");
 	$.each(menus,function(n,menudata) {
-		 menuhtm.push("<li><a href=\"javascript:loadContext('");
+		 menuhtm.push("<li onclick='selectedMenu(this)' class='"+getopenId(menudata.menuUrl)+"'><a href=\"javascript:loadContext('");
 		 menuhtm.push(menudata.menuUrl);		 
 		 menuhtm.push("');\"><i class=\"fa "+getMenuIcon(menudata.menuType)+"\"></i>"+menudata.menuName);
 		// menuhtm.push("<li><a href=\"#\"><i class=\"fa "+getMenuIcon(menudata.menuType)+"\"></i>"+menudata.menuName);
@@ -53,7 +95,7 @@ function setThirdLevelMenu(menus){
 	var menuhtm = [];
 	menuhtm.push("<ul class=\"treeview-menu\">");
 	$.each(menus,function(n,menudata) {
-		menuhtm.push("<li><a href=\"javascript:loadContext('");
+		menuhtm.push("<li onclick='selectedMenu(this)' class='"+getopenId(menudata.menuUrl)+"'><a href=\"javascript:loadContext('");
 		menuhtm.push(menudata.menuUrl);
 		 menuhtm.push("');\"><i class=\"fa "+getMenuIcon(menudata.menuType)+"\"></i>"+menudata.menuName+"</a>");
 	})

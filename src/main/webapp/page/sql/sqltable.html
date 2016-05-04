@@ -45,6 +45,14 @@
 						</div>
 		         </form>
 				</div>
+				<div class="box-footer">
+					<div class="form-group">
+						<div class="col-lg-offset-5 col-lg-2">
+							<button class="btn btn-primary" onclick="loadData()">查询</button>
+							<button class="btn btn-primary" onclick="resetLoadData()">重置</button>
+						</div>
+					</div>
+				</div>	
 				<div class="box-body">
 				 
 				  <div style="float: left">
@@ -125,10 +133,29 @@ var datasouce_change = function(){
 	var end = daterange[1].trim();
 	$('#begin').val(begin);
 	$('#end').val(end);
+	var beginOld = $('#begin').attr("oldValue");
+	var endOld = $('#end').attr("oldValue");
+	if(!beginOld){
+		$('#begin').attr("oldValue",begin);
+		$('#end').attr("oldValue",end);
+	}
+	loadData();
+}
+
+/**
+ * 重置方法
+ */
+function resetLoadData(){
+	var beginOld = $('#begin').attr("oldValue");
+	var endOld = $('#end').attr("oldValue");
+	$('#begin').val(beginOld);
+	$('#end').val(endOld);
+	$('#reservationtime').data("daterangepicker").setStartDate(beginOld);
+	//$('#reservationtime').data("daterangepicker").setStartDate(endOld);
 	loadData();
 }
  
-
+ 
 
 //Date range picker with time picker
 $('#reservationtime').daterangepicker(
@@ -168,18 +195,10 @@ $('#reservationtime').daterangepicker(
 						'十二月' ],
 				firstDay : 1
 			}
-		});
+		}); 
 		
 		
-$("#reservationtime").on('apply.daterangepicker', function() {
-	var daterange = $('#reservationtime').val().split('~');
-	var begin = daterange[0].trim();
-	var end = daterange[1].trim();
-	$('#begin').val(begin);
-	$('#end').val(end);
 
-	loadData();
-}); 
  
 var requestData = new Array();
 var timeData = new Array();
@@ -215,6 +234,9 @@ var initDataSouce = function(){
 	rainbow.setMethod("query");
 	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
 };
+
+
+
 
 var explainMysql12 = function(dataNode, sql) {
 	$('#explainDetail').load('./page/sql/sqlreport.html?v=' + Math.random());
@@ -265,6 +287,7 @@ $(document).ready(function() {
 	        method: 'post',
 	        root: 'items'
 	    });
+    
 });
 
 //加载配置文件
@@ -282,7 +305,6 @@ $(function(){
   	var item = "{\"<10ms, 10ms-200ms, 200ms-1s, >1s\":\"[11, 22, 30, 13]\",\"R/W, R%\":\"11/1, 0.92\",\"ID\":1,\"LAST_TIME\":1447490909406,\"22-06h, 06-13h, 13-18h, 18-22h\":\"[12, 22, 31, 13]\",\"USER\":\"test\"}";
   	var json =  eval('(' + item + ')');
   	//initMap(json);
-	
 });
 
 function loadData(){
@@ -292,6 +314,8 @@ function loadData(){
 	rainbow.setParam("ds", $('#datasource').val());
 	rainbow.setParam("begin", $('#begin').val());
 	rainbow.setParam("end", $('#end').val());
+	
+	console.log(rainbow);
 	rainbowAjax.query(rainbow, new function(){
 		this.onSuccess = function(data) {
 			 try {
@@ -301,8 +325,9 @@ function loadData(){
 					//initMap(dataRow);
 					var length = data.rows.length; 
 					//重置饼图数据 
-					for(var j=0;j<5;j++)
+					/* for(var j=0;j<5;j++)
 						resetMap(j); 
+					 */
 					if (length>5){
 						length=5;
 					}
@@ -355,7 +380,7 @@ function initMap(json,i){
 	//var r_array = eval( '(' + r_str + ')');
 	//var t_array = eval( '(' + t_str + ')');
 		  
-			
+			console.log(json);
 		require(
             [
                 'echarts',
@@ -414,7 +439,18 @@ function initMap(json,i){
  }
  
 //20秒钟刷新一次
- clearInterval(intervalId); 
- intervalId = setInterval("loadData()",20 * 1000); 
+clearInterval(intervalId); 
+intervalId = setInterval("loadData()",20 * 1000); 
+ 
+$("#reservationtime").on('apply.daterangepicker', function() {
+	var daterange = $('#reservationtime').val().split('~');
+	var begin = daterange[0].trim();
+	var end = daterange[1].trim();
+	$('#begin').val(begin);
+	$('#end').val(end);
 
+	loadData();
+});
+ 
+ 
 </script>
