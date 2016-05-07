@@ -328,37 +328,7 @@ function addForm(serviceName,method,_formid,extra_call){
 var zkPath = "";
 var zkId = "";
 function loadContext(url,copy){
-	
-	/**
-	 * 兼容以前的代码
-	 */
-	if(copy){
-		openContext(url,copy)
-	}else{
-		window.location.hash = "#"+url;
-	}
-}
-
-function openContext(url,copy){
-	if(intervalId)
-		clearInterval(intervalId); 
-	if(copy && mmgrid){
-		var rows =  mmgrid.selectedRows();
-		var length = rows.length;
-		if(length > 0){
-			data = rows[0];
-		}else{
-			alert("请选择复制的条目!");
-			return;
-		}
-	}
-
-	zkPath=getParam(url,"zkpath");
-	zkId=getParam(url,"zkid");
-   	$(".content-wrapper").load(url,function(response,status,xhr){
-   		$(".content").resize(function(){});
-   		
-   	});
+	$.loadContext(url,copy)
 }
 
 var mmgrid;

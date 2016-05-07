@@ -6,3 +6,7 @@
 .modal-body form .form-control{
 	width:200%;
 }
+
+.skin-blue .sidebar a{
+	cursor:pointer
+}

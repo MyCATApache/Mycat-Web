@@ -74,10 +74,11 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 <script type="text/javascript"
-	src="static/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+		src="resources/js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript"
+		src="resources/js/jquery-migrate-1.3.0.min.js"></script>
 <!-- 菜单库 -->
-<script type="text/javascript" src="resources/menu/MenuWeaver.js"></script>
-<script type="text/javascript" src="resources/menu/main.js"></script>
+<script type="text/javascript" src="resources/menu/menu-ui.js"></script>
 <!-- 基础css表 -->
 <link rel="stylesheet" type="text/css" href="resources/css/base.css">
 </head>
@@ -137,82 +138,7 @@
 				<!-- sidebar menu: : style can be found in sidebar.less -->
 				<ul id="menuContainer" class="sidebar-menu">
 					<li class="header">导航菜单</li>
-					<!--		<li class="treeview"><a href="#"> <i
-							class="fa fa-dashboard"></i><span>Mycat-配置</span><i
-							class="fa fa-angle-left pull-right"></i>
-					</a>
-						<ul class="treeview-menu">
-							<li><a
-								href="javascript:loadContext('page/manger/mycat.html');"><i
-									class="fa fa-circle-o"></i>mycat服务管理</a></li>
-							<li><a
-								href="javascript:loadContext('page/manger/jmx.html');"><i
-									class="fa fa-circle-o"></i>mycat-VM管理</a></li>
-							<li><a
-								href="javascript:loadContext('page/manger/sysparam.html');"><i
-									class="fa fa-circle-o"></i>mycat 系统参数</a></li>
-							<li><a
-								href="javascript:loadContext('page/sys/role/role.html');"><i
-									class="fa fa-circle-o"></i>mycat分库管理</a></li>
-							<li><a
-								href="javascript:loadContext('page/manger/zkconfig.html');"><i
-									class="fa fa-circle-o"></i>Zookeeper配置</a></li>						
-							<li><a
-								href="javascript:loadContext('page/manger/zkread.html');"><i
-									class="fa fa-circle-o"></i>Zookeeper信息</a></li>																										
-						</ul></li>
-					<li class="treeview"><a href="#"> <i
-							class="fa fa-dashboard"></i><span>Mycat-监控</span><i
-							class="fa fa-angle-left pull-right"></i>
-					</a>
-						<ul class="treeview-menu">
-							<li><a
-								href="javascript:loadContext('page/monitor/jrds.html');"><i
-									class="fa fa-circle-o"></i>mycat性能监控</a></li>-->
-					<!-- 							<li class="treeview"><a href="#"> <i class="fa fa-table"></i><span>mycat-VM监控</span><i
-									class="fa fa-angle-left pull-right"></i></a>
-								<ul class="treeview-menu">
-									<li><a
-										href="javascript:loadContext('jmonitor/index.html');"><i
-											class="fa fa-circle-o"></i>实时监控</a></li>
-									<li><a
-										href="javascript:loadContext('./jmonitor/runtime.html');"><i
-											class="fa fa-circle-o"></i>系统参数</a></li>
-									<li><a
-										href="javascript:loadContext('./jmonitor/thread.html');"><i
-											class="fa fa-circle-o"></i>线程信息</a></li>
-								</ul>
-							</li> -->
-					<!--						<li><a
-								href="javascript:loadContext('page/monitor/datahostinfo.html');"><i
-									class="fa fa-circle-o"></i>mycat物理节点</a></li>
-							<li><a
-								href="javascript:loadContext('page/monitor/masterslaveinfo.html');"><i
-									class="fa fa-circle-o"></i>主从同步监控</a></li>
-							<li><a
-								href="javascript:loadContext('page/sys/code/code.html');"><i
-									class="fa fa-circle-o"></i>节点负载监控</a></li>
-							<li><a
-								href="javascript:loadContext('page/sys/roletype/roletype.html');"><i
-									class="fa fa-circle-o"></i>数据节点监控</a></li>
-						</ul></li>
-
-<!--
-					<li class="treeview"><a href="#"> <i
-							class="fa fa-dashboard"></i><span>SQL-监控</span><i
-							class="fa fa-angle-left pull-right"></i>
-					</a>
-						<ul class="treeview-menu">
-							<li><a
-								href="javascript:loadContext('page/sql/sqltj.html');"><i
-									class="fa fa-circle-o"></i>SQL统计</a></li>
-							<li><a
-								href="javascript:loadContext('page/sql/sql.html');"><i
-									class="fa fa-circle-o"></i>SQL监控</a></li>
-							<li><a
-								href="javascript:loadContext('page/sql/sqlslow.html');"><i
-									class="fa fa-circle-o"></i>慢SQL统计</a></li>
-						</ul></li>-->
+					
 				</ul>
 			</section>
 			<!-- /.sidebar -->
@@ -303,7 +229,7 @@
 	<script type="text/javascript"
 		src="resources/My97DatePicker/WdatePicker.js"></script>
 	<script type="text/javascript">
-	var mmgrid;
+		var mmgrid;
 		// To make Pace works on Ajax calls    
 		var intervalId;
 		function loadData() {
@@ -316,19 +242,17 @@
 					try {
 
 						if (data.success) {
-
+							console.log(data.rows);
 							var dataRow = data.rows[0].menu;
-							//initMap(dataRow);
-							//console.log(dataRow);
-							//alert(Object.prototype.toString.apply(dataRow).toString());
-							setMenu($('.sidebar-menu'), dataRow);
-							//mmgrid.load(data.rows);
 							
-							
-							var url = window.location.hash;
-							if(url && url.length > 1){
-								openMenu(url.substring(1));
-							}
+							 $('.sidebar-menu').mtMenu({
+									data : dataRow
+								});
+								
+								var url = window.location.hash;
+								if(url && url.length > 1){
+									$.openMenu(url.substring(1));
+								}
 						}
 					} catch (e) {
 					//	alert(e);
@@ -339,8 +263,9 @@
 			});
 
 		}
-		$(document).ready(function() {
-			loadData();
+		
+		$(function(){
+			loadData() ;
 		});
 		
 	</script>
