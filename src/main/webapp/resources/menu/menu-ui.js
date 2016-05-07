@@ -104,7 +104,6 @@
 			var option = {};
 			$.extend(option, defulatOp, Op);
 			var $this = $(this);
-			console.log(option.data)
 			setMenu($this, option.data, option);
 		}
 	});
