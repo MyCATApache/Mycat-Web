@@ -328,7 +328,7 @@ function addForm(serviceName,method,_formid,extra_call){
 var zkPath = "";
 var zkId = "";
 function loadContext(url,copy){
-	$.loadContext(url,copy)
+	mwtools.loadContext(url,copy)
 }
 
 var mmgrid;

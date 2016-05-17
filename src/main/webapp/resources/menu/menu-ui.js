@@ -36,30 +36,30 @@
 			var sa = $("<a href=\"#\"><i class=\"fa "
 					+ option.icons[menudata.menuType] + "\"></i> <span>"
 					+ menudata.menuName + "</span></a>");
-			sa.click(function(){
-				//$(".treeview.active").removeClass("active").children("ul").hide().removeClass("menu-open");
-				//$(this).parent().addClass("active").children("ul").show().addClass("menu-open");
-				
+			sa.click(function() {
+				// $(".treeview.active").removeClass("active").children("ul").hide().removeClass("menu-open");
+				// $(this).parent().addClass("active").children("ul").show().addClass("menu-open");
+
 			});
 			sli.append(sa);
-			
+
 			if (menudata.subMenus.length > 0) {
 				sa.append("<i class=\"fa fa-angle-left pull-right\"></i>");
-				setSecondLevelMenu(sli, menudata.subMenus,option);
+				setSecondLevelMenu(sli, menudata.subMenus, option);
 			}
 			menuhtm.append(sli);
 		})
 	}
 
-	function setSecondLevelMenu(sli, menus,option) {
+	function setSecondLevelMenu(sli, menus, option) {
 
 		var sul = $("<ul class=\"treeview-menu\" style=\"display: none;\"></ul>");
 		sli.append(sul);
-		
+
 		$.each(menus, function(n, menudata) {
-			var sli2 = $("<li class='"
-					+ getopenId(menudata.menuUrl) + "'></li>");
-			sli2.click(function(){
+			var sli2 = $("<li class='" + getopenId(menudata.menuUrl)
+					+ "'></li>");
+			sli2.click(function() {
 				selectedMenu(this)
 			});
 			sul.append(sli2);
@@ -73,18 +73,18 @@
 			});
 			if (menudata.subMenus.length > 0) {
 				sa2.append("<i class=\"fa fa-angle-left pull-right\"></i>");
-				setThirdLevelMenu(sli2, menudata.subMenus,option);
+				setThirdLevelMenu(sli2, menudata.subMenus, option);
 			}
 		})
 	}
 
-	function setThirdLevelMenu(sli2, menus,option) {
+	function setThirdLevelMenu(sli2, menus, option) {
 		var sul3 = $("<ul class=\"treeview-menu\"></ul>");
 		sli2.append(sul3);
 		$.each(menus, function(n, menudata) {
-			var sli3 = $("<li  class='"
-					+ getopenId(menudata.menuUrl) + "'></li>");
-			sli3.click(function(){
+			var sli3 = $("<li  class='" + getopenId(menudata.menuUrl)
+					+ "'></li>");
+			sli3.click(function() {
 				selectedMenu(this);
 			});
 			sul3.append(sli3);
@@ -107,30 +107,105 @@
 			setMenu($this, option.data, option);
 		}
 	});
-	
 
 })(undefined, jQuery);
 
 (function(window, $) {
-	$(window).on("hashchange", function() {
-		var url = window.location.hash;
-		if (url && url.length > 1) {
-			$.openContext(url.substring(1));
+	window["request"] = {
+		params : null
+	};
+	
+	if(!window["mwtools"]){
+		window["mwtools"] = {};
+	}
+
+	function getParams(url) {
+		var urls = url.split("&");
+
+		var params = {};
+		for (var i = 0; i < urls.length; i++) {
+			var urln = urls[i];
+			var param = urln.split("=");
+			params[param[0]] = decodeURI(param[1]);
 		}
+		return params;
+	}
+
+	$(window).on("hashchange", function() {
+		chnageUrl();
 	});
 	
-	$.extend({
-		loadContext : function(url, copy) {
+	function chnageUrl(){
+		var url = window.location.hash;
+		if (url && url.length > 1) {
+			url = url.substring(1);
+			if (url.indexOf("?") > -1) {
+				var datas = url.substring(url.indexOf("?")+1);
+				var params = getParams(datas);
+				mwtools.openContext(url, null, params);
+			} else {
+				mwtools.openContext(url, null);
+			}
+		}
+	}
+	
+	/**
+	 * 获得菜单 唯一id
+	 */
+	function getopenId(url) {
+		url = url.replace(/\//g, "");
+		url = url.replace(/\./g, "");
+		return url;
+	}
+
+	$.extend(window["mwtools"],{
+		setSessionParam : function(name, data) {
+			if (window.sessionStorage) {
+				sessionStorage.setItem(name, data);
+			} else {
+				$.cookie(name, data);
+			}
+		},
+		getSessionParam : function(name) {
+			if (window.sessionStorage) {
+				return sessionStorage.getItem(name);
+			} else {
+				return $.cookie(name);
+			}
+		},
+		getParam : function(name) {
+			if (window["request"].params) {
+				return window["request"].params[name];
+			} else {
+				return null;
+			}
+		},
+		loadContext : function(url, copy,params) {
+			
 			/**
 			 * 兼容以前的代码
 			 */
 			if (copy) {
-				openContext(url, copy)
+				mwtools.openContext(url, copy)
 			} else {
-				window.location.hash = "#" + url;
+				if(params){
+					window["request"].params = null;
+					var datas = [];
+					for ( var key in params) {
+						datas.push(key+"="+encodeURI(params[key]));
+					}
+					window.location.hash = "#" + url+"?"+datas.join("&");
+				}else{
+					window.location.hash = "#" + url;
+				}
 			}
 		},
-		openContext : function(url, copy) {
+		openContext : function(url, copy, params) {
+			
+			if (params) {
+				window["request"].params = params;
+			}
+
 			if (intervalId)
 				clearInterval(intervalId);
 			if (copy && mmgrid) {
@@ -159,15 +234,19 @@
 		 */
 		openMenu : function(url) {
 			$(".treeview li").removeClass("active");
-			var $act = $(".treeview ." + getopenId(url));
+			var url2 = url;
+			if(url.indexOf("?") > -1){
+				url2 = url2.substring(0,url2.indexOf("?"));
+			}
+			var $act = $(".treeview ." + getopenId(url2));
 			if ($act.length > 0) {
 				var $parent = $act.parents(".treeview");
 				if (!$parent.hasClass("menu-open")) {
 					$parent.find("span").click();
 				}
-				openContext(url);
+				chnageUrl();
 				$act.addClass("active");
 			}
 		}
 	});
-})(window, jQuery)
+})(window, jQuery);

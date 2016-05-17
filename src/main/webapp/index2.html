@@ -78,6 +78,7 @@
 	<script type="text/javascript"
 		src="resources/js/jquery-migrate-1.3.0.min.js"></script>
 <!-- 菜单库 -->
+<script type="text/javascript" src="resources/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="resources/menu/menu-ui.js"></script>
 <!-- 基础css表 -->
 <link rel="stylesheet" type="text/css" href="resources/css/base.css">
@@ -250,7 +251,7 @@
 								
 								var url = window.location.hash;
 								if(url && url.length > 1){
-									$.openMenu(url.substring(1));
+									mwtools.openMenu(url.substring(1));
 								}
 						}
 					} catch (e) {
