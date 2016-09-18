@@ -1,0 +1,72 @@
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	
+        },
+        'click .remove': function (e, value, row, index) {
+        	
+        }
+        
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+
+var columns = [
+			{
+				title : '主机名称',
+				field : 'hostname',
+				align : 'center'
+			},
+			{   
+				title : 'ip地址',
+				field : 'ip',
+				align : 'center'
+			
+			},
+			{   
+				title : 'root账号',
+				field : 'root',
+				align : 'center'
+			},
+			{   
+				title : '密码',
+				field : 'password',
+				align : 'center'
+			}/* ,{
+                title : '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            } */];
+
+
+function getdatagrid(){
+	url = './dispatcherAction/query.do?service=mycatHostService&method=query&zkId='+zkId;
+	datagrid('mycatHostTable',url,columns);
+}
+
+$(document).ready(function() {
+	getdatagrid();
+});
+
+</script>
+<div class="box-body ">
+   <table  id="mycatHostTable"   data-toolbar="mycatHostTable" data-toggle="table"  class="table table-striped table-bordered table-hover" 
+   		data-id-field="name"  
+   		data-search ="false"
+   >
+   </table>
+</div>
+	
+	

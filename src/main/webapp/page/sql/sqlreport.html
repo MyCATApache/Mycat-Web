@@ -1,0 +1,145 @@
+<!-- Content Header (Page header) -->
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+		
+				<div class="box-body">
+				 
+				  <div style="float: left">
+				  <div id="requestMap" style="height:340px;width: 700px;float: left;margin-left: 50px"></div>
+				   <!-- <div id="redMap" style="height:400px;width: 400px;float: left"></div>
+				   <div id="requestMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
+				   <div id="timeMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>-->
+				  </div>
+					<div style="clear: both;">
+						<table id="table"></table>
+						<div style="text-align: right;">
+							<div id="paginator"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">  
+//加载配置文件
+require.config({
+	    paths: {
+	        echarts: './static/echarts/build/dist'
+	    }
+	}); 
+
+
+
+
+function loadData1(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("sqlsumtableInfo");
+	rainbow.setParam("ds",dataSource);
+	rainbow.setParam("DB_TABLE",sqlParam);
+	rainbow.setParam("begin", $('#begin').val());
+	rainbow.setParam("end", $('#end').val());
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) {
+					initMap1(data);
+					//mmgrid.load(data.rows);
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+	
+}
+
+loadData1();
+//20秒钟刷新一次
+//clearInterval(intervalId); 
+//intervalId = setInterval("loadData()",20 * 1000); 
+
+function initMap1(json){
+	
+
+    var xData = new Array();
+    var seriesData = new Array();		 
+			
+		require(
+           [
+               'echarts',
+               'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+               'echarts/chart/bar',
+               'echarts/chart/pie'
+           ],
+           function (ec) {
+
+          	//解析数据
+         	 $.each(json.rows, function(index, obj) {
+         		// var date = new Date(obj.createTime);
+      	  		xData.push(obj.LAST_TM);
+      	  		seriesData.push(obj.R);
+      	  	    
+      	  	 });              
+
+               var myChart_request = ec.init(document.getElementById('requestMap'));
+               myChart_request.setOption(initRequestMap1(xData,seriesData));               
+
+           }
+       );
+}
+
+ function initRequestMap1(aData,params){
+	// alert(params);
+	// aData= ['22点-06点','06点-13点','13点-18点','18点-22点'];
+	 option = {
+			 title : {
+			        text: '执行时间',
+			        subtext: '请求数'			      
+			    },
+			 tooltip : {
+					showContent : true
+				},
+				legend : {
+					data : [ '总计' ]
+				},
+				xAxis : [ {
+					type : 'category',
+					data : aData
+					//['22点-06点','06点-13点','13点-18点','18点-22点']
+				} ],
+				yAxis : [ {
+					type : 'value'
+				} ],
+				 series : [
+				              {
+				                  name:'请求数',
+				                  type:'line',
+				                  data: params,
+				                  markLine : {
+				                      data : [
+				                          {type : 'average', name: '平均值'}
+				                      ]
+				                  }
+				              }
+				        ]
+			};
+	return option;
+ }
+ </script>

@@ -1,0 +1,207 @@
+
+<style>
+#dataNodeModal .modal-body {
+	max-height: 250px;
+}
+
+</style>
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#mycatDataNode-form [name='guid']").val(row.name);
+        	 loadFormData("mycatDataNode-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑节点信息");
+        	 $("#dataNodeModal form [name='name']").attr("disabled",true);
+        	 destroyValidator("mycatDataNode-form");
+        	 validator();
+        	 showModal("dataNodeModal");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('dataNodeService','delete',data,callback);
+        	}
+        }
+};
+var columns = [{
+				title : '名称',
+				field:'name',
+				align : 'center'
+			},
+			{
+				title : '物理实例名',
+				field : 'dataHost',
+				align : 'center'
+			},
+			{
+				title : '数据库实例名',
+				field : 'database',
+				align : 'center'
+			},{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            }];
+
+
+function validator(){
+	$('#mycatDataNode-form').bootstrapValidator({
+	    message: 'This value is not valid',
+	    feedbackIcons: {
+	        //valid: 'glyphicon glyphicon-ok',
+	        //invalid: 'glyphicon glyphicon-remove',
+	        validating: 'glyphicon glyphicon-refresh'
+	    },
+	    err : {
+			container : 'tooltip'
+		},
+	    fields: {
+	        name: {
+	            validators: {
+	                notEmpty: {
+	                    message: '请输入节点名称'
+	                }
+	
+	            }
+	        },
+	        dataHost: {
+	            validators: {
+	                notEmpty: {
+	                    message: '请输入物理实例名'
+	                }
+	            }
+	        },
+	        database: {
+	            validators: {
+	            	notEmpty: {
+	                    message: '请输入数据库实例名'
+	                }
+	            }
+	        }
+	    },
+	    onSuccess : function(e,validator, form, submitButton) {
+	    	var guid =  $("#mycatDataNode-form [name='guid']").val();
+	    	var data = {
+	    			 "zkId" :zkId,
+	    			 "guid" : guid
+	    	}
+	    	if(guid){
+	    		saveForm('dataNodeService','update','mycatDataNode-form',data,callback);
+	    	}else{
+	    		saveForm('dataNodeService','insert','mycatDataNode-form',data,callback);
+	    	}
+			
+		}
+	});
+}
+ 
+function getdatagrid(){
+	var url = './dispatcherAction/query.do?service=dataNodeService&method=queryByPage&zkId='+zkId;
+	datagrid('mycatDatanodebody',url,columns);
+}
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+function addDataNode(){
+	 $("#mycatDataNode-form :reset").click();
+	 $("#mycatDataNode-form [name='guid']").val("");
+	 $("#myModalLabel").text("添加节点信息");
+	 $("#dataNodeModal form [name='name']").attr("disabled",false);
+	 destroyValidator("mycatDataNode-form");
+	 validator();
+	 showModal('dataNodeModal');
+	
+}
+
+function submit(){
+	$("#mycatDataNode-form" ).submit();
+}
+
+function callback(){
+	$('#dataNodeModal').modal('hide');
+	$('#mycatDatanodebody').bootstrapTable('refresh');
+	 
+}
+
+$(document).ready(function() {
+	getdatagrid();
+	validator();
+});
+
+</script>		
+	<div class="box-body">
+	    <div id="dataNodeToolbar">
+	        <button id="add" class="btn btn-default" onclick="addDataNode()" >
+	            <i class="glyphicon glyphicon-plus"></i> 新增节点
+	        </button>
+	    </div>
+		<table  id="mycatDatanodebody" data-toggle="table"  data-toolbar="#dataNodeToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >
+		</table>
+   </div>
+ 
+ 
+ 	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="dataNodeModal" tabindex="-1" role="dialog" 
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog modal-md "style="withd:auto">
+	      <div class="modal-content"  >
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" 
+	               aria-hidden="true">×
+	            </button>
+	            <h4 class="modal-title" id="myModalLabel">
+	        	      编辑datanode
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	         <form class="form-horizontal" role="form" id="mycatDataNode-form" method="post" >
+	          	<input type="hidden" id="guid" name="guid">
+		        <button type="reset" id="reset" style="display:none"></button>
+		       
+			   <div class="form-group">
+			   		<label for="name"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="输入节点名称">
+			        </div>
+			   </div>
+			   <div class="form-group">
+			   		<label for="dataHost"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > dataHost </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="dataHost"  name="dataHost" placeholder="请输入物理实例名">
+			        </div>
+			   </div>
+			   <div class="form-group">
+			   		<label for="database"  class=" col-md-2  control-label" title="datanode名称"  data-toggle="tooltip"  data-placement="right"  > database </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="database"  name="database" placeholder="请输入数据库实例名">
+			        </div>
+			   </div>
+		      
+			</form>
+	         </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-default" 
+	               data-dismiss="modal">关闭
+	            </button>
+	            <button type="button" class="btn btn-primary" onclick="submit()">
+	             	  保存
+	            </button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	   </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+ 

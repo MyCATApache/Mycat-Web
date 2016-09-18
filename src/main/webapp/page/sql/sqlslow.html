@@ -1,0 +1,276 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>慢SQL统计</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>慢SQL统计</a></li>
+		<li><a href="#"></i>慢SQL统计</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+				<div class="box-header">
+				 <form action="" id="query_Form">
+				   <input name="begin" id="begin" type="hidden"/> 
+				   <input name="end" id="end" type="hidden"/>
+				   <div class="row">
+				   
+				    <div class="col-xs-3">
+					  <label for="mycatName">查询条件:</label> 
+				      <div class="form-group">
+					  <select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		              </select>
+		              </div>
+		            </div> 
+		           
+		            <div class="col-xs-3">
+					  <label for="mycatName">SQL阀值:</label> 
+		              <div class="form-group">
+		               <input type="text" name="threshold"  id="threshold" type="number"
+										class="form-control" placeholder="慢SQL阀值，单位是毫秒">
+					  </div>	
+					</div>
+					<div class="col-xs-5">
+								<div class="form-group"> 
+								<label for="mycatName">区间查询:</label>
+									<div class="input-group">
+										<div class="input-group-addon">
+											<i class="fa fa-clock-o"></i>
+										</div>
+										<input type="text" class="form-control pull-right"
+											id="reservationtime">
+									</div>
+								</div>
+							</div>
+					
+					</div>	
+					
+		         </form>
+		         
+				</div>
+				<div class="box-footer">
+					<div class="form-group">
+						<div class="col-lg-offset-3 col-lg-3">
+							<button class="btn btn-primary" onclick="queryForm('query_Form')">查询</button>
+							<!--<button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>-->
+							<button class="btn btn-primary" onclick="setsqlslow()" type="button">阀值设置</button>
+						<!-- 	<button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button> -->
+						</div>
+					</div>
+				</div>			
+				
+				<div class="box-body">
+					<div>
+						<table id="table"></table>
+						<div style="text-align: right;">
+							<div id="paginator"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+/**
+ * 时间原型增加一个 format 函数
+ */
+Date.prototype.format = function(fmt) {
+  var o = {
+    "M+" : this.getMonth()+1,                 //月份
+    "d+" : this.getDate(),                    //日
+    "h+" : this.getHours(),                   //小时
+    "m+" : this.getMinutes(),                 //分
+    "s+" : this.getSeconds(),                 //秒
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度
+    "S"  : this.getMilliseconds()             //毫秒
+  };
+  if(/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+  return fmt;
+}
+var datasouce_change = function(){
+	var daterange = $('#reservationtime').val().split('~');
+	var begin = daterange[0].trim();
+	var end = daterange[1].trim();
+	$('#begin').val(begin);
+	$('#end').val(end);
+	//queryForm('query_Form');
+}
+//Date range picker with time picker
+$('#reservationtime').daterangepicker(
+		{
+			maxDate : moment(), //最大时间
+			showDropdowns : true,
+			showWeekNumbers : false, //是否显示第几周
+			timePicker : true, //是否显示小时和分钟
+			timePickerIncrement : 60, //时间的增量，单位为分钟
+			timePicker12Hour : false, //是否使用12小时制来显示时间
+			ranges : {
+				//'最近1小时': [moment().subtract('hours',1), moment()],
+				'今日' : [ moment().startOf('day'), moment() ],
+				'昨日' : [
+						moment().subtract('days', 1).startOf(
+								'day'),
+						moment().subtract('days', 1).endOf(
+								'day') ],
+				'最近7日' : [ moment().subtract('days', 6),
+						moment() ],
+				'最近30日' : [ moment().subtract('days', 29),
+						moment() ]
+			},
+			opens : 'right', //日期选择框的弹出位置
+			format : 'YYYY-MM-DD HH:mm', //控件中from和to 显示的日期格式
+			separator : ' to ',
+			locale : {
+				applyLabel : '确定',
+				cancelLabel : '取消',
+				fromLabel : '起始时间',
+				toLabel : '结束时间',
+				customRangeLabel : '自定义',
+				daysOfWeek : [ '日', '一', '二', '三', '四', '五',
+						'六' ],
+				monthNames : [ '一月', '二月', '三月', '四月', '五月',
+						'六月', '七月', '八月', '九月', '十月', '十一月',
+						'十二月' ],
+				firstDay : 1
+			}
+		});
+		
+		
+$("#reservationtime").on('apply.daterangepicker', function() {
+	var daterange = $('#reservationtime').val().split('~');
+	var begin = daterange[0].trim();
+	var end = daterange[1].trim();
+	$('#begin').val(begin);
+	$('#end').val(end);
+	queryForm('query_Form');
+});
+var setsqlslow=function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("setsqlslow");
+	rainbow.setParam("ds", $('#datasource').val());
+	rainbow.setParam("threshold", $('#threshold').val());
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) {
+					alert("设置阀值成功！");
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+}
+var exportcsv =function(){
+	var url = "./dispatcherAction/exportCSV.do?service=showService&method=sqlslow&ds="+$('#datasource').val()+"&threshold="+$('#threshold').val()+"&fileName=sqlslow";
+	window.location = url;
+}
+var Selected_Callback = function(target_select){
+	  this.onSuccess=function(data){
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					var length = j_obj.rows.length;
+					for(var i=0;i<length;i++){
+						var mycatName = j_obj.rows[i].mycatName;
+						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+						if(i==0){
+							datasouce_change();
+						}
+					}
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown){
+		};
+};
+var initDataSouce = function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("mycatService");
+	rainbow.setMethod("query");
+	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+};
+$(document).ready(function() {
+	initDataSouce();
+		    var cols = [
+                    { title:'用户', name:'USER' ,width:80, align:'left'},
+					{ title:'节点', name:'DATASOURCE' ,width:100, align:'left'},
+			        { title:'开始时间', name:'START_TIME' ,width:170, align:'left', sortable:true,
+			        	renderer: function(val){
+			        		console.debug( "vv:" + val);
+			        		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
+			        		return d;
+			        	} },
+					{ title:'执行时间', name:'EXECUTE_TIME' ,width:100, align:'left', sortable:true,type:'number'},
+					{ title:'IP', name:'IPAddr' ,width:80, align:'left', sortable:true},
+					{ title:'SQL', name:'SQL' ,width:600, align:'left'}
+			    ];
+	mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=sqlslow',
+	        method: 'post',
+	        //params: function(){return $('#query_Form').serializeJson();},
+	        params: function(){
+	        	var daterange = $('#reservationtime').val().split('~');
+	        	var begin = daterange[0].trim();
+	        	var end = daterange[1].trim();
+	        	if ($('#threshold').val().length>0){
+	        		return {ds:$('#datasource').val(),begin:begin,end:end,threshold:$('#threshold').val()};
+	        	}else{
+	        		return {ds:$('#datasource').val(),begin:begin,end:end};
+	        	}	
+	        	
+	        	//return $('#query_Form').serializeJson();
+	        },
+	        root: 'items',
+	        plugins:[
+	                 //配置当前grid默认的分页大小以及总记录数的名称
+	                	$('#paginator').mmPaginator({limit:20, totalCountName:'totalCount'})
+	               ]
+	    });
+});
+$.fn.serializeJson=function(){ 
+	
+    var serializeObj={}; // 目标对象 
+    var array=this.serializeArray(); // 转换数组格式 
+    // var str=this.serialize(); 
+    $(array).each(function(){ // 遍历数组的每个元素 {name : xx , value : xxx} 
+            if(serializeObj[this.name]){ // 判断对象中是否已经存在 name，如果存在name 
+                  if($.isArray(serializeObj[this.name])){ 
+                         serializeObj[this.name].push(this.value); // 追加一个值 hobby : ['音乐','体育'] 
+                  }else{ 
+                          // 将元素变为 数组 ，hobby : ['音乐','体育'] 
+                          serializeObj[this.name]=[serializeObj[this.name],this.value]; 
+                  } 
+            }else{ 
+                    serializeObj[this.name]=this.value; // 如果元素name不存在，添加一个属性 name:value 
+            } 
+    }); 
+    return serializeObj; 
+};     
+</script>

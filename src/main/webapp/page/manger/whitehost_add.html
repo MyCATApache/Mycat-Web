@@ -1,0 +1,105 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+             Mycat IP 白名单
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>   Mycat IP 白名单</a></li>
+    <li><a href="#"><i class="fa fa-table"></i>Procedure</a></li>
+    <li class="active">新增 IP 白名单</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">Mycat配置管理</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        
+	        <form action="" id="add_form">
+		        <div class="box-body">
+		          <div class="row">
+		             <div class="col-xs-6">
+		             					
+		            <div class="form-group">
+			              <input type=hidden id="guid" name="guid"  />
+		                     <label for="text">mycat数据源:</label>
+			                <select name="ds" id="datasource" class="form-control" style="width: 200px;">
+		          		  </select>
+		                  </div>
+						<div class="form-group">
+			              <input type=hidden id="guid" name="guid"  />
+		                     <label for="text">IP地址:</label>
+			                  <input id="ip" type="text" name="ip" class="form-control"  validateType = "lengthRange-1-100"  placeholder="IP地址">
+		                  </div>
+		                   <!-- json  -->
+		                  <div class="form-group">
+		                     <label for="IP">Mycat用户:</label>
+			                  <input id="username" type="text" name="username" class="form-control" placeholder="Mycat用户:" validateType="lengthRange-1-100">
+		                  </div>           
+		             </div>
+		            </div> 
+		        </div>
+	        </form>
+	        
+	        
+	        <div class="box-footer">
+	         <div class="form-group">
+	            <button class="btn btn-primary" onclick="addForm('showService','addWhitehost','add_form','addForm_extra_call')">保存</button>
+	            <button class="btn btn-primary" onclick="loadContext('page/manger/whitehost.html')">返回列表</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+   function addForm_extra_call(_formid,data){
+	   var value_obj = {};
+	   value_obj.ip = data.ip;
+	   
+	   value_obj.username = data.username;
+	   data.value = JSON.stringify(value_obj);
+   }
+   var Selected_Callback = function(target_select){
+		  this.onSuccess=function(data){
+				try {
+					var j_obj = data;
+					if (j_obj.success) {
+						var length = j_obj.rows.length;
+						for(var i=0;i<length;i++){
+							var mycatName = j_obj.rows[i].mycatName;
+							$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+							if(i == 0){
+								datasouce_change();
+							}
+						}
+					}
+				} catch (e) {
+					alert("异常!")
+				}
+			};
+			this.onFail = function(jqXHR, textStatus, errorThrown){
+			};
+	};
+
+	var initDataSouce = function(){
+		var rainbow = new Rainbow();
+		rainbow.setService("mycatService");
+		rainbow.setMethod("query");
+		rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+	};
+
+   $(document).ready(function(){
+	   	ready4AddForm("ready4Update_extra_call");
+	   	initDataSouce();
+   });
+   
+   
+</script>

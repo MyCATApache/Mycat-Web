@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQLTABLE"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssqltable (
+		    DB_NAME,
+			DB_TABLE,
+		    RELACOUNT,
+			R, 
+			PERCENT_R,
+			W,
+			RELATABLE,
+			ID,
+			LAST_TIME,
+			LAST_TM
+		) 
+		values(
+		    #{DB_NAME, jdbcType=VARCHAR},
+			#{TABLE, jdbcType=VARCHAR},
+			#{RELACOUNT, jdbcType=VARCHAR},
+			#{R, jdbcType=NUMERIC,typeHandler=NumberHandler}, 		
+			#{PERCENT_R, jdbcType=VARCHAR},
+			#{W, jdbcType=NUMERIC,typeHandler=NumberHandler}, 	
+			#{RELATABLE, jdbcType=VARCHAR},
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},  
+			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
+			#{LAST_TM, jdbcType=VARCHAR }
+		)
+	</select>
+	
+	
+	<update id="update" parameterType="map">
+		update  t_mycat_syssqltable 
+		<set>
+			<if test="RELACOUNT != null">
+				RELACOUNT = #{RELACOUNT, jdbcType=VARCHAR},
+			</if>
+			<if test="R != null">
+				R = #{R, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			</if>
+			<if test="PERCENT_R != null">
+				PERCENT_R = #{PERCENT_R, jdbcType=VARCHAR},
+			</if>
+			<if test="W != null">
+				W = #{W, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			</if>
+			<if test="RELATABLE != null">
+				RELATABLE = #{RELATABLE, jdbcType=VARCHAR},
+			</if>
+			<if test="ID != null">
+				ID = #{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},  
+			</if>
+			<if test="LAST_TIME != null">
+				LAST_TIME = #{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },    
+			</if>
+			<if test="LAST_TM != null">
+				LAST_TM = #{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date }
+			</if>
+		</set> 
+		<where>  
+			<if test="TABLE != null">
+				and DB_TABLE = #{TABLE, jdbcType=VARCHAR}
+			</if> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 			
+		</where>
+	</update>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select DB_TABLE,
+		    RELACOUNT,
+			R, 
+			PERCENT_R,
+			W,
+			RELATABLE,
+			ID,
+			LAST_TIME,
+			LAST_TM
+			from t_mycat_syssqltable 
+		<where>  
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="TABLE != null">
+				and DB_TABLE = #{TABLE}
+			</if>  
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sqlsumtable" parameterType="map" resultType="map">
+		select 
+		    DB_NAME,
+		    DB_TABLE,
+			sum(R) as R, 
+			sum(R)/(sum(R)+sum(W)) as PERCENT_R,
+			sum(W) as W
+			
+			from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+			 
+		</where>
+		group by DB_NAME,DB_TABLE
+	</select>
+	
+	<select id="sqlsumtableCount" parameterType="map" resultType="int">
+		select count(1) from (select count(1) from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+				
+		</where> 
+		group by DB_NAME,DB_TABLE) atable
+	</select>
+	
+	<select id="sqlsumtableInfo" parameterType="map" resultType="map">
+		select DB_TABLE,
+		    RELACOUNT,
+			R, 
+			PERCENT_R,
+			W,
+			RELATABLE,
+			ID,
+			LAST_TIME,
+			LAST_TM
+			from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				 
+		</where>
+	</select>
+	
+	<select id="sqlsumtableInfoCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssqltable 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if> 
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
+		</where> 
+	</select>	
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqltable 
+		<where> 
+			LAST_TM  &lt; #{clearday} 
+		</where>
+	</delete>	
+	
+</mapper>

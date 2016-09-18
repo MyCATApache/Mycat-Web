@@ -1,0 +1,63 @@
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#mycatDataHost-form [name='guid']").val(row.name);
+        	 loadFormData("mycatDataHost-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑datahost");
+        	 destroyValidator("mycatDataHost-form");
+        	 validator();
+        	 showModal("dataHostModal");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('dataHostService','delete',data,callback);
+        	}
+        }
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+var columns = [
+			{
+				title : '区域名称',
+				field : 'name',
+				align : 'center'
+			}/* ,
+			{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            } */];
+
+
+function getdatagrid(){
+	url = './dispatcherAction/query.do?service=myCatZoneService&method=query&zkId='+zkId;
+	datagrid('mycatZonebody',url,columns);
+}
+
+
+$(document).ready(function() {
+	getdatagrid();
+});
+
+</script>
+<div class="box-body ">
+   <table  id="mycatZonebody"   data-toolbar="#zoneToolbar"   data-id-field="name"  data-toggle="table"  class="table table-striped table-bordered table-hover" >
+   </table>
+</div>
+	

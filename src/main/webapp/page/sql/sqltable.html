@@ -1,0 +1,456 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>SQL表分析</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>SQL表分析</a></li>
+		<li><a href="#"></i>SQL表分析</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+				<div class="box-header">
+				 <form action="" id="query_Form">
+				 	
+				 	<input name="begin" id="begin" type="hidden"/> 
+				 	<input name="end" id="end" type="hidden"/> 
+		            <div class="row">
+							<div class="col-xs-3">
+								<label for="mycatName">查询条件:</label> 
+								<div class="form-group">
+									<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		            				</select>
+								</div>
+							</div>
+<!-- 							<div class="col-xs-8">
+								<div class="form-group">
+									 <button class="btn btn-primary"  onclick="exportcsv()" type="button">导出CSV</button>
+								</div>
+							</div> -->
+							<div class="col-xs-8">
+								<div class="form-group"> 
+								<label for="mycatName">区间查询:</label>
+									<div class="input-group">
+										<div class="input-group-addon">
+											<i class="fa fa-clock-o"></i>
+										</div>
+										<input type="text" class="form-control pull-right"
+											id="reservationtime">
+									</div>
+								</div>
+							</div>
+						</div>
+		         </form>
+				</div>
+				<div class="box-footer">
+					<div class="form-group">
+						<div class="col-lg-offset-5 col-lg-2">
+							<button class="btn btn-primary" onclick="loadData()">查询</button>
+							<button class="btn btn-primary" onclick="resetLoadData()">重置</button>
+						</div>
+					</div>
+				</div>	
+				<div class="box-body">
+				 
+				  <div style="float: left">
+				   <div id="redMap0" style="height:250px;width: 250px;float: left"></div>
+				   <div id="redMap1" style="height:250px;width: 250px;float: left;margin-left: 50px"></div>
+				   <div id="redMap2" style="height:250px;width: 250px;float: left;margin-left: 50px"></div>
+				   <div id="redMap3" style="height:250px;width: 250px;float: left;margin-left: 60px"></div>
+				   <div id="redMap4" style="height:250px;width: 250px;float: left;margin-left: 60px"></div>
+				  <!-- <div id="requestMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>
+				   <div id="timeMap" style="height:400px;width: 400px;float: left;margin-left: 50px"></div>-->
+				  </div>
+					<div style="clear: both;">
+						<table id="table"></table>
+						<div style="text-align: right;">
+							<div id="paginator"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="mysqlexplain">表分析信息</h4>
+			</div>
+			<div class="modal-body" id="explainDetail">
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+	var dataSource = "";
+	var sqlParam = "";   
+</script>
+
+<script type="text/javascript">
+var mmgridSqlTable;
+/**
+ * 时间原型增加一个 format 函数
+ */
+Date.prototype.format = function(fmt) {
+  var o = {
+    "M+" : this.getMonth()+1,                 //月份
+    "d+" : this.getDate(),                    //日
+    "h+" : this.getHours(),                   //小时
+    "m+" : this.getMinutes(),                 //分
+    "s+" : this.getSeconds(),                 //秒
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度
+    "S"  : this.getMilliseconds()             //毫秒
+  };
+  if(/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+  return fmt;
+}
+
+var datasouce_change = function(){ 
+	var daterange = $('#reservationtime').val().split('~');
+	var begin = daterange[0].trim();
+	var end = daterange[1].trim();
+	$('#begin').val(begin);
+	$('#end').val(end);
+	var beginOld = $('#begin').attr("oldValue");
+	var endOld = $('#end').attr("oldValue");
+	if(!beginOld){
+		$('#begin').attr("oldValue",begin);
+		$('#end').attr("oldValue",end);
+	}
+	loadData();
+}
+
+/**
+ * 重置方法
+ */
+function resetLoadData(){
+	var beginOld = $('#begin').attr("oldValue");
+	var endOld = $('#end').attr("oldValue");
+	$('#begin').val(beginOld);
+	$('#end').val(endOld);
+	$('#reservationtime').data("daterangepicker").setStartDate(beginOld);
+	//$('#reservationtime').data("daterangepicker").setStartDate(endOld);
+	loadData();
+}
+ 
+ 
+
+//Date range picker with time picker
+$('#reservationtime').daterangepicker(
+		{
+			maxDate : moment(), //最大时间
+			showDropdowns : true,
+			showWeekNumbers : false, //是否显示第几周
+			timePicker : true, //是否显示小时和分钟
+			timePickerIncrement : 60, //时间的增量，单位为分钟
+			timePicker12Hour : false, //是否使用12小时制来显示时间
+			ranges : {
+				//'最近1小时': [moment().subtract('hours',1), moment()],
+				'今日' : [ moment().startOf('day'), moment() ],
+				'昨日' : [
+						moment().subtract('days', 1).startOf(
+								'day'),
+						moment().subtract('days', 1).endOf(
+								'day') ],
+				'最近7日' : [ moment().subtract('days', 6),
+						moment() ],
+				'最近30日' : [ moment().subtract('days', 29),
+						moment() ]
+			},
+			opens : 'right', //日期选择框的弹出位置
+			format : 'YYYY-MM-DD HH:mm', //控件中from和to 显示的日期格式
+			separator : ' to ',
+			locale : {
+				applyLabel : '确定',
+				cancelLabel : '取消',
+				fromLabel : '起始时间',
+				toLabel : '结束时间',
+				customRangeLabel : '自定义',
+				daysOfWeek : [ '日', '一', '二', '三', '四', '五',
+						'六' ],
+				monthNames : [ '一月', '二月', '三月', '四月', '五月',
+						'六月', '七月', '八月', '九月', '十月', '十一月',
+						'十二月' ],
+				firstDay : 1
+			}
+		}); 
+		
+		
+
+ 
+var requestData = new Array();
+var timeData = new Array();
+ 
+
+
+var Selected_Callback = function(target_select){
+	  this.onSuccess=function(data){
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					var length = j_obj.rows.length;
+					for(var i=0;i<length;i++){
+						var mycatName = j_obj.rows[i].mycatName;
+						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+						if(i==0){
+							datasouce_change();
+						}
+					}
+				}
+				
+			} catch (e) {
+				alert("异常AA!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown){
+		};
+};
+
+var initDataSouce = function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("mycatService");
+	rainbow.setMethod("query");
+	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+};
+
+
+
+
+var explainMysql12 = function(dataNode, sql) {
+	$('#explainDetail').load('./page/sql/sqlreport.html?v=' + Math.random());
+	$('#myModal').modal({
+		show : true
+	});
+	dataSource = $('#datasource').val();
+	sqlParam = sql;
+};
+$(document).ready(function() {
+	initDataSouce();
+	
+    var cols = [
+				{
+					title : '操作',
+					name : 'operation',
+					width : 100,
+					align : 'center',
+					renderer : function(val, item, rowIndex) {
+						//return '<button class="btn btn-danger btn-xs" onclick=explainMysql12("'+item+'")>删除</button>&nbsp;'; 
+						return '<button  class="btn btn-primary btn-xs modify"  onclick="explainMysql12(\''
+								+ item.R
+								+ '\',\''
+								+ item.DB_TABLE + '\')">分析</button>';
+					}
+				},
+				{ title:'表名', name:'DB_TABLE', width:300, align:'left'},
+				{ title:'读次数', name:'R', width:100, align:'left', sortable:true,type:'number'},
+				{ title:'写次数', name:'W', width:100, align:'left', sortable:true,type:'number'},
+				{ title:'读占比', name:'PERCENT_R', width:60, align:'left', sortable:true,type:'number'}
+				//{ title:'关联表', name:'RELATABLE', width:260, align:'left'},
+				//{ title:'关联次数', name:'RELACOUNT', width:60, align:'left'},
+		      //  { title:'最后执行', name:'LAST_TIME' ,width:160, align:'left',  sortable:true,
+		      //  	renderer: function(val){
+		      //  		console.debug( "vv:" + val);
+		     //   		var d = new Date(val).format("yyyy-MM-dd hh:mm:ss");;
+		      //  		return d;
+		      //  	} 
+		     //   }
+	    ];
+		    
+    mmgridSqlTable = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        autoLoad: false,
+	        method: 'post',
+	        root: 'items'
+	    });
+    
+});
+
+//加载配置文件
+require.config({
+	    paths: {
+	        echarts: './static/echarts/build/dist'
+	    }
+	}); 
+
+
+
+//获取数据
+$(function(){
+	
+  	var item = "{\"<10ms, 10ms-200ms, 200ms-1s, >1s\":\"[11, 22, 30, 13]\",\"R/W, R%\":\"11/1, 0.92\",\"ID\":1,\"LAST_TIME\":1447490909406,\"22-06h, 06-13h, 13-18h, 18-22h\":\"[12, 22, 31, 13]\",\"USER\":\"test\"}";
+  	var json =  eval('(' + item + ')');
+  	//initMap(json);
+});
+
+function loadData(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("sqlsumtable");
+	rainbow.setParam("ds", $('#datasource').val());
+	rainbow.setParam("begin", $('#begin').val());
+	rainbow.setParam("end", $('#end').val());
+	
+	console.log(rainbow);
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) {
+					//var dataRow = data.rows[0];
+					//initMap(dataRow);
+					var length = data.rows.length; 
+					//重置饼图数据 
+					/* for(var j=0;j<5;j++)
+						resetMap(j); 
+					 */
+					if (length>5){
+						length=5;
+					}
+					for(var i=0;i<length;i++){
+						var dataRow = data.rows[i];
+						initMap(dataRow,i);
+					} 
+					mmgridSqlTable.load(data.rows);
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+	
+}
+ 
+//重置饼图数据
+function resetMap(i){
+	  
+		require(
+            [
+                'echarts',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+            	var myChart_read = ec.init(document.getElementById('redMap'+i));
+               // myChart_read.setOption(initReadMap(json["TABLE"],json["R"],json["W"]));
+            }
+        );
+}
+
+function initMap(json,i){
+	
+	 if ( json == undefined) {	
+		 var NULL_JSON = "{\"TTL_COUNT\":\"[0, 0, 0, 0]\",\"R\":\"0\",\"W\":\"0\",\"R%\":\"0\",\"MAX\":\"0\",\"ID\":1,\"LAST_TIME\":0,\"TIME_COUNT\":\"[0, 0, 0, 0]\",\"USER\":\"\"}";
+		 json =  eval('(' + NULL_JSON + ')');
+	 }else{
+		
+	 }
+	 
+	//eval
+	//var r_str = json["TIME_COUNT"];
+	//var t_str = json["TTL_COUNT"];
+	
+	//var r_array = eval( '(' + r_str + ')');
+	//var t_array = eval( '(' + t_str + ')');
+		  
+			console.log(json);
+		require(
+            [
+                'echarts',
+                'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+                'echarts/chart/bar',
+                'echarts/chart/pie'
+            ],
+            function (ec) {
+                var myChart_read = ec.init(document.getElementById('redMap'+i));
+                   myChart_read.setOption(initReadMap(json["DB_TABLE"],json["R"],json["W"]));
+               // var myChart_request = ec.init(document.getElementById('requestMap'));
+                //myChart_request.setOption(initRequestMap(r_array));
+                
+              //  var myChart_timeMap = ec.init(document.getElementById('timeMap'));
+              //  myChart_timeMap.setOption(initTimeMap(t_array));
+            }
+        );
+}
+
+//饼图
+ function initReadMap(tname,rCount, wCount){
+	 
+	 option = {
+     	    title : {
+     	        text: tname,
+     	        subtext: '读写次数',
+     	        x:'center'
+     	    },
+     	    tooltip : {
+     	        trigger: 'item',
+     	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+     	    },
+     	    legend: {
+     	        orient : 'vertical',
+     	        x : 'left',
+     	        data:["读","写"]
+     	    },
+     	    toolbox: {
+     	        show : true
+     	    },
+     	    calculable : true,
+     	    series : [
+     	        {
+     	            name:'SQL类型',
+     	            type:'pie',
+     	            radius : '55%',
+     	            center: ['50%', '60%'],
+     	            data:[
+     	                {value:rCount, name:'读'},
+     	                {value:wCount, name:'写'}
+     	            ]
+     	        }
+     	    ]
+     	};
+	 return option;
+ }
+ 
+//20秒钟刷新一次
+clearInterval(intervalId); 
+intervalId = setInterval("loadData()",20 * 1000); 
+ 
+$("#reservationtime").on('apply.daterangepicker', function() {
+	var daterange = $('#reservationtime').val().split('~');
+	var begin = daterange[0].trim();
+	var end = daterange[1].trim();
+	$('#begin').val(begin);
+	$('#end').val(end);
+
+	loadData();
+});
+ 
+ 
+</script>

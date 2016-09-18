@@ -1,0 +1,72 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>cluster配置信息</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>cluster配置</a></li>
+		<li><a href="#">cluster配置</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<ul id="myTab" class="nav nav-tabs">
+		<li class="active">
+			<a href="#schema" data-toggle="tab" onclick="loadTab('schema','page/cluster/schema.html')">schema</a>
+		</li>
+		<li>
+			<a href="#datahost" data-toggle="tab" onclick="loadTab('datahost','page/cluster/datahost.html')">datahost</a>
+		</li>
+		<li>
+			<a href="#datanode" data-toggle="tab"  onclick="loadTab('datanode','page/cluster/datanode.html')" >datanode</a>
+		</li>
+		<li>
+			<a href="#rule" data-toggle="tab" onclick="loadTab('rule','page/cluster/rule.html')" >rule</a>
+		</li>
+		<li>
+			<a href="#blockSQLs" data-toggle="tab" onclick="loadTab('blockSQLs','page/cluster/blockSql.html')" >blockSQLs</a>
+		</li>
+		<li>
+			<a href="#sequence" data-toggle="tab" onclick="loadTab('sequence','page/cluster/sequence.html')" >sequence</a>
+		</li>
+		<li>
+			<a href="#user" data-toggle="tab" onclick="loadTab('user','page/cluster/user.html')">user</a>
+		</li>
+		
+	</ul>
+	<div id="myTabContent" class="tab-content">
+		<div class="tab-pane fade in  active"  id="schema">
+			
+		</div>
+		<div class="tab-pane fade" id="datahost" >
+			
+		</div>
+		<div class="tab-pane fade" id="datanode">
+			
+		</div>
+		<div class="tab-pane fade" id="rule">
+			
+		</div>
+		<div class="tab-pane fade" id="blockSQLs">
+			
+		</div>
+		<div class="tab-pane fade" id="sequence">
+		
+		</div>
+		<div class="tab-pane fade" id="user">
+			
+		</div>
+	</div>
+
+</section>
+<!-- /.content -->
+
+<script type="text/javascript">
+$(function(){
+	$("#schema").load("page/cluster/schema.html");
+});
+
+ function loadTab(id,url){
+	 url = url+"?timestamp="+new Date().getTime();
+	$("#"+id).load(url);
+ }
+	
+</script>

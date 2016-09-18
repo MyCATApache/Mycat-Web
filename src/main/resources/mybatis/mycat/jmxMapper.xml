@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSJMX">
+
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				GUID	as "guid",  <!-- GUID -->
+				JMXNAME as "jmxname",  <!-- NAME -->
+				IP	as "ip",  <!-- IP -->
+				PORT	as "port",  <!-- PORT -->
+				USERNAME	as "username",  <!-- USERNAME -->
+				PASSWORD	as "password",<!-- PASSWORD -->
+				FILE_NAME as "fileName"
+		FROM T_SYS_MYCAT_JMX
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="jmxname != null">
+				and JMXNAME = #{jmxname}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="username != null">
+				and USERNAME = #{username}
+			</if>
+			<if test="password != null">
+				and PASSWORD = #{password}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT
+				count(*)
+		FROM T_SYS_MYCAT_JMX
+		<where>
+			<if test="guid != null">
+				and GUID = #{guid}
+			</if>
+			<if test="jmxname != null">
+				and JMXNAME = #{jmxname}
+			</if>
+			<if test="ip != null">
+				and IP = #{ip}
+			</if>
+			<if test="port != null">
+				and PORT = #{port}
+			</if>
+			<if test="username != null">
+				and USERNAME = #{username}
+			</if>
+			<if test="password != null">
+				and PASSWORD = #{password}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO T_SYS_MYCAT_JMX (
+				GUID,  <!-- GUID -->
+				JMXNAME,  <!-- NAME -->
+				IP,  <!-- IP -->
+				PORT,  <!-- PORT -->
+				USERNAME,  <!-- USERNAME -->
+				PASSWORD,  <!-- PASSWORD -->
+				FILE_NAME
+		)VALUES ( 
+				#{guid, jdbcType=NVARCHAR}, 
+				#{jmxname, jdbcType=NVARCHAR}, 
+				#{ip, jdbcType=NVARCHAR}, 
+				#{port, jdbcType=NVARCHAR}, 
+				#{username, jdbcType=NVARCHAR}, 
+				#{password, jdbcType=NVARCHAR} ,
+				#{fileName, jdbcType=NVARCHAR} 
+				
+		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM T_SYS_MYCAT_JMX 
+		<where> 
+			GUID = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE T_SYS_MYCAT_JMX  
+		<set>
+			<if test="jmxname != null">
+				JMXNAME = #{jmxname, jdbcType=NVARCHAR},
+			</if>
+			<if test="ip != null">
+				IP = #{ip, jdbcType=NVARCHAR},
+			</if>
+			<if test="port != null">
+				PORT = #{port, jdbcType=NVARCHAR},
+			</if>
+			<if test="username != null">
+				USERNAME = #{username, jdbcType=NVARCHAR},
+			</if>
+			<if test="password != null">
+				PASSWORD = #{password, jdbcType=NVARCHAR},
+			</if>
+		</set>
+		<where>
+			GUID = #{guid}
+		</where>
+	</update>
+</mapper>

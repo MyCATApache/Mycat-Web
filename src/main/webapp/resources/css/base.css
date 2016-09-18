@@ -1,0 +1,12 @@
+@charset "UTF-8";
+.modal-body{
+	height:450px;
+	overflow:auto;
+}
+.modal-body form .form-control{
+	width:200%;
+}
+
+.skin-blue .sidebar a{
+	cursor:pointer
+}

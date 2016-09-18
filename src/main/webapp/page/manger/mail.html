@@ -1,0 +1,128 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                       邮件告警
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>邮件告警-配置</a></li>
+    <li><a href="#"></i>邮件告警</a></li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row"> 
+	 <div class="col-md-12">
+	 	<!-- 
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	        <form action="" id="query_Form">
+	        <div class="row">
+	         	<div class="col-xs-3">
+	                  <div class="form-group">
+	                      <label for="mycatName">Mycat名称:</label>
+		                     <input   type="text" name="mycatName" class="form-control" placeholder="Mycat名称">
+	                  </div>
+	             </div>
+            </div>
+            </form>
+	     </div>
+	     <div class="box-footer"> 
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button class="btn btn-primary"  onclick="queryForm('query_Form')">查询</button>
+	                <button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div> -->
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	        </div>
+	        
+	        <div class="box-header">
+	     		<button class="btn btn-success" onclick="loadContext('page/manger/mail_add.html')">新增</button>
+	     	 </div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	         
+	   </div>
+	 </div>
+ </div>
+   
+</section><!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+
+function ready4Update_extra_call(modifyForm_obj,row,attr_){
+	  if(attr_ == 'value'){
+		  var value_obj = jQuery.parseJSON(row[attr_]);
+		  for(var obj_attr in value_obj){
+			  modifyForm_obj.find("[name='"+obj_attr+"']").val([''+value_obj[obj_attr]]);
+		  }
+	  }
+}
+
+function updateForm_extra_call(form_id,data){
+	   var value_obj = {};
+	   value_obj.url = data.url;
+	   value_obj.driverClassName = data.driverClassName;
+	   value_obj.mangerPort = data.mangerPort;
+	   value_obj.serverPort = data.serverPort;
+	   value_obj.username = data.username;
+	   value_obj.password = data.password;
+	   data.value = JSON.stringify(value_obj);
+}
+
+$(document).ready(function() {
+		    var cols = [
+		    		{ title:'操作', name:'operation',width:100, align:'center',renderer:function(val,item,rowIndex){
+							 return '<button class="btn btn-danger btn-xs" onclick=delObj("mailService","delete","'+item.index+'")>删除</button>&nbsp;'; 
+					}
+					},
+					{ title:'发送邮箱账号', name:'smtpUser' ,width:200, align:'center'},
+					{ title:'发送邮箱地址', name:'smtpHost' ,width:200, align:'center'},
+			        { title:'发送邮箱协议', name:'smtpProtocol' ,width:200, align:'center'},
+			        { title:'发送邮箱端口', name:'mangerPort' ,width:200, align:'center'},
+			        { title:'接收邮件地址', name:'to' ,width:200, align:'center'},
+			        { title:'抄送人邮件地址', name:'cc' ,width:200, align:'center',
+						renderer : function(val, item, rowIndex) { 
+							var cc = item.cc;
+							while(cc.indexOf( ";" ) != -1) {
+								cc=cc.replace(";","<br>"); 
+							}
+							return  cc;
+						}},						
+			        
+			        
+			    ];
+	  mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=mailService&method=queryAll',
+	        method: 'post',
+	        root: 'items' 
+	    });
+});
+</script>

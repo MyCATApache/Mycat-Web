@@ -1,0 +1,416 @@
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#mycatDataHost-form [name='guid']").val(row.name);
+        	 loadFormData("mycatDataHost-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑主机信息");
+        	 $("#mycatDataHost-form [name='name']").attr("disabled",true);
+        	 destroyValidator("mycatDataHost-form");
+        	 validator();
+        	 showModal("dataHostModal");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('dataHostService','delete',data,callback);
+        	}
+        }
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+var columns = [
+			{
+				title : '名称',
+				field : 'name',
+				align : 'center'
+			},
+			{
+				title : '数据库驱动',
+				field : 'dbDriver',
+				align : 'center'
+			},
+			{   
+				title : '数据库类型',
+				field : 'dbtype',
+				align : 'center'
+			
+			},
+			{   
+				title : '最大连接数',
+				field : 'maxcon',
+				align : 'center'
+			},
+			{   
+				title : '最小连接数',
+				field : 'mincon',
+				align : 'center'
+			},
+			{   
+				title : '读操作类型',
+				field : 'balance',
+				align : 'center'
+			},
+			{   
+				title : '写操作类型',
+				field : 'writetype',
+				align : 'center'
+			},
+			/* {   
+				title : '主从切换机制',
+				field : 'switchType'
+			},
+			{   
+				title : '主从复制时延',
+				field : 'slaveThreshold'
+			},
+			{   
+				title : '心跳检查语句',
+				field : 'heartbeantSQL'
+			}, */
+			{
+				title : '数据库组',
+				field : 'mysqlGroup',
+				align : 'center'
+
+			},{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            }];
+
+function validator(){
+	$('#mycatDataHost-form').bootstrapValidator({
+	        message: 'This value is not valid',
+	        feedbackIcons: {
+	            //valid: 'glyphicon glyphicon-ok',
+	           // invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        err : {
+				container : 'tooltip'
+			},
+	        fields: {
+	            name: {
+	                validators: {
+	                    notEmpty: {
+	                        message: '请输入名称'
+	                    },
+	                    stringLength: {
+	                    	min: 2,
+	                        max: 50,
+	                        message: '长度介于2~50之间'
+	                    }
+	                }
+	            },
+	            mincon: {
+	                validators: {
+	                    notEmpty: {
+	                        message: '不能为空'
+	                    },
+	                    integer: {
+	                        message: '请输入数字'
+	                    }
+	                }
+	            },
+	            maxcon: {
+	                validators: {
+	                	notEmpty: {
+	                        message: '不能为空'
+	                    },
+	                    integer: {
+	                        message: '请输入数字'
+	                    }
+	                }
+	            },
+	            balance: {
+	                validators: {
+	                	notEmpty: {
+	                        message: '请选择balance'
+	                    }
+	                }
+	            },
+	            writetype:{
+	                validators: {
+	                	notEmpty: {
+	                        message: '请选择writetype'
+	                    }
+	                }
+	            },
+	            dbtype: {
+	                validators: {
+	                	notEmpty: {
+	                        message: '请选择dbtype'
+	                    }
+	                }
+	            },
+	            dbDriver: {
+	                validators: {
+	                	notEmpty: {
+	                        message: '请选择dbDriver'
+	                    }
+	                }
+	            },
+	            switchType:{
+	                validators: {
+	                	notEmpty: {
+	                        message: '不能为空'
+	                    }
+	                }
+	            },
+	            slaveThreshold:{
+	                validators: {
+	                	notEmpty: {
+	                        message: '不能为空'
+	                    },
+	                    integer: {
+	                        message: '请输入数字'
+	                    }
+	                }
+	            },
+	            heartbeantSQL:{
+	                validators: {
+	                	notEmpty: {
+	                        message: '不能为空'
+	                    }
+	                }
+	            },
+	            mysqlGroup:{
+	                validators: {
+	                	notEmpty: {
+	                        message: '不能为空'
+	                    }
+	                }
+	            }
+	        },
+	        onSuccess : function(e,validator, form, submitButton) {
+	        	var guid =  $("#mycatDataHost-form [name='guid']").val();
+	        	var data = {
+	        			 "zkId" :zkId,
+	        			 "guid" : guid
+	        	}
+	        	if(guid){
+	        		saveForm('dataHostService','update','mycatDataHost-form',data,callback);
+	        	}else{
+	        		saveForm('dataHostService','insert','mycatDataHost-form',data,callback);
+	        	}
+				
+			}
+	    });
+
+}
+
+function getdatagrid(){
+	url = './dispatcherAction/query.do?service=dataHostService&method=queryByPage&zkId='+zkId;
+	datagrid('mycatDataHostbody',url,columns);
+}
+
+function addHost(){
+	 $("#mycatDataHost-form :reset").click();
+	 $("#mycatDataHost-form [name='guid']").val("");//guid 设置空
+	 $("#myModalLabel").text("添加主机信息");
+	 $("#mycatDataHost-form [name='name']").attr("disabled",false);
+	 destroyValidator("mycatDataHost-form");
+	 validator();
+	 showModal('dataHostModal');
+}
+
+function submit(){
+	$("#mycatDataHost-form" ).submit();
+}
+
+
+function callback(){
+	$('#dataHostModal').modal('hide');
+	$('#mycatDataHostbody').bootstrapTable('refresh');
+	 
+}
+
+
+$(document).ready(function() {
+	getdatagrid();
+	validator();
+});
+
+</script>
+	<div class="box-body ">
+		<div id="hostToolbar" >
+		   <div class="pull-right">
+	        <button id="add" class="btn btn-default btn-group" onclick="addHost()">
+	            <i class="glyphicon glyphicon-plus"></i> 新增主机
+	        </button>
+	        </div>
+	    </div>
+	  
+	   <table  id="mycatDataHostbody"  data-toolbar="#hostToolbar"  
+	   		 data-id-field="name"  data-toggle="table"  class="table table-striped table-bordered table-hover" >
+	   </table>
+	</div>
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="dataHostModal" tabindex="-1" role="dialog"  
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog modal-lg " >
+	      <div class="modal-content">
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" 
+	               aria-hidden="true">×
+	            </button>
+	            <h4 class="modal-title" id="myModalLabel">
+	        	      编辑主机信息
+	            </h4>
+	         </div>
+	         <div class="modal-body"  >
+	         <form class="form-horizontal" role="form" id="mycatDataHost-form" method="post" >
+	           <input type="hidden" id="guid" name="guid">
+	           <button type="reset" id="reset" style="display:none"></button>
+	           
+	           <table id="datahostTablebody" class="table table-striped table-bordered table-hover">
+					<tr>
+						<td width="15%">
+							<div class="form-group">
+						         <label for="name" class="col-md-3 control-label"  title="主机名称"  data-toggle="tooltip"  data-placement="right" >name</label>
+						         <div class="col-md-4">
+						            <input type="text" class="form-control" id="name" name="name" placeholder="请输入主机名称" >
+						         </div>
+					  		 </div>
+						</td>
+						<td width="15%">
+							<div class="form-group">
+					          <label for="mincon" class="col-md-3 control-label" title="实例连接池的最小连接"  data-toggle="tooltip"  data-placement="right" >mincon</label>
+					         <div class="col-md-4">
+					            <input type="text" class="form-control" id="mincon" name="mincon"  placeholder="请输入实例连接池的最小连接">
+					          </div>
+					 		 </div>
+						</td>
+					</tr>
+					<tr>
+						<td width="15%">
+							<div class="form-group">
+					   			<label for="maxcon"  class="col-md-3 control-label" title="实例连接池的最大连接"  data-toggle="tooltip"  data-placement="right"  >maxcon </label>
+					   			<div class="col-lg-4 ">
+					         		<input type="text" class="form-control" id="maxcon"  name="maxcon" placeholder="请输入连接池的最大连接">
+					       		</div>
+					       </div> 
+						</td>
+						<td width="15%">
+						    <div class="form-group">
+							    <label for="balance"  class="col-md-3 control-label" title="负载均衡属性"  data-toggle="tooltip"  data-placement="right" > balance </label>
+						   		<div class="col-md-4">
+							        <select class="form-control" id="balance" name="balance">
+							        	<option value="">请选择balance</option>
+							        	<option value="0">0</option>
+							        	<option value="1">1</option>
+							        	<option value="2">2</option>
+							        </select>
+						        </div>
+					        </div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="form-group">
+						   		<label for="writetype"  class="col-md-3 control-label" title="负载均衡类型"  data-toggle="tooltip"  data-placement="right"  > writetype </label>
+						   		<div class="col-md-4">
+							        <select class="form-control" id="writetype" name="writetype">
+							        	<option value="">请选择writetype</option>
+							        	<option value="0">0</option>
+							        	<option value="1">1</option>
+							        	<option value="2">2</option>
+							        </select>
+						        </div>
+					        </div>
+						</td>
+						<td>
+							<div class="form-group">
+								<label for="dbtype"  class="col-md-3 control-label" title="后端数据库类型"  data-toggle="tooltip"  data-placement="right"  > dbtype </label>
+					   			<div class="col-md-4">
+							        <select class="form-control" id="dbtype" name="dbtype">
+							        	<option value="">请选择dbtype</option>
+							        	<option value="mysql">mysql</option>
+							        	<option value="MariaDB">MariaDB</option>
+							        </select>
+					        	</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+					  <td>
+						<div class="form-group">
+					   		<label for="dbDriver "  class="col-md-3 control-label" title="后端数据库驱动类型"  data-toggle="tooltip"  data-placement="right"  > dbDriver  </label>
+					   		<div class="col-md-4">
+						        <select class="form-control" id="dbDriver " name="dbDriver">
+						        	<option value="">请选择dbDriver </option>
+						        	<option value="native">native</option>
+						        	<option value="JDBC">JDBC</option>
+						        </select>
+					        </div>
+				        </div>
+						</td>
+						<td>
+							<div class="form-group">
+								<label for="switchType"  class="col-md-3 control-label" title="主从切换类型"  data-toggle="tooltip"  data-placement="right"  > switchType  </label>
+				   				<div class="col-md-4">
+					         		<input type="text" class="form-control" id="switchType"  name="switchType"  placeholder="请输入切换类型">
+				       			</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="form-group">
+								<label for="slaveThreshold"  class="col-md-3 control-label" title="主从复制时延"  data-toggle="tooltip"  data-placement="right"  > slaveThreshold  </label>
+				   				<div class="col-md-4">
+					        	 <input type="text" class="form-control" id="slaveThreshold"  name="slaveThreshold"  placeholder="请输入主从复制时延">
+				        		</div>
+							</div>
+						</td>
+						<td>
+							<div class="form-group">
+								 <label for="heartbeantSQL"  class="col-md-3  control-label" title="心跳检测的语句"  data-toggle="tooltip"  data-placement="right"  >heartbeantSQL</label>
+				   				<div class="col-md-4">
+					        		 <input type="text" class="form-control" id="heartbeatSQL"  name="heartbeantSQL" placeholder="请输入心跳检测的语句">
+				       			 </div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="form-group">
+								<label for="mysqlGroup"  class="col-md-3 control-label" title="所属数据库组"  data-toggle="tooltip"  data-placement="right"  > mysqlGroup</label>
+				   				<div class="col-lg-4">
+					        		 <input type="text" class="form-control" id="mysqlGroup"  name="mysqlGroup" placeholder="请输入所属数据库组">
+					        	</div>
+				     		</div>
+						</td>
+						<td>  
+						</td>
+					</tr>
+				</table>
+				</form>
+	         </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-default" 
+	               data-dismiss="modal">关闭
+	            </button>
+	            <button type="button" class="btn btn-primary" onclick="submit()">
+	             	  保存
+	            </button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	   </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->

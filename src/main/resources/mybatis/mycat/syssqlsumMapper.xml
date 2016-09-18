@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQLSUM"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_sqlsum ( 
+		    DB_NAME,
+			R, 
+			PERCENT_R,
+			MAX,
+			W, 
+			ID,
+			TIME_COUNT,
+			USER,
+			LAST_TIME,
+			LAST_TM,
+			TTL_COUNT
+		) 
+		values( 
+		    #{DB_NAME, jdbcType=VARCHAR},
+			#{R, jdbcType=NUMERIC,typeHandler=NumberHandler}, 		
+			#{PERCENT_R, jdbcType=VARCHAR},
+			#{MAX, jdbcType=NUMERIC,typeHandler=NumberHandler}, 	
+			#{W, jdbcType=NUMERIC,typeHandler=NumberHandler},  
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},  		
+			#{TIME_COUNT, jdbcType=VARCHAR},		
+			#{USER, jdbcType=VARCHAR},
+			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
+			#{LAST_TM, jdbcType=VARCHAR},
+			#{TTL_COUNT, jdbcType=VARCHAR}
+		)
+	</select>
+	
+	
+	<update id="update" parameterType="map">
+		update  t_mycat_sqlsum 
+		<set>
+			<if test="R != null">
+				R = #{R, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			</if>
+			<if test="PERCENT_R != null">
+				PERCENT_R = #{PERCENT_R, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="MAX != null">
+				MAX = #{MAX, jdbcType=NUMERIC,typeHandler=NumberHandler},  
+			</if> 
+			<if test="W != null">
+				W = #{W, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			</if> 
+			<if test="ID != null">
+				ID = #{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},  
+			</if>
+			<if test="TIME_COUNT != null">
+				TIME_COUNT = #{TIME_COUNT, jdbcType=VARCHAR}, 
+			</if> 
+			<if test="LAST_TIME != null">
+				LAST_TIME = #{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },    
+			</if>
+			<if test="LAST_TM != null">
+				LAST_TM = #{LAST_TM, jdbcType=TIMESTAMP, javaType=java.util.Date },
+			</if>
+			
+			<if test="TTL_COUNT != null">
+				TTL_COUNT = #{TTL_COUNT, jdbcType=VARCHAR}
+			</if>
+		</set> 
+		<where>  
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 			
+			<if test="USER != null">
+				and USER = #{USER, jdbcType=VARCHAR}
+			</if> 	
+		</where>
+	</update>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select DB_TABLE,
+			sum(R) as R, 
+			sum(R)/(sum(R)+sum(W)) as PERCENT_R,
+			max(MAX) as MAX,
+			sum(W) as W, 
+			ID,
+			TIME_COUNT,
+			USER,
+			LAST_TIME,
+			LAST_TM,
+			TTL_COUNT
+			from t_mycat_sqlsum 
+		<where>  
+			<if test="DB_TABLE != null">
+				and DB_TABLE = #{DB_TABLE}
+			</if> 				
+			<if test="USER != null and USER != ''">
+				and USER = #{USER}
+			</if> 	 		
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sqlsum" parameterType="map" resultType="map">
+		select 
+			DB_NAME, 
+			sum(R) as R, 
+			sum(R)/(sum(R)+sum(W)) as PERCENT_R,
+			max(MAX) as MAX,
+			sum(W) as W, 
+			ID,
+			TIME_COUNT,
+			USER,
+			LAST_TIME,
+			LAST_TM,
+			TTL_COUNT
+			
+			from t_mycat_sqlsum 
+		<where> 
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="USER != null and USER != ''">
+				and USER = #{USER}
+			</if> 		
+			<if test="begin != null  and begin != '' and end != null  and end != ''">
+				and LAST_TM between #{begin} and #{end}
+			</if> 			 
+		</where>
+		group by DB_NAME,USER
+	</select>
+	
+	<select id="sqlsumCount" parameterType="map" resultType="int">
+		select count(1) from (select * from t_mycat_sqlsum 
+		<where> 
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 
+			<if test="USER != null and USER != ''">
+				and USER = #{USER}
+			</if>	
+			<if test="begin != null  and begin != '' and end != null  and end != ''">
+				and LAST_TM between #{begin} and #{end}
+			</if> 				
+		</where> 
+		group by DB_NAME,USER) atable 
+	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_sqlsum 
+		<where> 
+			LAST_TM  &lt; #{clearday} 
+		</where>
+	</delete>		
+	 
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSZOOKEEPER">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				id,  
+				zkid, 
+				name,
+				cluster,
+				ip,
+				port,
+				memo
+		FROM t_sys_zkconfig
+		<where>
+				and cluster = #{cluster}
+		</where>
+
+	</select>
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT 
+				id,  
+				zkid, 
+				name,
+				cluster,
+				ip,
+				port,
+				memo
+		FROM t_sys_zkconfig
+		<where>
+			<if test="zkid != null">
+				and zkid = #{zkid}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="name != null">
+				and name = #{name}
+			</if>
+			
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_sys_zkconfig 
+		<where>
+			<if test="zkid != null">
+				and zkid = #{zkid}
+			</if>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="name != null">
+				and name = #{name}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_sys_zkconfig (
+				zkid, 
+				name,  
+				cluster,
+				ip, 
+				port, 
+				memo
+		)VALUES ( 
+				#{zkid, jdbcType=NVARCHAR}, 
+				#{name, jdbcType=NVARCHAR}, 
+				#{cluster, jdbcType=NVARCHAR}, 
+				#{ip, jdbcType=NVARCHAR}, 
+				#{port, jdbcType=NVARCHAR}, 
+				#{memo, jdbcType=NVARCHAR}				
+		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_sys_zkconfig 
+		<where> 
+			id = #{guid}
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_sys_zkconfig  
+		<set>
+			<if test="ip != null">
+				ip = #{ip, jdbcType=NVARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name, jdbcType=NVARCHAR},
+			</if>
+			<if test="cluster != null">
+				cluster = #{cluster, jdbcType=NVARCHAR},
+			</if>			
+			<if test="port != null">
+				port = #{port, jdbcType=NVARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo, jdbcType=NVARCHAR},
+			</if>			
+		</set>
+		<where>
+			id = #{id}
+		</where>
+	</update>
+</mapper>

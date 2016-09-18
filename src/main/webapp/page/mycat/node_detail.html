@@ -1,0 +1,97 @@
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#mycatDataHost-form [name='guid']").val(row.name);
+        	 loadFormData("mycatDataHost-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑datahost");
+        	 destroyValidator("mycatDataHost-form");
+        	 validator();
+        	 showModal("dataHostModal");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('dataHostService','delete',data,callback);
+        	}
+        }
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+var columns = [
+			{
+				title : '节点名称',
+				field : 'name',
+				align :'center'
+			},
+			{   
+				title : '区域中心',
+				field : 'zone',
+				align :'center'
+			
+			},
+			{   
+				title : '集群',
+				field : 'cluster',
+				align :'center'
+			},
+			{
+				title : '主机名',
+				field : 'hostname',
+				align :'center'
+			},
+			{   
+				title : '权重',
+				field : 'weigth',
+				aligin :'center'
+			},
+			{   
+				title : '是否主机',
+				field : 'leader',
+				align :'center'
+			},
+			{
+				title : '状态',
+				field : 'state',
+				align :'center'
+
+			}/* ,{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            } */];
+
+
+
+function getdatagrid(){
+	url = './dispatcherAction/query.do?service=mycatNodeService&method=query&zkId='+zkId;
+	datagrid('mycatNodeTable',url,columns);
+}
+
+
+$(document).ready(function() {
+	getdatagrid();
+});
+
+</script>
+<div class="box-body ">
+   <table  id="mycatNodeTable"   data-toolbar="mycatNodeTable" data-toggle="table"  class="table table-striped table-bordered table-hover" 
+   		data-id-field="name"  
+   		data-search ="false"
+   >
+   </table>
+</div>

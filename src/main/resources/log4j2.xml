@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!-- status=debug 可以查看log4j的装配过程 -->  
+<!-- 开启异步功能，需加入参数-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector -->
+<configuration status="OFF"  monitorInterval="1800">  
+    <properties>  
+        <property name="BACKUP_HOME">backup</property>  
+        <property name="PROJECT_PATH">${mvn.logpath}</property>  
+        <property name="STAT_NAME">stat</property>  
+        <property name="SERVER_NAME">rainbow</property>  
+        
+        <!-- SMTP信息 -->
+        <property name="subject">Mycat Eye告警</property>
+        <property name="to">${sys:mail_to}</property>
+        <property name="cc">${sys:mail_cc}</property>
+        <property name="from">${sys:mail_from}</property>
+        <property name="smtpHost">${sys:mail_server}</property>
+        <property name="smtpPort">${sys:mail_port}</property>
+        <property name="smtpProtocol">${sys:mail_protocal}</property>
+        <property name="smtpUser">${sys:mail_user}</property>
+        <property name="smtpPassword">${sys:mail_password}</property>
+        <!-- 
+        <property name="smtpUser">agile_louie@139.com</property>
+        <property name="smtpPassword">agileadmin123</property>
+         -->
+    </properties>  
+    <appenders>  
+        <!-- 定义控制台输出 -->  
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level %c:%line - %msg%n" />  
+        </Console>
+        <!-- 程序员调试日志 -->  
+        <RollingRandomAccessFile name="DevLog" fileName="${PROJECT_PATH}/${SERVER_NAME}.log"
+            filePattern="${PROJECT_PATH}/${SERVER_NAME}.%d{yyyy-MM-dd-HH}.log">  
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level %thread %c:%line - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="360" modulate="true" />  
+            </Policies>  
+        </RollingRandomAccessFile>  
+        <!-- 游戏产品数据分析日志 -->  
+<!--         <RollingRandomAccessFile name="ProductLog"  
+            fileName="${PROJECT_PATH}/${SERVER_NAME}_${STAT_NAME}"  
+            filePattern="${PROJECT_PATH}/${SERVER_NAME}_${STAT_NAME}.%d{yyyy-MM-dd-HH}.log">  
+            <PatternLayout  
+                pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />  
+            <Policies>  
+                <TimeBasedTriggeringPolicy interval="360"  
+                    modulate="true" />  
+            </Policies>  
+        </RollingRandomAccessFile>  --> 
+        
+        <SMTP name="Mail" 
+				subject="${subject}" 
+				to="${to}"
+				cc="${cc}"
+
+				from="${from}" 
+				smtpUsername="${smtpUser}" 	
+				smtpPassword="${smtpPassword}"
+			    smtpHost="${smtpHost}" 
+				smtpPort="${smtpPort}" 
+				bufferSize="1" 
+				smtpProtocol="${smtpProtocol}" 
+				smtpDebug="true">
+				
+			</SMTP>
+        
+        
+    </appenders>  
+    <loggers>  
+        <!-- 3rdparty Loggers -->  
+		<logger name="org.springframework" level="error" />
+		<logger name="com.google" level="error" />
+		<logger name="net.rubyeye" level="error" />
+		<logger name="org.mybatis" level="error" />
+		<logger name="jrds" level="error" />
+		<logger name="org.apache" level="error" />
+		<logger name="org.hx.rainbow" level="error" />
+		<!-- pattern layout actually uses location, so we need to include it -->
+
+		<Root  level="info">
+			<appender-ref ref="DevLog" />
+			<appender-ref ref="Console" />
+		</Root>
+		<logger name="org.mycat.web.util.MailUtil" level="error" >
+			<AppenderRef ref="Mail" />
+		</logger> 
+		<logger name="org.mycat.web.TestMailLog" level="error" >
+			<AppenderRef ref="Mail" />
+			<!-- 消息过滤器 -->
+		     	<RegexFilter regex=".* test .*" onMatch="ACCEPT" 	onMismatch="DENY"/>
+		</logger>
+<!-- 		<Root level="error">
+      		<AppenderRef ref="Mail" />
+    	</Root> -->
+    </loggers>  
+    
+</configuration>  

@@ -1,0 +1,183 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+                       Mycat-VM管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>Mycat-配置</a></li>
+    <li><a href="#">Mycat-VM管理</a></li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row"> 
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        <div class="box-body">
+	        <form action="" id="query_Form">
+	        <div class="row">
+	         	<div class="col-xs-3">
+	                  <div class="form-group">
+	                      <label for="jmxName">Mycat-VM名称:</label>
+		                     <input   type="text" name="jmxname" class="form-control" placeholder="Mycat名称">
+	                  </div>
+	             </div>
+            </div>
+            </form>
+	     </div>
+	     <div class="box-footer">
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button class="btn btn-primary"  onclick="queryForm('query_Form')">查询</button>
+	                <button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	        </div>
+	        
+	        <div class="box-header">
+	     		<button class="btn btn-success" onclick="loadContext('page/manger/jmx_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/manger/jmx_add.html','true')">复制新增</button>
+	     	 </div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	        <div class="box-footer">
+	       <div class="form-group">
+				<button class="btn btn-success" onclick="loadContext('page/manger/jmx_add.html')">新增</button> <button class="btn bg-purple" onclick="loadContext('page/manger/jmx_add.html','true')">复制新增</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+ 
+ 
+<div class="modal fade" id="showInfo" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+               修改页面
+            </h4>
+         </div>
+         <div class="modal-body">
+			
+			<form action="" id="modify_form">
+			
+			<div class="row">
+	             <div class="col-xs-6">
+	             
+					<div class="form-group">
+		              <input type=hidden id="guid" name="guid"  />
+	                     <label for="text">Mycat-VM名称(必须为英文哦):</label>
+		                  <input id="jmxname" type="text" name="jmxname" class="form-control"  validateType = "lengthRange-1-20|excludeCN"  placeholder="Mycat-VM名称(必须问英文哦)">
+	                  </div>
+	                   <!-- json  -->
+	                  <div class="form-group">
+	                     <label for="IP">IP地址:</label>
+		                  <input id="ip" type="text" name="ip" class="form-control" placeholder="IP地址" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="username">端口:</label>
+		                  <input id="port" type="text" name="port" class="form-control" placeholder="端口" validateType="lengthRange-1-100">
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="user">用户名:</label>
+		                  <input id="username" type="text" name="username" class="form-control" placeholder="用户名" >
+	                  </div>
+	                  <div class="form-group">
+	                     <label for="pwd">密码:</label>
+		                  <input id="password" type="password" name="password" class="form-control" placeholder="密码" ">
+	                  </div>
+	                  	                  
+	             </div>
+	            </div> 
+			</form>
+			
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" 
+               data-dismiss="modal">关闭
+            </button>
+            <button id="modify_btn" onclick="javascript:updateForm('jmxservice','update','modify_form','updateForm_extra_call');" type="button" class="btn btn-primary">
+               	修改
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal -->
+</div>
+</section><!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+
+function ready4Update_extra_call(modifyForm_obj,row,attr_){
+	  if(attr_ == 'value'){
+		  var value_obj = jQuery.parseJSON(row[attr_]);
+		  for(var obj_attr in value_obj){
+			  modifyForm_obj.find("[name='"+obj_attr+"']").val([''+value_obj[obj_attr]]);
+		  }
+	  }
+}
+
+function updateForm_extra_call(form_id,data){
+	   var value_obj = {};
+	   value_obj.url = data.url;
+	   value_obj.driverClassName = data.driverClassName;
+	   value_obj.username = data.username;
+	   value_obj.password = data.password;
+	   data.value = JSON.stringify(value_obj);
+}
+
+$(document).ready(function() {
+		    var cols = [
+		    		{ title:'操作', name:'operation',width:100, align:'center',renderer:function(val,item,rowIndex){
+							 return '<button  class="btn btn-primary btn-xs modify"  onclick=ready4Update("'+item.guid+'","showInfo","ready4Update_extra_call")>修改</button>&nbsp;'+
+								'<button class="btn btn-danger btn-xs" onclick=delObj("jmxservice","delete","'+item.guid+'")>删除</button>&nbsp;'; 
+					}
+					},
+					{ title:'Mycat-VM名称', name:'jmxname' ,width:200, align:'center'},
+			        { title:'IP地址', name:'ip' ,width:200, align:'center'},
+			        { title:'端口', name:'port' ,width:150, align:'center'},
+			        { title:'用户名', name:'username' ,width:150, align:'center'}
+			        
+			    ];
+	  mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=jmxservice&method=queryByPage',
+	        method: 'post',
+	        root: 'items',
+	        plugins : [
+	          $('#paginator').mmPaginator()
+	        ]
+	    });
+});
+</script>

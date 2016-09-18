@@ -1,0 +1,193 @@
+<script type="text/javascript">
+
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	// $("#mycatDataHost-form [name='guid']").val(row.name);
+        	 loadFormData("modify_form",JSON.stringify(row));
+        	 //destroyValidator("mycatDataHost-form");
+        	// validator();
+        	 showModal("showInfo");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('dataHostService','delete',data,callback);
+        	}
+        }
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+var columns = [
+			{
+				title : '组名称',
+				field:'name',
+				align :'center'
+			},
+			{   
+				title : '是否主从复制',
+				field : 'repType',
+				align :'center'
+			
+			},
+			{
+				title : '区域中心',
+				field : 'zone',
+				align :'center'
+			},
+			{
+				title : '后端数据库实例',
+				field:'servers',
+				align :'center'
+			},
+			{
+				title : '当前写服务',
+				field : 'cur-write-server',
+				align :'center'
+			},
+			{   
+				title : '是否自动写切换',
+				field : 'auto_write_switch',
+				align :'center'
+			},{   
+				title : '心跳检查语句',
+				field : 'heartbeatSQL',
+				align :'center'
+			}/* ,{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+            } */ ];
+
+function loadServers() {
+	var rainbow = new Rainbow();
+	rainbow.setService("mycatMysqlsService");
+	rainbow.setMethod("queryAll");
+	rainbow.setAttr(data);
+	rainbow.addRows(data);
+	jQuery.ajax({
+		cache : false,
+		type : 'POST',
+		dataType : "json",
+		url : './dispatcherAction/execute.do',
+		data : $.parseJSON(JSON.stringify(rainbow)),
+		error : function() {//请求失败处理函数
+			alert('请求失败');
+		},
+		success : function(response) { //请求成功后处理函数。 
+			if (response.success == true) {
+				$.each(response.rows, function(n, item) {
+					$("<option value="+item.ip+">" + item.ip + "</option>").appendTo("#mysqlServer");
+				})
+				$('#mysqlServer').multiselect({
+					//includeSelectAllOption : true,
+					nonSelectedText : '请选择',
+					onChange : function(element, checked) {
+						$('#modify_form').data('bootstrapValidator') 
+						.updateStatus('mysqlServer', 'NOT_VALIDATED') 
+						.validateField('mysqlServer'); 
+					}
+				})
+
+			} else {
+				alert('加载失败！');
+			}
+
+		}
+	});
+}
+
+function validator(){
+	$('#modify_form').bootstrapValidator();
+}
+
+function getdatagrid(){
+	url = './dispatcherAction/query.do?service=mySqlRepService&method=query&zkId='+zkId;
+	datagrid('mycatGroupbody',url,columns);
+}
+
+$(document).ready(function() {
+	getdatagrid();
+	loadServers();
+	validator();
+});
+	
+</script>
+<div class="box-body ">
+	
+   <table  id="mycatGroupbody"   data-toolbar="#mycatGroupbodybar"   data-id-field="name"  data-toggle="table"  class="table table-striped table-bordered table-hover" >
+   </table>
+</div>
+
+<div class="modal fade" id="showInfo" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">修改页面</h4>
+			</div>
+			<div class="modal-body">
+
+				<form action="" id="modify_form">
+
+					<div class="row">
+						<div class="col-xs-6">
+
+							<div class="form-group">
+								<input type=hidden id="guid" name="guid" /> <label for="text">名称</label>
+								<input id="name" type="text" name="name"
+									class="form-control"
+									placeholder="">
+							</div>
+							<div class="form-group">
+							    <label for="text">主从类型</label>
+								<input id="repType" type="text" name="repType"
+									class="form-control"
+									placeholder="">
+							</div>
+							<div class="form-group">
+								<label for="server">所属地区：</label> <input id="zone" type="text"
+									name="zone" class="form-control" placeholder=""
+									>
+							</div>
+							<div class="form-group">
+								<label >添加数据库实例</label>
+									<select id="mysqlServer" name="mysqlServer"
+									     class="selectpicker bla bla bli form-control"  data-live-search="true"  multiple="multiple">
+									</select>
+							</div>
+					</div>
+					
+				</div>
+
+			</form>
+
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+			</button>
+			<button id="modify_btn"
+				onclick="javascript:updateForm('mySqlRepService','addMyRep','modify_form','updateForm_extra_call');"
+				type="button" class="btn btn-primary">修改</button>
+		</div>
+	</div>
+	<!-- /.modal-content -->
+</div>
+</div>
+
+	

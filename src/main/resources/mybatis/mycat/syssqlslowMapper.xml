@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQLSLOW"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssqlslow (
+		    DB_NAME,
+			START_TIME,
+		    START_TM,
+			EXECUTE_TIME, 
+			USER,
+			CONTENT,
+			IPAddr
+		) 
+		values(
+		    #{DB_NAME, jdbcType=VARCHAR},
+			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{START_TM, jdbcType=VARCHAR },			
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{USER, jdbcType=VARCHAR},
+			#{SQL, jdbcType=NVARCHAR},
+			#{IP, jdbcType=NVARCHAR}
+		)
+	</select>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",IPAddr from t_mycat_syssqlslow 
+		<where>  
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="START_TIME != null">
+				and START_TIME = #{START_TIME}
+			</if>			
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sqlslow" parameterType="map" resultType="map">
+		select START_TIME,START_TM,EXECUTE_TIME,USER,CONTENT as "SQL",DB_NAME as "DATASOURCE",IPAddr from t_mycat_syssqlslow 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and START_TM between #{begin} and #{end}
+			</if>
+			<if test="threshold != null">
+				and EXECUTE_TIME >= #{threshold,javaType=[Ljava.lang.Integer;,jdbcType=NUMERIC,typeHandler=NumberHandler }
+			</if>
+			 
+		</where>		
+		order by START_TIME desc
+	</select>
+	
+	<select id="sqlslowCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssqlslow 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="begin != null and end != null">
+				and START_TM between #{begin} and #{end}
+			</if>
+			 
+			<if test="threshold != null">
+				and EXECUTE_TIME >= #{threshold ,javaType=[Ljava.lang.Integer;,jdbcType=NUMERIC,typeHandler=NumberHandler}
+			</if>
+		</where> 
+	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqlslow 
+		<where> 
+			START_TM  &lt; #{clearday} 
+		</where>
+	</delete>	
+	
+</mapper>

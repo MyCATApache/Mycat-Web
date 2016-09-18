@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQLHIGH"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssqlhig (
+		    DB_NAME,
+			AVG_TIME,
+			MAX_TIME,
+			EXECUTE_TIME,
+			FREQUENCY,
+			MIN_TIME,
+			ID,
+			LAST_TIME,
+			LAST_TM,
+			CONTENT,
+			username
+		) 
+		values(  
+		    #{DB_NAME, jdbcType=VARCHAR},
+			#{AVG_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{MAX_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{FREQUENCY, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{MIN_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{LAST_TIME, jdbcType=NUMERIC, typeHandler=NumberHandler },  
+			#{LAST_TM, jdbcType=VARCHAR },  
+			#{SQL, jdbcType=NVARCHAR},
+			#{USER, jdbcType=VARCHAR}
+		)
+	</select>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select AVG_TIME, MAX_TIME, EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM , CONTENT as "SQL" from t_mycat_syssqlhig 
+		<where> 
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 		 		
+			<if test="ID >= 0">
+				and ID = #{ID}
+			</if> 
+			<if test="LAST_TIME != null">
+				and LAST_TIME = #{LAST_TIME}
+			</if>	
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sqlhighInfo" parameterType="map" resultType="map">
+		select AVG_TIME, MAX_TIME, DB_NAME as "dbName", EXECUTE_TIME, FREQUENCY, MIN_TIME, ID, LAST_TIME,LAST_TM, CONTENT as "SQL", username from t_mycat_syssqlhig
+		<where> 
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if> 		
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			<if test="username != null">
+				and username =  #{username}
+			</if>
+			 <if test="CONTENT != null">
+				and CONTENT =  #{CONTENT}
+			</if>			 
+		</where>
+	</select>
+	<select id="sqlhigh" parameterType="map" resultType="map">
+		select avg(AVG_TIME) as AVG_TIME, max(MAX_TIME) as MAX_TIME, DB_NAME as "dbName", (sum(EXECUTE_TIME)/count(EXECUTE_TIME)) as EXECUTE_TIME, sum(FREQUENCY) as FREQUENCY, min(MIN_TIME) as MIN_TIME,   CONTENT as "SQL", username from t_mycat_syssqlhig
+		<where> 
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 		 		
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			<if test="username != null">
+				and username =  #{username}
+			</if>			 
+		</where>
+		group by CONTENT,username,DB_NAME
+	</select>
+		
+	<select id="sqlhighCount" parameterType="map" resultType="int">
+		select count(1) from (select count(1) from t_mycat_syssqlhig 
+		<where> 
+			<if test="DB_NAME != null and DB_NAME != ''">
+				and DB_NAME = #{DB_NAME}
+			</if> 				
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			 <if test="username != null">
+				and username =  #{username}
+			</if>			
+		</where> 
+		group by CONTENT,username,DB_NAME) as atable
+	</select>
+	
+	<select id="sqlhighInfoCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssqlhig 
+		<where> 
+			<if test="dbName != null">
+				and DB_NAME = #{dbName}
+			</if> 		
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and LAST_TM between #{begin} and #{end}
+			</if>
+			 <if test="username != null">
+				and username =  #{username}
+			</if>
+			 <if test="CONTENT != null">
+				and CONTENT =  #{CONTENT}
+			</if>			
+		</where> 
+	</select>	
+	
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssqlhig 
+		<where> 
+			LAST_TM   &lt; #{clearday} 
+		</where>
+	</delete>		
+	
+</mapper>

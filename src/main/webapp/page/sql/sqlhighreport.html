@@ -1,0 +1,155 @@
+<!-- Content Header (Page header) -->
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-body">
+				  <div id="requestMap" style="height:340px;width: 700px;float: left;margin-left: 50px"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</section>
+<!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+/**
+ * 时间原型增加一个 format 函数
+ */
+Date.prototype.format = function(fmt) {
+  var o = {
+    "M+" : this.getMonth()+1,                 //月份
+    "d+" : this.getDate(),                    //日
+    "h+" : this.getHours(),                   //小时
+    "m+" : this.getMinutes(),                 //分
+    "s+" : this.getSeconds(),                 //秒
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度
+    "S"  : this.getMilliseconds()             //毫秒
+  };
+  if(/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+  return fmt;
+}
+
+
+$(document).ready(function() {
+	//initDataSouce();
+	loadData();
+});
+
+//加载配置文件
+require.config({
+	    paths: {
+	        echarts: './static/echarts/build/dist'
+	    }
+	}); 
+
+
+
+
+function loadData(){
+	var rainbow = new Rainbow();
+	rainbow.setService("showService");
+	rainbow.setMethod("sqlhighInfo");
+	rainbow.setParam("ds",dataSource);
+	rainbow.setParam("CONTENT",sqlParam);
+	rainbow.setParam("username",dataUsername);
+	rainbow.setParam("begin", $('#begin').val());
+	rainbow.setParam("end", $('#end').val());
+	rainbowAjax.query(rainbow, new function(){
+		this.onSuccess = function(data) {
+			 try {
+				
+				if (data.success) {
+					initMap(data);
+					//mmgrid.load(data.rows);
+				}
+			} catch (e) {
+				//alert(e);
+			} 
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	});
+	
+}
+
+
+function initMap(json){
+	
+
+    var xData = new Array();
+    var seriesData = new Array();		 
+			
+		require(
+           [
+               'echarts',
+               'echarts/chart/line',   // 按需加载所需图表，如需动态类型切换功能，别忘了同时加载相应图表
+               'echarts/chart/bar',
+               'echarts/chart/pie'
+           ],
+           function (ec) {
+
+          	//解析数据
+         	 $.each(json.rows, function(index, obj) {
+         		// var date = new Date(obj.createTime);
+      	  		xData.push(obj.LAST_TM);
+      	  		seriesData.push(obj.FREQUENCY);
+      	  	    
+      	  	 });              
+
+               var myChart_request = ec.init(document.getElementById('requestMap'));
+               myChart_request.setOption(initRequestMap(xData,seriesData));               
+
+           }
+       );
+}
+
+ function initRequestMap(aData,params){
+	// alert(params);
+	// aData= ['22点-06点','06点-13点','13点-18点','18点-22点'];
+	 option = {
+			 title : {
+			        text: '执行时间',
+			        subtext: '请求数'			      
+			    },
+			 tooltip : {
+					showContent : true
+				},
+				legend : {
+					data : [ '总计' ]
+				},
+				xAxis : [ {
+					type : 'category',
+					data : aData
+					//['22点-06点','06点-13点','13点-18点','18点-22点']
+				} ],
+				yAxis : [ {
+					type : 'value'
+				} ],
+				 series : [
+				              {
+				                  name:'请求数',
+				                  type:'line',
+				                  data: params,
+				                  markLine : {
+				                      data : [
+				                          {type : 'average', name: '平均值'}
+				                      ]
+				                  }
+				              }
+				        ]
+			};
+	return option;
+ }
+ </script>

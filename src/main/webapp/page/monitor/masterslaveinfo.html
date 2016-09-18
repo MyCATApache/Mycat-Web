@@ -1,0 +1,175 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>mycat 物理主从</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>Mycat-监控</a></li>
+		<li><a href="#"></i>mycat 物理主从</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+
+				<div class="box-header">
+					<form action="" id="query_Form">
+						<select onchange="datasouce_change()" name="ds" id="datasource"
+							class="form-control" style="width: 200px;">
+						</select>
+					</form>
+				</div>
+				<div class="box-body" id="hostbody">
+				</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+
+	</div>
+</section>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="myModalLabel">时间同步曲线</h4>
+			</div>
+			<div class="modal-body" id="hostDetail">
+				<div id="heatbearline" style="height: 400px;"></div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+
+	var dataSouceNames = "";
+	var showHostDetail = function(dataSouceName) {
+		$('#hostDetail').load(
+				'./page/monitor/masterslavecharts.html?v=' + Math.random());
+		$('#myModal').modal({
+			show : true
+		});
+		dataSouceNames = dataSouceName;
+	}
+
+	$("#myModal").on("hidden.bs.modal", function() {
+		$(this).removeData("bs.modal");
+	});
+
+	var datasouce_change = function() {
+		var rainbow = new Rainbow();
+		rainbow.setService("showService");
+		rainbow.setMethod("dataSouceSynstatus");
+		rainbow.setParam("ds", $('#datasource').val());
+		rainbowAjax
+				.query(
+						rainbow,
+						new function() {
+							this.onSuccess = function(data) {
+								try {
+									if (data.success) {
+										var length = data.rows.length;
+										var hostHTML = "";
+										for (var i = 0; i < length; i++) {
+											var row = data.rows[i];
+											if (i % 2 == 0) {
+
+												hostHTML += '<div class="row">';
+											}
+											var boxcss = "box box-danger";
+											if (row.Slave_IO_Running == "Yes" && row.Slave_SQL_Running == "Yes") {
+												boxcss = "box box-success";
+											}
+											hostHTML += '<div class="col-md-6">';
+											hostHTML += '<div class="'+boxcss+'">';
+											hostHTML += '<div class="box-header with-border">';
+											hostHTML += '<h3 class="box-title">'+ row.name + '</h3>';
+											hostHTML += '<div class="box-tools pull-right">';
+											hostHTML += '<button class="btn btn-block btn-info"  onclick="showHostDetail(\''
+												+ row.name
+												+ '\');">时间同步曲线</button>';
+											hostHTML += '</div>';
+											hostHTML += '</div>';
+											hostHTML += '<div class="box-body">';
+											hostHTML += '<div class="row" >';
+											hostHTML += '<div class="col-md-4">';
+											hostHTML += '<img alt="" src="./static/image/masterslave.png">';
+											hostHTML += '</div>';
+											hostHTML += '<div class="col-md-8" align="left" >';
+
+											hostHTML += '<b>Master：</b>'+ row.Master_Host  + ':' + row.Master_Port + '<br>';
+											hostHTML += '<b>Slave：</b>'+ row.host + ':' + row.port+ '<br>';
+											hostHTML += '<b>Seconds_Behind_Master：</b>'+ row.Seconds_Behind_Master + '<br>';
+											hostHTML += '<b>Slave_IO_Running：</b>'+ row.Slave_IO_Running + '<br>';
+											hostHTML += '<b>Slave_SQL_Running：</b>'+ row.Slave_SQL_Running + '<br>';
+											hostHTML += '<b>Connect_Retry：</b>'+ row.Connect_Retry+ '<br>';
+											hostHTML += '<b>Last_IO_Error：</b>'+ row.Last_IO_Error+ '<br>';
+											hostHTML += '<b>Slave_IO_State：</b>'+ row.Slave_IO_State + '<br>';
+											hostHTML += '</div>';
+											hostHTML += '</div>';
+											hostHTML += '</div>';
+											hostHTML += '</div>';
+											hostHTML += '</div>';
+											if (i % 2 != 0) {
+												hostHTML += '</div>';
+											}
+										}
+										$("#hostbody").html(hostHTML);
+									}
+								} catch (e) {
+									alert("异常!");
+								}
+							};
+							this.onFail = function(jqXHR, textStatus,
+									errorThrown) {
+							};
+						});
+	};
+
+	var Selected_Callback = function(target_select) {
+		this.onSuccess = function(data) {
+			try {
+				if (data.success) {
+					var length = data.rows.length;
+					for (var i = 0; i < length; i++) {
+						var mycatName = data.rows[i].mycatName;
+						$("#" + target_select).append(
+								"<option value=\""+ mycatName+"\">" + mycatName
+										+ "</option>");
+						if(i==0){
+							datasouce_change();
+						}
+					}
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown) {
+		};
+	};
+
+	var initDataSouce = function() {
+		var rainbow = new Rainbow();
+		rainbow.setService("mycatService");
+		rainbow.setMethod("query");
+		rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+	};
+
+	$(document).ready(function() {
+		initDataSouce();
+	});
+</script>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="MYCATSHOWPROCESSOR">
+
+	<select id="load" resultType="map" parameterType="map">
+		SELECT 
+				NAME	as "name",  
+				NET_IN	as "netIn",  
+				NET_OUT	as "netOut",  
+				REACT_COUNT	as "reactCount",  
+				R_QUEUE	as "rQueue",  
+				W_QUEUE	as "wQueue",  
+				FREE_BUFFER	as "freeBuffer",  
+				TOTAL_BUFFER	as "totalBuffer",  
+				BU_PERCENT	as "buPercent",  
+				BU_WARNS	as "buWarns",  
+				FC_COUNT	as "fcCount",  
+				BC_COUNT	as "bcCount",  
+				create_time	as "createTime",  
+				mycat_name	as "mycatName" 
+		FROM t_mycat_showprocessor
+		<where>
+		</where>
+
+	</select>
+	<select id="testMycat" resultType="map" parameterType="map">
+		show @@version
+	</select>
+	
+	
+	<select id="queryMycat" resultType="map" parameterType="map">
+		show @@processor
+	</select>
+	
+
+	<select id="query" resultType="map" parameterType="map">
+		SELECT
+				NAME	as "name",  
+				NET_IN	as "netIn",  
+				NET_OUT	as "netOut",  
+				REACT_COUNT	as "reactCount",  
+				R_QUEUE	as "rQueue",  
+				W_QUEUE	as "wQueue",  
+				FREE_BUFFER	as "freeBuffer",  
+				TOTAL_BUFFER	as "totalBuffer",  
+				BU_PERCENT	as "buPercent",  
+				BU_WARNS	as "buWarns",  
+				FC_COUNT	as "fcCount",  
+				BC_COUNT	as "bcCount",  
+				create_time	as "createTime",  
+				mycat_name	as "mycatName" 
+		FROM t_mycat_showprocessor
+		<where>
+			<if test="name != null">
+				and NAME = #{name}
+			</if>
+			<if test="netIn != null">
+				and NET_IN = #{netIn}
+			</if>
+			<if test="netOut != null">
+				and NET_OUT = #{netOut}
+			</if>
+			<if test="reactCount != null">
+				and REACT_COUNT = #{reactCount}
+			</if>
+			<if test="rQueue != null">
+				and R_QUEUE = #{rQueue}
+			</if>
+			<if test="wQueue != null">
+				and W_QUEUE = #{wQueue}
+			</if>
+			<if test="freeBuffer != null">
+				and FREE_BUFFER = #{freeBuffer}
+			</if>
+			<if test="totalBuffer != null">
+				and TOTAL_BUFFER = #{totalBuffer}
+			</if>
+			<if test="buPercent != null">
+				and BU_PERCENT = #{buPercent}
+			</if>
+			<if test="buWarns != null">
+				and BU_WARNS = #{buWarns}
+			</if>
+			<if test="fcCount != null">
+				and FC_COUNT = #{fcCount}
+			</if>
+			<if test="bcCount != null">
+				and BC_COUNT = #{bcCount}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="mycatName != null">
+				and mycat_name = #{mycatName}
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="int" parameterType="map">
+		SELECT COUNT(*) FROM t_mycat_showprocessor 
+		<where>
+			<if test="name != null">
+				and NAME = #{name}
+			</if>
+			<if test="netIn != null">
+				and NET_IN = #{netIn}
+			</if>
+			<if test="netOut != null">
+				and NET_OUT = #{netOut}
+			</if>
+			<if test="reactCount != null">
+				and REACT_COUNT = #{reactCount}
+			</if>
+			<if test="rQueue != null">
+				and R_QUEUE = #{rQueue}
+			</if>
+			<if test="wQueue != null">
+				and W_QUEUE = #{wQueue}
+			</if>
+			<if test="freeBuffer != null">
+				and FREE_BUFFER = #{freeBuffer}
+			</if>
+			<if test="totalBuffer != null">
+				and TOTAL_BUFFER = #{totalBuffer}
+			</if>
+			<if test="buPercent != null">
+				and BU_PERCENT = #{buPercent}
+			</if>
+			<if test="buWarns != null">
+				and BU_WARNS = #{buWarns}
+			</if>
+			<if test="fcCount != null">
+				and FC_COUNT = #{fcCount}
+			</if>
+			<if test="bcCount != null">
+				and BC_COUNT = #{bcCount}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="mycatName != null">
+				and mycat_name = #{mycatName}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insert" parameterType="map">
+		INSERT INTO t_mycat_showprocessor (
+			NAME,
+			NET_IN,
+			NET_OUT,
+			REACT_COUNT,
+			R_QUEUE,
+			W_QUEUE,
+			FREE_BUFFER,
+			TOTAL_BUFFER,
+			BU_PERCENT,
+			BU_WARNS,
+			FC_COUNT,
+			BC_COUNT,
+			create_time,
+			mycat_name
+		)
+		VALUES ( 
+			#{NAME, jdbcType=VARCHAR}, 
+			#{NET_IN, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{NET_OUT, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{REACT_COUNT, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{R_QUEUE, jdbcType=INTEGER,typeHandler=NumberHandler}, 
+			#{W_QUEUE, jdbcType=INTEGER,typeHandler=NumberHandler}, 
+			#{FREE_BUFFER, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{TOTAL_BUFFER, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{BU_PERCENT, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{BU_WARNS, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{FC_COUNT, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{BC_COUNT, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{createTime, jdbcType=TIMESTAMP,typeHandler=DateHandler}, 
+			#{mycatName, jdbcType=VARCHAR}		)
+	</insert>
+  
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_showprocessor 
+		<where> 
+		</where>
+	</delete>
+
+	<update id="update" parameterType="map">
+		UPDATE t_mycat_showprocessor  
+		<set>
+			<if test="name != null">
+				NAME = #{name},
+			</if>
+			<if test="netIn != null">
+				NET_IN = #{netIn},
+			</if>
+			<if test="netOut != null">
+				NET_OUT = #{netOut},
+			</if>
+			<if test="reactCount != null">
+				REACT_COUNT = #{reactCount},
+			</if>
+			<if test="rQueue != null">
+				R_QUEUE = #{rQueue},
+			</if>
+			<if test="wQueue != null">
+				W_QUEUE = #{wQueue},
+			</if>
+			<if test="freeBuffer != null">
+				FREE_BUFFER = #{freeBuffer},
+			</if>
+			<if test="totalBuffer != null">
+				TOTAL_BUFFER = #{totalBuffer},
+			</if>
+			<if test="buPercent != null">
+				BU_PERCENT = #{buPercent},
+			</if>
+			<if test="buWarns != null">
+				BU_WARNS = #{buWarns},
+			</if>
+			<if test="fcCount != null">
+				FC_COUNT = #{fcCount},
+			</if>
+			<if test="bcCount != null">
+				BC_COUNT = #{bcCount},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="mycatName != null">
+				mycat_name = #{mycatName}
+			</if>
+		</set>
+		<where>
+		</where>
+	</update>
+</mapper>

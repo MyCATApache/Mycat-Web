@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSHOW"> 
+	<select id="sysparam" resultType="map" parameterType="map">
+		show @@sysparam
+	</select>
+	
+	<select id="sql" resultType="map" parameterType="map">
+		show @@sql true
+	</select>
+	
+	<select id="setsqlslow" resultType="map" parameterType="map">
+		reload @@sqlslow=${threshold}
+	</select>		
+	<select id="sqlslow" resultType="map" parameterType="map">
+		show @@sql.slow true
+	</select>	
+	<select id="sqlhigh" resultType="map" parameterType="map">
+		show @@sql.high true
+	</select>		
+	<select id="syslog" resultType="map" parameterType="map">
+		show @@syslog limit=50
+	</select>		
+	<select id="sqlsum" resultType="map" parameterType="map">
+		show @@sql.sum true
+	</select>
+	<select id="sqlsumtable" resultType="map" parameterType="map">
+		show @@sql.sum.table true
+	</select>		
+	<select id="heartbeat" resultType="map" parameterType="map">
+		show @@heartbeat
+	</select>	
+	
+	<select id="heartbeatDetail" resultType="map" parameterType="map">
+		show @@heartbeat.detail where name=${dataHostName}
+	</select>	
+	
+	<select id="dataSouceSynstatus" resultType="map" parameterType="map">
+		 show @@datasource.synstatus
+	</select>	
+	<select id="dataSouceDetail" resultType="map" parameterType="map">
+		 show @@datasource.syndetail where name=${dataSouceName}
+	</select>	
+	<select id="whitehost" resultType="map" parameterType="map">
+		 show @@white
+	</select>	
+	<select id="addwhitehost" resultType="map" parameterType="map">
+		 show @@white.set=${ip},${username}
+	</select>	
+</mapper>

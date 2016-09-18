@@ -1,0 +1,294 @@
+
+<style type="text/css">
+#mycatUserModal .modal-body {
+	max-height: 350px;
+}
+#showbox_mycatUser .chosen-choices {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 34px;
+    padding: 6px 12px;
+}
+#showbox_mycatUser .form-control-feedback {
+    /* To make the feedback icon visible */
+    z-index: 100;
+}
+
+#chosenForm .chosen-choices {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-height: 34px;
+    padding: 6px 12px;
+}
+#chosenForm .form-control-feedback {
+    /* To make the feedback icon visible */
+    z-index: 100;
+}
+</style>
+<script type="text/javascript">
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#mycatUser-form [name='guid']").val(row.name);
+        	 loadFormData("mycatUser-form",JSON.stringify(row));
+        	 $("#myModalLabel").text("编辑用户信息");
+         	 $("#mycatUserModal form [name='name']").attr("disabled",true);
+        	 destroyValidator("mycatUser-form");
+        	 validator();
+        	 showModal("mycatUserModal");
+        	 
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('userService','delete',data,callback);
+        	}
+        }
+};
+
+var columns = [{
+   				title : '用户名',
+   				field :'name',
+   				align : 'center'
+   			},
+   			{
+   				title : '密码',
+   				field : 'password',
+   				align : 'center'
+   			},
+   			{
+   				title : '是否只读',
+   				field : 'readOnly',
+   				align : 'center'
+   			},
+   			{
+   				title : '可访问对象',
+   				field : 'schemas',
+   				align : 'center'
+   			},{
+                title: '操作',
+                align: 'center',
+                events: operateEvents,
+                formatter: operateFormatter
+              }];
+
+	function validator() {
+		$('#mycatUser-form').bootstrapValidator(
+			  {
+				excluded : ':disabled',
+				feedbackIcons : {
+					valid : 'glyphicon glyphicon-ok',
+			  },
+			 fields : {
+
+				name : {
+					validators : {
+						notEmpty : {
+							message : '请输入名称'
+						},
+						stringLength : {
+							min : 2,
+							max : 50,
+							message : '长度介于2~50之间'
+						}
+					}
+				},
+				password : {
+					validators : {
+						notEmpty : {
+							message : '请输入密码'
+						}
+					}
+				},
+
+				schemas : {
+					validators : {
+						callback : {
+							message : '至少选择一项schema',
+							callback : function(value,validator) {
+								var options = validator.getFieldElements('schemas').val();
+								return (options != null && options.length >= 1);
+							}
+						}
+
+					}
+				}
+			},
+			onSuccess : function(e, validator, form,submitButton) {
+				var guid = $("#mycatUser-form [name='guid']")
+						.val();
+				var data = {
+					"guid" : guid,
+					"zkId" : zkId
+				}
+				if (guid) {
+					saveForm('userService', 'update',
+							'mycatUser-form', data, callback);
+				} else {
+					saveForm('userService', 'insert',
+							'mycatUser-form', data, callback);
+				}
+
+			}
+	   });
+   }
+	
+
+	function operateFormatter(value, row, index) {
+		return [ '<a class="like" href="javascript:void(0)" title="Edit">',
+				'<i class="glyphicon glyphicon-pencil"></i>', '</a>  ',
+				'<a class="remove" href="javascript:void(0)" title="Remove">',
+				'<i class="glyphicon glyphicon-remove"></i>', '</a>' ].join('');
+	};
+
+	function addUser() {
+		$("#mycatUser-form :reset").click();
+		$("#mycatUser-form :input [name='guid']").val("");
+		$("#myModalLabel").text("添加用户");
+		$("#mycatUserModal form [name='name']").attr("disabled", false);
+		$("#schemas").multiselect('rebuild');
+		destroyValidator("mycatUser-form");
+		validator();
+		showModal("mycatUserModal");
+	}
+
+	function submit() {
+		$("#mycatUser-form").submit();
+	}
+
+	function callback() {
+		$('#mycatUserModal').modal('hide');
+		$('#mycatUserbody').bootstrapTable('refresh');
+
+	}
+
+	function loadSchemas() {
+		var rainbow = new Rainbow();
+		var data = {
+			"zkId" : zkId,
+			"guid" : $("#guid").val()
+		};
+		rainbow.setService("schemaService");
+		rainbow.setMethod("queryAll");
+		rainbow.setAttr(data);
+		rainbow.addRows(data);
+		jQuery.ajax({
+			cache : false,
+			type : 'POST',
+			dataType : "json",
+			url : './dispatcherAction/execute.do',
+			data : $.parseJSON(JSON.stringify(rainbow)),
+			error : function() {//请求失败处理函数
+				alert('请求失败');
+			},
+			success : function(response) { //请求成功后处理函数。 
+				if (response.success == true) {
+					$.each(response.rows, function(n, item) {
+						$("<option value="+item.name+">" + item.name + "</option>").appendTo("#schemas");
+					})
+					$('#schemas').multiselect({
+						includeSelectAllOption : true,
+						nonSelectedText : '请选择',
+						onChange : function(element, checked) {
+							$('#mycatUser-form').data('bootstrapValidator') // Get plugin instance
+							.updateStatus('schemas', 'NOT_VALIDATED') // Update field status
+							.validateField('schemas'); // and re-validate it
+						}
+					})
+
+				} else {
+					alert('加载失败！');
+				}
+
+			}
+		});
+	}
+
+	function getdatagrid() {
+		var url = './dispatcherAction/query.do?service=userService&method=queryByPage&zkId='
+				+ zkId;
+		datagrid('mycatUserbody', url, columns);
+	}
+
+	$(document).ready(function() {
+		getdatagrid();
+		loadSchemas();
+		validator();
+	});
+
+
+</script>
+
+
+ <div class="box-body">
+	 <div id="userToolbar">
+        <button id="add" class="btn btn-default" onclick="addUser()" >
+            <i class="glyphicon glyphicon-plus"></i> 新增用户
+        </button>
+	 </div>
+	<table  id="mycatUserbody"    data-toolbar="#userToolbar" data-toggle="table" class="table table-striped table-bordered table-hover"
+	 	data-id-field="name"  
+	 > 
+	</table>
+</div>
+
+<!-- 模态框（Modal） -->
+	<div class="modal fade" id="mycatUserModal" tabindex="-1" role="dialog" 
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog modal-md "style="withd:auto">
+	      <div class="modal-content"  >
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" 
+	               aria-hidden="true">×
+	            </button>
+	            <h4 class="modal-title" id="myModalLabel">
+	        	      添加用户
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	         <form class="form-horizontal" role="form" id="mycatUser-form" method="post" >
+	          	<input type="hidden" id="guid" name="guid">
+	          	<button type="reset" id="reset" style="display:none"></button>
+			   <div class="form-group">
+			   		<label for="name"  class=" col-md-2  control-label" title="用户名称"  data-toggle="tooltip"  data-placement="right"  > name </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="请输入用户名">
+			        </div>
+			   </div>
+			   <div class="form-group">
+			   		<label for="password"  class=" col-md-2  control-label" title="密码"  data-toggle="tooltip"  data-placement="right"  > password </label>
+			   		<div class="col-md-4 ">
+			         <input type="password" class="form-control" id="password"  name="password" placeholder="请输入密码">
+			        </div>
+			   </div>
+				 <div class="form-group">
+			        <label class="col-sm-2 control-label" for="schemas" title="逻辑表"  data-toggle="tooltip"  data-placement="right" >schemas</label>
+			        <div class="col-sm-4">
+			            <select class="form-control" name="schemas" id="schemas" multiple>
+			            </select>
+			        </div>
+	   			</div>
+	   			<div class="form-group">
+					<label class="control-label col-sm-2" for="readOnly"></label>
+					<div class="col-sm-4">
+						<label class="checkbox-inline">
+							<input type="checkbox" id="readOnly" name="readOnly" value="true" >是否只读
+						</label>
+					</div>
+				</div>
+			</form>
+	         </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-default" 
+	               data-dismiss="modal">关闭
+	            </button>
+	            <button type="button" class="btn btn-primary" onclick="submit()">
+	             	  保存
+	            </button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	   </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	

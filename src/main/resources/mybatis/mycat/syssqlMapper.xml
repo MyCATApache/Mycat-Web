@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="SYSSQL"> 
+	
+	<select id="insert" parameterType="map">
+		INSERT INTO t_mycat_syssql (
+		    DB_NAME,
+			START_TIME,
+		    START_TM,
+			EXECUTE_TIME,
+			ID,
+			USER,
+			CONTENT,
+			IPAddr
+		) 
+		values(
+		    #{DB_NAME, jdbcType=VARCHAR},
+			#{START_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{START_TM, jdbcType=VARCHAR },			
+			#{EXECUTE_TIME, jdbcType=NUMERIC,typeHandler=NumberHandler},
+			#{ID, jdbcType=NUMERIC,typeHandler=NumberHandler}, 
+			#{USER, jdbcType=VARCHAR},
+			#{SQL, jdbcType=NVARCHAR},
+			#{IP, jdbcType=NVARCHAR}
+		)
+	</select>
+	
+	<select id="query" parameterType="map" resultType="map">
+		select START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 		
+			<if test="ID >= 0">
+				and ID = #{ID}
+			</if> 
+			<if test="START_TIME != null">
+				and START_TIME = #{START_TIME}
+			</if>	
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>						
+		</where>
+		 limit 1;
+	</select>
+	
+	<select id="sql" parameterType="map" resultType="map">
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 			
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and START_TM between #{begin} and #{end}
+			</if>
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>			 
+		</where>
+		order by START_TM desc
+	</select>
+	 
+	<select id="sqlInfo" parameterType="map" resultType="map">
+		select SID,START_TIME,START_TM,EXECUTE_TIME,ID,USER,DB_NAME,CONTENT as "SQL",IPAddr from t_mycat_syssql 
+		<where> 
+			<if test="SID != 0">
+				and SID = #{SID}
+			</if> 	 
+		</where>
+	</select>
+	
+	<select id="sqlInfoCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssql 
+		<where> 
+			<if test="SID != 0">
+				and SID = #{SID}
+			</if> 	 
+		</where>
+	</select>
+	
+	<select id="sqlCount" parameterType="map" resultType="int">
+		select count(1) from t_mycat_syssql 
+		<where> 
+			<if test="DB_NAME != null">
+				and DB_NAME = #{DB_NAME}
+			</if> 	
+			<if test="ID != null">
+				and ID = #{ID}
+			</if>
+			<if test="begin != null and end != null">
+				and START_TM between #{begin} and #{end}
+			</if>
+			 <if test="username != null">
+				and USER =  #{username}
+			</if>			 
+		</where> 
+	</select>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM t_mycat_syssql 
+		<where> 
+			START_TM  &lt; #{clearday} 
+		</where>
+	</delete>		
+	
+</mapper>

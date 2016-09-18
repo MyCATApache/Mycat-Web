@@ -1,0 +1,189 @@
+<style>
+#sequenceModal .modal-body {
+	max-height: 200px;
+}
+</style>
+
+<script type="text/javascript">
+window.operateEvents = {
+        'click .like': function (e, value, row, index) {
+        	 $("#sequence-form [name='guid']").val(row.name);
+        	 loadFormData("mycatDataNode-form",JSON.stringify(row));
+        	 $("#sequenceModalLabel").text("编辑序列");
+        	 $("#sequenceModal form [name='name']").attr("disabled",true);
+        	 destroyValidator("sequence-form");
+        	 validator();
+        	 showModal("sequenceModal");
+        },
+        'click .remove': function (e, value, row, index) {
+        	var data = {
+        			 "zkId" :zkId,
+        			 "guid" : row.name
+        	};
+        	if(confirm("确定要删除数据吗")){
+        		deleteRow ('sequenceService','delete',data,callback);
+        	}
+        }
+};
+
+function operateFormatter(value, row, index) {
+    return [
+        '<a class="like" href="javascript:void(0)" title="Edit">',
+        '<i class="glyphicon glyphicon-pencil"></i>',
+        '</a>  ',
+        '<a class="remove" href="javascript:void(0)" title="Remove">',
+        '<i class="glyphicon glyphicon-remove"></i>',
+        '</a>'
+    ].join('');
+};
+
+
+function validator(){
+	$('#sequence-form').bootstrapValidator({
+	    message: 'This value is not valid',
+	    feedbackIcons: {
+	        //valid: 'glyphicon glyphicon-ok',
+	        //invalid: 'glyphicon glyphicon-remove',
+	        validating: 'glyphicon glyphicon-refresh'
+	    },
+	    err : {
+			container : 'tooltip'
+		},
+	    fields: {
+	        name: {
+	            validators: {
+	                notEmpty: {
+	                    message: '请输入名称'
+	                }
+	
+	            }
+	        },
+	        increament: {
+	            validators: {
+	                notEmpty: {
+	                    message: '请输入步长'
+	                },
+	                integer: {
+                        message: '请输入数字'
+                    }
+	            }
+	        }
+	    },
+	    onSuccess : function(e,validator, form, submitButton) {
+	    	var guid =  $("#sequence-form [name='guid']").val();
+	    	var data = {
+	    			 "zkId" :zkId,
+	    			 "guid" : guid
+	    	}
+	    	if(guid){
+	    		saveForm('sequenceService','update','sequence-form',data,callback);
+	    	}else{
+	    		saveForm('sequenceService','insert','sequence-form',data,callback);
+	    	}
+			
+		}
+	});
+}
+var columns = [{
+				title : '序列名称',
+				field:'name',
+				align :'center'
+			},
+			{
+				title : '当前序列值',
+				field:'currentValue',
+				align :'center'
+			},
+			{
+				title : '步长',
+				field:'increament',
+				align :'center'
+			},{
+                title: '操作',
+                align: 'center',
+	            events: operateEvents,
+	            formatter: operateFormatter
+            }];
+
+function addSequence(){
+	 $("#sequence-form :reset").click();
+	 $("#sequence-form [name='guid']").val("");
+	 $("#sequenceModalLabel").text("添加序列");
+	 $("#sequence-form [name='name']").attr("disabled",false);
+	 destroyValidator("sequence-form");
+	 validator();
+	 showModal('sequenceModal');
+	
+}
+
+function callback(){
+	$('#sequenceModal').modal('hide');
+	$('#mycatSequence').bootstrapTable('refresh');
+	 
+}
+function submit(){
+	$("#sequence-form" ).submit();
+}
+function getdatagrid(){
+	var url = './dispatcherAction/query.do?service=sequenceService&method=queryByPage&zkId='+zkId;
+	datagrid('mycatSequence',url,columns);
+}
+
+$(document).ready(function() {
+	getdatagrid();
+});
+
+</script>		
+	<div class="box-body">
+	<div id="sequenceToolbar">
+		<button id="add" class="btn btn-default" onclick="addSequence()">
+			<i class="glyphicon glyphicon-plus"></i> 新增序列
+		</button>
+	</div>
+	<table  id="mycatSequence" data-toggle="table"  data-toolbar="#sequenceToolbar" data-id-field="name"  class="table table-striped table-bordered table-hover" >
+		</table>
+   </div>
+   
+   	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="sequenceModal" tabindex="-1" role="dialog" 
+	   aria-labelledby="sequenceModalLabel" aria-hidden="true">
+	   <div class="modal-dialog modal-md "style="withd:auto">
+	      <div class="modal-content"  >
+	         <div class="modal-header">
+	            <button type="button" class="close" data-dismiss="modal" 
+	               aria-hidden="true">×
+	            </button>
+	            <h4 class="modal-title" id="sequenceModalLabel">
+	        	      编辑序列信息
+	            </h4>
+	         </div>
+	         <div class="modal-body">
+	         <form class="form-horizontal" role="form" id="sequence-form" method="post" >
+	          	<input type="hidden" id="guid" name="guid">
+		        <button type="reset" id="reset" style="display:none"></button>
+		       
+			   <div class="form-group">
+			   		<label for="name"  class=" col-md-2  control-label" title="序列名称"  data-toggle="tooltip"  data-placement="right"  > 序列名称 </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="name"  name="name" placeholder="请输入序列名称">
+			        </div>
+			   </div>
+			   <div class="form-group">
+			   		<label for="increament"  class=" col-md-2  control-label" title="序列步长"  data-toggle="tooltip"  data-placement="right"  > 序列步长 </label>
+			   		<div class="col-md-4 ">
+			         <input type="text" class="form-control" id="increament"  name="increament" placeholder="请输入步长值">
+			        </div>
+			   </div>
+			</form>
+	        </div>
+	         <div class="modal-footer">
+	            <button type="button" class="btn btn-default" 
+	               data-dismiss="modal">关闭
+	            </button>
+	            <button type="button" class="btn btn-primary" onclick="submit()">
+	             	  保存
+	            </button>
+	         </div>
+	      </div><!-- /.modal-content -->
+	   </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->

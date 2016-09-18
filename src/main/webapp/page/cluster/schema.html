@@ -1,0 +1,133 @@
+
+<script type="text/javascript">
+
+  var schemaCols = 
+    	[ {
+			title : '逻辑库名称',
+			field : 'name',
+			align : 'center'
+		}, 
+		{
+			title : '是否校验schema',
+			field : 'checkSQLSchema',
+			align : 'center'
+		}, 
+		{
+			title : '查询最多条数',
+			field : 'defaultMaxLimit',
+			align : 'center'
+		}]
+  
+  
+   var tableCols =
+		    [ {
+				title : '表名',
+				field : 'name',
+				align : 'center'
+			}, {
+				title : '物理节点',
+				field : 'datanode',
+				align : 'center'
+			}, {
+				title : '是否全局表',
+				field : 'type',
+				align : 'center'
+			}
+			, {
+				title : '主键',
+				field : 'primaryKey',
+				align : 'center'
+		   }]
+  	 var chldTableCols =
+	  		[ {
+				title : '子表名称',
+				field : 'name',
+				align : 'center'
+			}, {
+				title : '主键',
+				field : 'primaryKey',
+				align : 'center'
+			}, {
+				title : '父表主键',
+				field : 'parentKey',
+				align : 'center'
+			}
+			, {
+				title : '关联字段名',
+				field : 'joinKey',
+				align : 'center'
+			}]
+  
+  	function loadgrid(tableId,url,cols,detailFormatter){
+		$("#"+tableId).bootstrapTable({
+		  	detailFormatter : detailFormatter,
+		  	responseHandler : "responseHandler",
+			sidePagination : "server",
+			pageList: "[10, 25, 50, 100]",
+			idField : "name",
+			url : url,
+			dataType:"json",
+			columns : cols
+		})
+  	}
+				    
+	var  schemaName;
+	
+	function schemaDatagrid() {
+		url = "./dispatcherAction/query.do?service=schemaService&method=queryByPage&zkId="+zkId;
+		loadgrid("schema_table",url,schemaCols,tableDetailFormatter);
+		
+	}
+	
+	function tableDatagrid(shcema) {
+		schemaName = shcema;
+		url = "./dispatcherAction/query.do?service=tableService&method=queryByPage&zkId="+zkId+"&guid="+ schemaName;
+		loadgrid(shcema,url,tableCols,chldTabledetailFormatter );
+		
+	}
+	
+	function chldTableDatagrid(table) {
+		var url = "./dispatcherAction/query.do?service=childrenTableService&method=queryByPage&zkId="+zkId+"&guid="+schemaName +"/" +table;
+		loadgrid (table,url,chldTableCols ,"");
+	}
+	
+	function responseHandler(res) {
+		var selections = [];
+		$.each(res.rows, function(i, row) {
+			row.state = $.inArray(row.id, selections) !== -1;
+		});
+		return res;
+	}
+	
+	function tableDetailFormatter(index, row) {
+	
+		return "<table id=\""+row.name+"\" data-detail-view=\"true\"" 
+		      + "data-pagination=\"true\""
+		      + "data-id-field= \"name\""
+		      + " data-page-list= \"[10, 25, 50, 100]\"" 
+		      + " data-side-pagination=\"server\" >"
+		      + "<script>tableDatagrid(\""+ row.name+ "\")<\/script></table>";
+	}
+	
+	function chldTabledetailFormatter (index, row) {
+		
+		 return "<table id=\""+row.name+"\" ><script>chldTableDatagrid(\""+ row.name+ "\")<\/script></table>";
+	}
+	
+	
+	$(function() {
+		schemaDatagrid();
+	});
+  
+</script>
+		
+<div class="box-body">
+     <table id="schema_table" data-toolbar="#toolbar" class="table table-striped table-bordered table-hover"
+          data-detail-view="true"
+          data-pagination="true"
+          data-id-field="id"
+          data-page-list="[10, 25, 50, 100, ALL]"
+          data-side-pagination="server"
+          data-response-handler="responseHandler">
+	</table>
+</div>

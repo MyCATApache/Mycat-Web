@@ -1,0 +1,238 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>Mysql服务监控</h1>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-dashboard"></i>Mycat-监控</a></li>
+		<li><a href="#"></i>Mysql服务监控</a></li>
+	</ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">监控条件</h3>
+					<div class="box-tools pull-right"></div>
+					<!-- /.box-tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body no-padding">
+					<div class="form-group">
+						<select onchange="host_detail();" name="hosts" id="hosts"
+							class="form-control" style="width: 200px;">
+						</select>
+					</div>
+					<div class="form-group" id="hostDetailtable"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">查询条件<font color="red" size="3">(注：两个条件独立查询)</font></h3>
+					<div class="box-tools pull-right"></div>
+					<!-- /.box-tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body no-padding">
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="form-group">
+								<label for="mycatName">历史查询:</label> 
+								<select id="autoperiod" name="autoperiod" class="form-control" onchange="historyquery();">
+										<option value="0" id="period.0">最近1天</option>
+										<option value="1" id="period.1">最近1小时</option>
+										<option value="2" id="period.2">最近2小时</option>
+										<option value="3" id="period.3">最近3小时</option>
+										<option value="4" id="period.4">最近4小时</option>
+										<option value="5" id="period.5">最近6小时</option>
+										<option value="6" id="period.6">最近12小时</option>
+										<option value="8" id="period.8">最近2天</option>
+										<option value="9" id="period.9">最近1周</option>
+										<option value="10" id="period.10">最近2周</option>
+										<option value="11" id="period.11">最近1个月</option>
+										<option value="12" id="period.12">最近2个月</option>
+										<option value="13" id="period.13">最近3个月</option>
+										<option value="14" id="period.14">最近4个月</option>
+										<option value="15" id="period.15">最近6个月</option>
+										<option value="16" id="period.16">最近1年</option>
+										<option value="17" id="period.17">最近2年</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-8">
+							<div class="form-group">
+								<label for="mycatName">区间查询:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-clock-o"></i>
+									</div>
+									<input type="text" class="form-control pull-right"
+										id="reservationtime">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">图形分析</h3>
+					<div class="box-tools pull-right"></div>
+					<!-- /.box-tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body no-padding">
+					<img id="contentGraph" src="" height="380" width="100%">
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+ 
+var historyquery = function(){ 
+	$('#contentGraph').attr('src', getGraphUrl() + "&autoperiod=" + $("#autoperiod").val()); 
+}
+
+$(document).ready(
+		function() {
+			rainbowAjax.get("./reload", "", function callback(data) {
+				create_host();
+			});
+			//Initialize Select2 Elements
+			$(".select2").select2();
+
+			//Money Euro
+			$("[data-mask]").inputmask();
+
+			//Date range picker with time picker
+			$('#reservationtime').daterangepicker(
+					{
+						maxDate : moment(), //最大时间
+						showDropdowns : true,
+						showWeekNumbers : false, //是否显示第几周
+						timePicker : true, //是否显示小时和分钟
+						timePickerIncrement : 60, //时间的增量，单位为分钟
+						timePicker12Hour : false, //是否使用12小时制来显示时间
+						ranges : {
+							//'最近1小时': [moment().subtract('hours',1), moment()],
+							'今日' : [ moment().startOf('day'), moment() ],
+							'昨日' : [
+									moment().subtract('days', 1).startOf(
+											'day'),
+									moment().subtract('days', 1).endOf(
+											'day') ],
+							'最近7日' : [ moment().subtract('days', 6),
+									moment() ],
+							'最近30日' : [ moment().subtract('days', 29),
+									moment() ]
+						},
+						opens : 'right', //日期选择框的弹出位置
+						format : 'YYYY-MM-DD HH:mm', //控件中from和to 显示的日期格式
+						separator : ' to ',
+						locale : {
+							applyLabel : '确定',
+							cancelLabel : '取消',
+							fromLabel : '起始时间',
+							toLabel : '结束时间',
+							customRangeLabel : '自定义',
+							daysOfWeek : [ '日', '一', '二', '三', '四', '五',
+									'六' ],
+							monthNames : [ '一月', '二月', '三月', '四月', '五月',
+									'六月', '七月', '八月', '九月', '十月', '十一月',
+									'十二月' ],
+							firstDay : 1
+						}
+					});
+
+			$("#reservationtime").on('apply.daterangepicker', function() {
+				var daterange = $('#reservationtime').val().split('~');
+				url =  getGraphUrl() + "&begin=" + daterange[0].trim() + "&end=" + daterange[1].trim();
+				$('#contentGraph').attr('src', url);
+			});
+		});
+
+var showgraph = function(url) {
+	$('#contentGraph').attr('src', url);
+};
+
+var getGraphUrl = function(){
+	var url = $('#contentGraph').attr('src');
+	var index = url.indexOf('&');
+	if(index != -1){
+		url = url.substring(0, index);
+	}
+	return url;
+};
+
+var host_detail = function() {
+	$('#hostDetailtable').html('');
+	$('#contentGraph').attr('src', '');
+	rainbowAjax
+			.get(
+					"./graph/showMycatGraphs?hostName=" + $("#hosts").val(),
+					"",
+					function callback(data) {
+						var jrdsHtml = '';
+						var jrds = JSON.parse(data);
+						for ( var i in jrds) {
+							jrdsHtml += '<table class="table">';
+							jrdsHtml += '<tbody>';
+							jrdsHtml += '<tr>';
+
+							var probe = jrds[i].probe;
+							for ( var j in probe) {
+								var graph = probe[j].graph;
+								for ( var k in graph) {
+									var url = graph[k].url;
+									var name = graph[k].name.substring(5,graph[k].name.length);
+									if(name == "StatusCacheHits"){
+										$('#contentGraph').attr('src', url);
+									}
+									jrdsHtml += '<td><button class="btn btn-block btn-primary" onclick="showgraph(\''
+											+ url
+											+ '\')">'
+											+ name
+											+ '</button></td>';
+								}
+							}
+							jrdsHtml += '     </tr>';
+							jrdsHtml += '</tbody>';
+							jrdsHtml += '</table>';
+						}
+						$('#hostDetailtable').html(jrdsHtml);
+					});
+}
+
+var create_host = function() {
+	rainbowAjax.get("./graph/hostMycatList?hostprefix=MYSQL", "",
+			function callback(data) {
+				var jrds = JSON.parse(data);
+				$('#hosts').html(''); //清空host
+				for ( var i in jrds) {
+					$("#hosts").append(
+							"<option value=\""+ jrds[i]+"\">" + jrds[i]
+									+ "</option>");
+				}
+				host_detail();
+			});
+	
+}
+
+clearInterval(intervalId); 
+intervalId = setInterval(function(){
+	var url = $('#contentGraph').attr('src');   
+	showgraph(url+"&timestamp="+(new Date()).getTime());
+},20 * 1000);
+</script>

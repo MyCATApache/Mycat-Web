@@ -1,0 +1,136 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+   Mycat IP 白名单
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>Mycat IP 白名单</a></li>
+    <li><a href="#"></i>mycat IP 白名单</a></li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row"> 
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询条件</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+				<div class="box-header">
+				 <form action="" id="query_Form">
+					<select onchange="datasouce_change()" name="ds" id="datasource" class="form-control" style="width: 200px;">
+		            </select>
+		         </form>
+				</div>
+	     <div class="box-footer">
+	       <div class="form-group">
+				<div class="col-lg-offset-5 col-lg-2">
+			       <button class="btn btn-primary"  onclick="queryForm('query_Form')">查询</button>
+	                <button class="btn btn-primary" onclick="resetBtn('query_Form')">重置</button>
+				</div>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">查询结果</h3>
+	        </div>
+	        
+	        <div class="box-header">
+	     		<button class="btn btn-success" onclick="loadContext('page/manger/whitehost_add.html')">新增</button> 
+	     	 </div>
+	        <div class="box-body">
+	          <div>
+		        <table id="table"></table>
+		        <div style="text-align:right;">
+		            <div id="paginator"></div>
+		        </div>
+			  </div>
+	        </div>
+	        <div class="box-footer">
+	       <div class="form-group">
+				<button class="btn btn-success" onclick="loadContext('page/manger/whitehost_add.html')">新增</button> 
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+
+
+<script type="text/javascript">
+   $.AdminLTE.boxWidget.activate();
+</script>
+
+<script type="text/javascript">
+
+var whiltehost_datasouce;
+function ready4Update_extra_call(modifyForm_obj,row,attr_){
+	  if(attr_ == 'value'){
+		  var value_obj = jQuery.parseJSON(row[attr_]);
+		  for(var obj_attr in value_obj){
+			  modifyForm_obj.find("[name='"+obj_attr+"']").val([''+value_obj[obj_attr]]);
+		  }
+	  }
+}
+
+
+var datasouce_change = function(){
+	queryForm('query_Form');
+}
+
+var Selected_Callback = function(target_select){
+	  this.onSuccess=function(data){
+			try {
+				var j_obj = data;
+				if (j_obj.success) {
+					var length = j_obj.rows.length;
+					for(var i=0;i<length;i++){
+						var mycatName = j_obj.rows[i].mycatName;
+						$("#"+target_select).append("<option value=\""+ mycatName+"\">"+ mycatName+"</option>");
+						if(i == 0){
+							datasouce_change();
+						}
+					}
+				}
+			} catch (e) {
+				alert("异常!")
+			}
+		};
+		this.onFail = function(jqXHR, textStatus, errorThrown){
+		};
+};
+
+var initDataSouce = function(){
+	var rainbow = new Rainbow();
+	rainbow.setService("mycatService");
+	rainbow.setMethod("query");
+	rainbowAjax.query(rainbow, new Selected_Callback("datasource"));
+};
+$(document).ready(function() {
+	initDataSouce();
+		    var cols = [
+		    		
+			        { title:'IP地址', name:'IP' ,width:200, align:'center'},
+			        { title:'用户名', name:'USER' ,width:150, align:'center'}
+			        
+			    ];
+	  mmgrid = $('#table').mmGrid({
+	        indexCol: true,
+	        height: '400',
+	        indexColWidth: 35,
+	        cols: cols,
+	        url: './dispatcherAction/queryByMMGrid.do?service=showService&method=whitehost',
+	        method: 'post',
+	        root: 'items',
+	        plugins : [
+	          $('#paginator').mmPaginator()
+	        ]
+	    });
+});
+</script>

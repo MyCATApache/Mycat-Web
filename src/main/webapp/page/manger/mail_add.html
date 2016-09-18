@@ -1,0 +1,76 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+          邮件预警配置管理
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i>邮件预警管理</a></li> 
+    <li class="active">新增预警邮件</li>
+  </ol>
+</section>
+<!-- Main content -->
+<section id="container" class="content">
+  <div class="row">
+	 <div class="col-md-12">
+	      <div class="box box-primary">
+	        <div class="box-header with-border">
+	          <h3 class="box-title">邮件预警配置管理</h3>
+	          <div class="box-tools pull-right">
+                  <button id="abc" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+               </div>
+	        </div>
+	        
+	        <form action="" id="add_form">
+		        <div class="box-body">
+		          <div class="row">
+		             <div class="col-xs-6">
+						 <div class="form-group"> 
+		                     <label for="smtpUser">发送邮箱账号:</label>
+			                  <input id="smtpUser" type="text" name="smtpUser" class="form-control"  validateType = "lengthRange-1-100|excludeCN"  placeholder="发送邮箱账号">
+		                  </div>
+		                  <div class="form-group"> 
+		                     <label for="smtpPassword">发送邮箱密码:</label>
+			                  <input id="smtpPassword" type="password" name="smtpPassword" class="form-control"  validateType = "lengthRange-1-100"  placeholder="发送邮箱密码">
+		                  </div> 
+		                   <!-- json  -->
+		                  <div class="form-group">
+		                     <label for="smtpHost">发送邮箱Server地址:</label>
+			                  <input id="smtpHost" type="text" name="smtpHost" class="form-control" placeholder="发送邮箱地址" validateType="lengthRange-1-100">
+		                  </div> 
+		                  <div class="form-group">
+		                     <label for="smtpProtocol">发送邮箱协议:</label>
+			                  <input id="smtpProtocol" type="text" name="smtpProtocol" class="form-control" placeholder="发送邮箱协议" validateType="lengthRange-1-100">
+		                  </div>
+		                  <div class="form-group">
+		                     <label for="mangerPort">发送邮箱端口:</label>
+			                  <input id="mangerPort" type="text" name="mangerPort" class="form-control" placeholder="发送邮箱端口" validateType="lengthRange-1-100|beDigits">
+		                  </div>
+		                  <div class="form-group">
+		                     <label for="to">接收邮件地址:</label>
+			                  <input id="to" type="text" name="to" class="form-control" placeholder="接收邮件地址" validateType="lengthRange-1-100|email">
+		                  </div>
+		                  <div class="form-group">
+		                     <label for="cc">抄送人邮件地址:(多个抄送人请用英文,分隔)</label>
+			                  <input id="cc" type="text" name="cc" class="form-control" placeholder="抄送人邮件地址" validateType="lengthRange-1-100">
+		                  </div>               
+		             </div>
+		            </div> 
+		        </div>
+	        </form>
+	        
+	        
+	        <div class="box-footer">
+	         <div class="form-group">
+	            <button class="btn btn-primary" onclick="addForm('mailService','addMail','add_form')">保存</button>
+	            <button class="btn btn-primary" onclick="loadContext('page/manger/mail.html')">返回列表</button>
+			</div>
+	     </div>
+	   </div>
+	 </div>
+ </div>
+</section><!-- /.content -->
+<script type="text/javascript">
+	$.AdminLTE.boxWidget.activate(); 
+   $(document).ready(function(){ 
+   });
+</script>
